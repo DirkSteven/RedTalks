@@ -11,6 +11,7 @@ const UserSchema = new Schema({
         default: Date.now(), 
         type: Date
     }, 
+    imageUrl: String,
     role: String,
 });
 

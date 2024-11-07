@@ -17,7 +17,8 @@ app.use(cors());
 
 app.use(bodyParser.json());
 
-const PORT = 5000;
+// const PORT = 5000;
+const PORT = process.env.PORT;
 // const __dirname = path.dirname(new URL(import.meta.url).pathname);
 const __dirname = path.resolve(); 
 
