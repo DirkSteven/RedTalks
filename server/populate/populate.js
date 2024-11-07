@@ -1,12 +1,17 @@
 // populate/populate.js
+import dotenv from 'dotenv';
+dotenv.config();
+
 import mongoose from 'mongoose';
 import fs from 'fs';
 import path from 'path';
-// import User from '../models/User.js';
-// import Post from '../models/Post.js';
-import User from 'C:/Users/monte/OneDrive/Documents/school/CS/311/forum/RedTalks/models/users.js';
-import Post from 'C:/Users/monte/OneDrive/Documents/school/CS/311/forum/RedTalks/models/posts.js';
+import User from '../src/models/User.js';
+import Post from '../src/models/Post.js';
 import { connectDB } from '../db/connectDB.js';
+
+
+const uri = process.env.MONGODB_KEY; // Ensure this is set in your .env file
+
 
 // Function to read JSON data from a file
 const readDataFromFile = (filePath) => {
@@ -53,17 +58,22 @@ const populateDatabase = async (data) => {
 // Connect to MongoDB and populate the database
 const run = async () => {
     try {
-        await connectDB(); // Await the connection to the database
+        // Connect to MongoDB
+
+
+        connectDB();
+        console.log('Successfully connected to MongoDB!');
 
         // Read data from JSON file
-        const dataPath = path.resolve('./populate/data.json'); // Updated path to read from populate directory
+        const dataPath = path.resolve('./populate/data.json'); // Path to your JSON data file
         const data = readDataFromFile(dataPath);
         await populateDatabase(data);
     } catch (error) {
-        console.error('Error connecting to MongoDB:', error);
+        console.error('Error connecting to MongoDB or populating database:', error);
     } finally {
-        await mongoose.connection.close(); // Ensure this is awaited
+        await mongoose.connection.close(); // Close the connection if necessary
     }
 };
+
 
 run();

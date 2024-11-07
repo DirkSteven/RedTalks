@@ -4,7 +4,7 @@ export async function connectDB() {
   console.log('connectDB function started');
   const uri = process.env.MONGODB_KEY;
   
-  // console.log('MongoDB URI:', uri);
+  console.log('MongoDB URI:', uri);
 
   if (!uri) {
     console.error("MongoDB URI is missing in environment variables.");
