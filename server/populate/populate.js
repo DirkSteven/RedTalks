@@ -59,8 +59,6 @@ const populateDatabase = async (data) => {
 const run = async () => {
     try {
         // Connect to MongoDB
-
-
         connectDB();
         console.log('Successfully connected to MongoDB!');
 
