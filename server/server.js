@@ -6,7 +6,9 @@ import cors from 'cors';
 
 import path from 'path';
 import { connectDB } from './db/connectDB.js'
-import router from './src/routes/User.js';
+import userRouter from './src/routes/User.js';
+import postRouter from './src/routes/Post.js';
+// import { userRouter, postRouter } from './src/routes/index.js';
 
 dotenv.config();
 
@@ -22,21 +24,23 @@ app.use(bodyParser.json());
 const PORT = process.env.PORT || 5000;
 const __dirname = path.resolve(); 
 
-app.use(express.static(path.join(__dirname, '..', 'client', 'build')));
 
-app.use('/api/user', router);
-
-// HTTP GET REQUEST
-// app.get('*', (req, res) => {
-//     res.sendFile(path.join(__dirname, '..', 'client', 'build','index.html'));
-//     console.log(path.join(__dirname, '..', "client/build/index.html"));
-// });
+app.use('/api/user', userRouter);
+app.use('/api/posts', postRouter);
 
 app.get('/', (req, res) => {
-  res.send({
-    message: 'Hello World'
-  });
+  console.log("Home route");
+  res.status(201).json("Home");
 })
+
+
+// app.use(express.static(path.join(__dirname, '..', 'client', 'build')));
+
+// // HTTP GET REQUEST
+// app.get('*', (req, res) => {
+//     res.sendFile(path.join(__dirname, '..', 'client', 'build','index.html'));
+//     // console.log(path.join(__dirname, '..', "client/build/index.html"));
+// });
 
 // Start server when connection is valid
 connectDB().then(() => {

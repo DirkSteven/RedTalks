@@ -1,12 +1,18 @@
 // populate/populate.js
+import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import fs from 'fs';
 import path from 'path';
 
 // Import the models (adjust the path as needed)
-import User from './users.js'; // Ensure users.js is in the same folder
-import Post from './posts.js'; // Ensure posts.js is in the same folder
-import { connectDB } from '../../db/connectDb.js'; // Correct path to connectDb.js
+import User from './User.js'; // Ensure users.js is in the same folder
+import Post from './Post.js'; // Ensure posts.js is in the same folder
+import { connectDB } from '../../db/connectDB.js'; // Correct path to connectDb.js
+
+
+dotenv.config(); // Check if MongoDB URI is loaded correctly
+
+const uri = process.env.MONGODB_KEY; // Ensure this is set in your .env file
 
 // Function to read JSON data from a file
 const readDataFromFile = (filePath) => {
@@ -54,9 +60,9 @@ const populateDatabase = async (data) => {
 const run = async () => {
     try {
         await connectDB(); // Await the connection to the database
-
-        // Use __dirname to get the directory of the current module
-        const dataPath = path.resolve(new URL(import.meta.url).pathname, '../../populate/data.json'); 
+        
+        const __dirname = path.resolve(); 
+        const dataPath = path.resolve(path.join(__dirname, '../server/src/models/data.json') ); 
         const data = readDataFromFile(dataPath);
 
         // Populate the database with the data

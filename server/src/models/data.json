@@ -1,49 +1,142 @@
 {
-    "users": [
-      {
-        "name": "Alice Johnson",
-        "email": "alice@example.com",
-        "password": "password123",
-        "imageUrl": "https://example.com/images/alice.jpg",
-        "role": "admin"
-      },
-      {
-        "name": "Bob Smith",
-        "email": "bob@example.com",
-        "password": "password456",
-        "imageUrl": "https://example.com/images/bob.jpg",
-        "role": "user"
-      },
-      {
-        "name": "Charlie Brown",
-        "email": "charlie@example.com",
-        "password": "password789",
-        "imageUrl": "https://example.com/images/charlie.jpg",
-        "role": "user"
-      }
-    ],
-    "posts": [
-      {
-        "title": "My First Post",
-        "content": "This is the content of my first post.",
-        "imageUrl": "https://example.com/images/post1.jpg",
-        "tags": ["introduction", "first"],
-        "comments": [
-          {
-            "content": "Great post!"
-          },
-          {
-            "content": "Thanks for sharing!"
-          }
-        ]
-      },
-      {
-        "title": "Learning Mongoose",
-        "content": "Mongoose is a great ODM for MongoDB.",
-        "imageUrl": "https://example.com/images/post2.jpg",
-        "tags": ["mongoose", "mongodb"],
-        "comments": []
-      }
-    ]
-  }
-  
+  "users": [
+    {
+      "_id": "63867a4b5f4f17b60a4a9d85",
+      "name": "Alice Johnson",
+      "email": "alice@example.com",
+      "password": "password123"
+    },
+    {
+      "_id": "63867a4b5f4f17b60a4a9d86",
+      "name": "Bob Smith",
+      "email": "bob@example.com",
+      "password": "password456"
+    },
+    {
+      "_id": "63867a4b5f4f17b60a4a9d87",
+      "name": "Charlie Brown",
+      "email": "charlie@example.com",
+      "password": "password789"
+    },
+    {
+      "_id": "63867a4b5f4f17b60a4a9d88",
+      "name": "David Lee",
+      "email": "david@example.com",
+      "password": "password111"
+    },
+    {
+      "_id": "63867a4b5f4f17b60a4a9d89",
+      "name": "Eve Adams",
+      "email": "eve@example.com",
+      "password": "password222"
+    },
+    {
+      "_id": "63867a4b5f4f17b60a4a9d90",
+      "name": "Frank Castle",
+      "email": "frank@example.com",
+      "password": "password333"
+    }
+  ],
+  "posts": [
+    {
+      "title": "My First Post",
+      "content": "This is the content of my first post. I'm excited to start blogging!",
+      "imageUrl": "https://example.com/images/post1.jpg",
+      "tags": ["introduction", "first", "blogging"],
+      "comments": [
+        {
+          "content": "Great post! Looking forward to reading more.",
+          "author": "63867a4b5f4f17b60a4a9d86"
+        },
+        {
+          "content": "Thanks for sharing! It's great to see your journey begin.",
+          "author": "63867a4b5f4f17b60a4a9d87"
+        }
+      ],
+      "upvotes": [
+        "63867a4b5f4f17b60a4a9d85",
+        "63867a4b5f4f17b60a4a9d86"
+      ]
+    },
+    {
+      "title": "Learning Mongoose",
+      "content": "Mongoose is a great ODM for MongoDB. It's an essential tool for working with MongoDB in Node.js applications.",
+      "imageUrl": "https://example.com/images/post2.jpg",
+      "tags": ["mongoose", "mongodb", "nodejs"],
+      "comments": [
+        {
+          "content": "I agree, Mongoose makes things so much easier!",
+          "author": "63867a4b5f4f17b60a4a9d85"
+        }
+      ],
+      "upvotes": [
+        "63867a4b5f4f17b60a4a9d85",
+        "63867a4b5f4f17b60a4a9d87",
+        "63867a4b5f4f17b60a4a9d86"
+      ]
+    },
+    {
+      "title": "JavaScript Async/Await",
+      "content": "In this post, I dive deep into JavaScript async/await and how it can simplify handling asynchronous code.",
+      "imageUrl": "https://example.com/images/post3.jpg",
+      "tags": ["javascript", "async", "await", "nodejs"],
+      "comments": [
+        {
+          "content": "This is super helpful, thanks for explaining async/await in a simple way!",
+          "author": "63867a4b5f4f17b60a4a9d86"
+        },
+        {
+          "content": "I struggled with callbacks, but async/await made it much clearer.",
+          "author": "63867a4b5f4f17b60a4a9d88"
+        }
+      ],
+      "upvotes": [
+        "63867a4b5f4f17b60a4a9d86",
+        "63867a4b5f4f17b60a4a9d88",
+        "63867a4b5f4f17b60a4a9d90"
+      ]
+    },
+    {
+      "title": "React Basics",
+      "content": "React is one of the most popular front-end libraries. In this post, I’ll go over the basics of React components, state, and props.",
+      "imageUrl": "https://example.com/images/post4.jpg",
+      "tags": ["react", "frontend", "javascript"],
+      "comments": [
+        {
+          "content": "React has really changed how we build apps. Great post!",
+          "author": "63867a4b5f4f17b60a4a9d85"
+        },
+        {
+          "content": "I just started learning React, and this post is really helpful. Thanks!",
+          "author": "63867a4b5f4f17b60a4a9d89"
+        }
+      ],
+      "upvotes": [
+        "63867a4b5f4f17b60a4a9d85",
+        "63867a4b5f4f17b60a4a9d87",
+        "63867a4b5f4f17b60a4a9d88"
+      ]
+    },
+    {
+      "title": "CSS Grid vs Flexbox",
+      "content": "CSS Grid and Flexbox are two powerful layout tools for building responsive web designs. In this post, I'll compare both and when to use each.",
+      "imageUrl": "https://example.com/images/post5.jpg",
+      "tags": ["css", "webdesign", "responsive"],
+      "comments": [
+        {
+          "content": "Great comparison! I always wondered when to use Flexbox over Grid.",
+          "author": "63867a4b5f4f17b60a4a9d86"
+        },
+        {
+          "content": "CSS Grid is a game-changer for layouts!",
+          "author": "63867a4b5f4f17b60a4a9d89"
+        }
+      ],
+      "upvotes": [
+        "63867a4b5f4f17b60a4a9d86",
+        "63867a4b5f4f17b60a4a9d87",
+        "63867a4b5f4f17b60a4a9d88"
+      ]
+    }
+  ]
+}

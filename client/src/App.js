@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react';
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import axios from 'axios';
 import AppContext from './Contexts/AppContext';
-import Home from './Pages/Home/Home.js';
+import Home from './Pages/Home/Home';
 // import { init } from '../../server/src/models/User.js';
 
 function App() {
   useEffect(() => {
-    // console.log('useEffect running');
+    console.log('useEffect running');
+    console.log(Home);
     init();
   }, []);
 
@@ -19,6 +20,7 @@ function App() {
     // const {data} = await axios.get(`http://localhost:5000/api/user/init?token=${token}`);
     // setUser(data.user);
     // setIsInitiated(true);
+
 
     try {
       const token = localStorage.getItem('token');
@@ -41,7 +43,7 @@ function App() {
             </Routes>
           </Router>
         </AppContext.Provider>
-      )}
+      )} 
     </div>
   );
 }
