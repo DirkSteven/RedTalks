@@ -1,7 +1,7 @@
 import Post from '../models/Post.js'
 import { calculatePopularityScore } from '../utils/popularity.js'
 
-export async function getPosts(req, res) {
+export async function getAllPosts(req, res) {
     try {
         const posts = await Post.find()
         .populate('author', 'name email') // Populate author details
@@ -43,3 +43,77 @@ export async function getPopularPosts(req, res) {
         return res.status(500).json({ message: 'Error fetching popular posts', error: error.message });
     }
 };
+
+export async function getPost(req, res) {
+  try {
+      const { postId } = req.params;  // Extract postId from request parameters
+
+      // Fetch the post by its ID from the database
+      const post = await Post.findById(postId)
+          .populate('author', 'name email')  // Optionally populate author fields
+          .populate('comments.author', 'name email');  // Optionally populate comment authors
+
+      if (!post) {
+          return res.status(404).json({ message: 'Post not found' });
+      }
+
+      // Return the found post
+      res.status(200).json({
+          message: 'Post retrieved successfully',
+          post
+      });
+  } catch (error) {
+      res.status(500).json({
+          message: 'Error retrieving post',
+          error: error.message
+      });
+  }
+}
+
+export async function createPost(req, res){
+  try {
+    const { title, content, author, imageUrl, tags } = req.body;
+
+    // Validate incoming data
+    if (!title || !content || !author || !tags || !tags.descriptiveTag) {
+        return res.status(400).json({ message: 'Missing required fields: title, content, author, or descriptiveTag' });
+    }
+
+    // If the descriptiveTag is 'others', campusTag and departmentTag are optional
+    if (tags.descriptiveTag !== 'others') {
+        if (!tags.campusTag || !tags.departmentTag) {
+            return res.status(400).json({ message: 'Missing campusTag or departmentTag' });
+        }
+    }
+
+    // Create a new post instance
+    const newPost = new Post({
+        title,
+        content,
+        author,
+        imageUrl: imageUrl || '',  // Default to empty string if no image URL provided
+        tags: {
+            descriptiveTag: tags.descriptiveTag,
+            campusTag: tags.campusTag || '',
+            departmentTag: tags.departmentTag || '',
+            nsfw: tags.nsfw || false, // Default to false if nsfw not provided
+        },
+        upvotes: []  // Initialize with an empty array of upvotes
+    });
+
+    // Save the post to the database
+    await newPost.save();
+
+    // Respond with the newly created post
+    res.status(201).json({
+        message: 'Post created successfully',
+        post: newPost
+    });
+  } catch (error) {
+      res.status(500).json({
+          message: 'Error creating post',
+          error: error.message
+      });
+  }
+}
+

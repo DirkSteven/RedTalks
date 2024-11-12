@@ -5,7 +5,7 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 
 import path from 'path';
-import { connectDB } from './db/connectDB.js'
+import { connectDB } from './src/config/connectDB.js'
 import userRouter from './src/routes/User.js';
 import postRouter from './src/routes/Post.js';
 // import { userRouter, postRouter } from './src/routes/index.js';

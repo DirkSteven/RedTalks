@@ -20,3 +20,5 @@ export function calculatePopularityScore(post) {
 
     return popularityScore;
 }
+
+
