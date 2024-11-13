@@ -1,4 +1,5 @@
 import Post from '../models/Post.js'
+import { Comment } from '../models/Comment.js'
 import { calculatePopularityScore } from '../utils/popularity.js'
 
 export async function getAllPosts(req, res) {
@@ -117,3 +118,158 @@ export async function createPost(req, res){
   }
 }
 
+export async function commentOnPost(req, res) {
+    try {
+        const postId = req.params.postId;
+        const { content, author, parentCommentId } = req.body; // Capture the parentCommentId
+
+        
+        // Find the post by ID and populate its comments
+        const post = await Post.findById(postId).populate("comments");
+        if (!post) {
+            return res.status(404).json({ message: "Post not found" });
+        }
+
+        // Check if there's a parent comment to reply to
+        let parentComment = null;
+        if (parentCommentId) {
+            parentComment = post.comments.id(parentCommentId); // Find the comment by its ID in the post
+            if (!parentComment) {
+                return res.status(404).json({ message: "Parent comment not found" });
+            }
+        }
+
+        // Create a new comment
+        const newComment = new Comment({
+            content,
+            author,
+            parentComment: parentCommentId || null,  // If no parent comment, this stays null
+        });
+
+        // Push the new comment into the post's comments array
+        post.comments.push(newComment);
+        await post.save();
+
+        return res.status(201).json({ message: 'Comment added successfully', comment: newComment });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error adding comment', error: error.message });
+    }
+}
+
+
+export async function upvotePost(req, res){
+    try {
+        const { postId } = req.params;  // Get postId from the URL params
+        const { userId } = req.body;   // Get userId from the request body
+    
+        // Find the post by its ID
+        const post = await Post.findById(postId);
+        if (!post) {
+          return res.status(404).json({ message: 'Post not found' });
+        }
+    
+        // Check if the user has already upvoted the post
+        if (post.upvotes.includes(userId)) {
+          return res.status(400).json({ message: 'You have already upvoted this post' });
+        }
+    
+        // Add the user's ID to the upvotes array
+        post.upvotes.push(userId);
+    
+        // Save the post with the new upvote
+        await post.save();
+    
+        // Respond with the updated post
+        res.status(200).json({
+          message: 'Post upvoted successfully',
+          post: post,
+        });
+    } catch (error) {
+        res.status(500).json({
+          message: 'Error upvoting post',
+          error: error.message,
+        });
+    }
+      
+}
+
+export async function deleteComment(req,res) {
+    try {
+        const { postId, commentId } = req.params;  // Get postId and commentId from the URL params
+    
+        // Find the post by its ID
+        const post = await Post.findById(postId);
+        if (!post) {
+          return res.status(404).json({ message: 'Post not found' });
+        }
+    
+        // Find the comment index by commentId
+        const commentIndex = post.comments.findIndex(comment => comment._id.toString() === commentId);
+    
+        // If the comment is not found, return an error
+        if (commentIndex === -1) {
+          return res.status(404).json({ message: 'Comment not found' });
+        }
+    
+        // Remove the comment from the comments array
+        post.comments.splice(commentIndex, 1);
+    
+        // Save the updated post
+        await post.save();
+    
+        // Respond with the updated post
+        res.status(200).json({
+          message: 'Comment deleted successfully',
+          post: post,
+        });
+      } catch (error) {
+        res.status(500).json({
+          message: 'Error deleting comment',
+          error: error.message,
+        });
+      }
+}
+
+export async function downvote(req, res){
+    try {
+        const { postId } = req.params;  // Get postId from URL params
+        const userId = req.body.userId; // Assuming userId is passed in the body (or from authenticated user session)
+    
+        // Check if userId is provided
+        if (!userId) {
+          return res.status(400).json({ message: 'User ID is required' });
+        }
+    
+        // Find the post by its ID
+        const post = await Post.findById(postId);
+        if (!post) {
+          return res.status(404).json({ message: 'Post not found' });
+        }
+    
+        // Check if the user has already upvoted the post
+        const upvoteIndex = post.upvotes.indexOf(userId);
+    
+        // If user hasn't upvoted the post, return an error
+        if (upvoteIndex === -1) {
+          return res.status(400).json({ message: 'User has not upvoted this post' });
+        }
+    
+        // Remove the user's upvote
+        post.upvotes.splice(upvoteIndex, 1);
+    
+        // Save the updated post
+        await post.save();
+    
+        // Respond with the updated post
+        res.status(200).json({
+          message: 'Upvote removed successfully',
+          post: post,
+        });
+      } catch (error) {
+        res.status(500).json({
+          message: 'Error removing upvote',
+          error: error.message,
+        });
+      }
+}
