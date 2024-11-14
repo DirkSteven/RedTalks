@@ -1,31 +1,45 @@
 import React, { useEffect, useState } from 'react';
-import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
-import axios from 'axios';
+import {BrowserRouter as Router, Route} from 'react-router-dom';
 import AppContext from './Contexts/AppContext';
 import Home from './Pages/Home/Home';
 // import { init } from '../../server/src/models/User.js';
 
 function App() {
+
+  const [loading, setLoading] = useState(true);  // Loading state
+  const [isInitiated, setIsInitiated] = useState(false);
+  const [user, setUser] = useState(null);  // State to hold user data
+  const axios = require('axios');
+
   useEffect(() => {
     console.log('useEffect running');
     console.log(Home);
     init();
   }, []);
 
-  const [isInitiated, setIsInitiated] = useState(false);
-  const [user, setUser] = useState(null);  // State to hold user data
-
   const init = async () => {
-    // const token = localStorage.getItem('token');
-    // const {data} = await axios.get(`http://localhost:5000/api/user/init?token=${token}`);
-    // setUser(data.user);
-    // setIsInitiated(true);
+    const token = localStorage.getItem('token');
 
+    if (!token) {
+      console.log('No token found');
+      setLoading(false);
+      return;
+    }
+
+    console.log("Sending token:", token);
 
     try {
-      const token = localStorage.getItem('token');
-      const { data } = await axios.get(`http://localhost:5000/api/user/init?token=${token}`);
-      setUser (data.user);
+      // Make a GET request to your Express backend to get the user data
+      const response = await axios.get(`http://localhost:5000/api/user/init?token=${token}`);
+      console.log("Response from server: ", response.data);
+
+      if (response.data && response.data.user) {
+        setUser(response.data.user);  // Set the user data from the response
+        setIsInitiated(true);
+      } else {
+        console.log('No user data found in response');
+        setUser(null);  // Handle case when user data is not returned
+      }
     } catch (error) {
       console.error('Error during initialization:', error);
     } finally {
@@ -38,9 +52,9 @@ function App() {
       {isInitiated && (
         <AppContext.Provider value = {{ user, setUser }}>
           <Router>
-            <Routes>
-              <Route path="/" element={<Home />} />
-            </Routes>
+              <Route path="/">
+                <Home />
+              </Route>
           </Router>
         </AppContext.Provider>
       )} 
