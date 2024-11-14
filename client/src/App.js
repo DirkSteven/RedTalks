@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {BrowserRouter as Router, Route, BrowserRouter} from 'react-router-dom';
 import AppContext from './Contexts/AppContext';
 import Home from './Pages/Home';
+import Landing from './Pages/Landing';
 // import { init } from '../../server/src/models/User.js';
 
 function App() {
@@ -46,13 +47,13 @@ function App() {
     }
   };
 
-  // if (loading) {
-  //   return <div>Loading...</div>;
-  // }
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
-  // if (!user) {
-  //   return <div>No user data found</div>;
-  // }
+  if (!user) {
+    return <div>No user data found</div>;
+  }
 
 
   return (
@@ -61,8 +62,11 @@ function App() {
         <AppContext.Provider value = {{user, setUser}}>
           <BrowserRouter>
             <Router>
-                <Route path="/">
+                <Route path="/Home">
                   <Home />
+                </Route>
+                <Route path="Landing">
+                  <Landing/>
                 </Route>
             </Router>
           </BrowserRouter>
