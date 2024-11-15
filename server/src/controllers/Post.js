@@ -1,6 +1,7 @@
 import Post from '../models/Post.js'
 import { Comment } from '../models/Comment.js'
 import { calculatePopularityScore } from '../utils/popularity.js'
+import { calculateRelevanceScore } from '../utils/relevance.js'
 
 export async function getAllPosts(req, res) {
     try {
@@ -45,6 +46,31 @@ export async function getPopularPosts(req, res) {
     }
 };
 
+export async function getRelevantPosts(req, res) {
+  try {
+    // Fetch all posts
+    const posts = await Post.find().populate('comments');  // Include comments if needed
+
+    // Calculate the relevance score for each post
+    const postsWithScores = posts.map(post => {
+        const relevanceScore = calculateRelevanceScore(post);
+        return { post, relevanceScore };
+    });
+
+    // Sort posts by relevance score (descending order)
+    postsWithScores.sort((a, b) => b.relevanceScore - a.relevanceScore);
+
+    // Return the sorted posts
+    res.status(200).json(postsWithScores.map(item => ({
+        post: item.post,
+        relevanceScore: item.relevanceScore
+    })));
+} catch (error) {
+    console.error('Error fetching posts by relevance:', error);
+    res.status(500).json({ message: 'Server error' });
+}
+}
+
 export async function getPost(req, res) {
   try {
       const { postId } = req.params;  // Extract postId from request parameters
@@ -70,6 +96,38 @@ export async function getPost(req, res) {
       });
   }
 }
+
+export async function getPostbyTags(req, res) {
+  try {
+    console.log('Tags route accessed');
+    // Extract query parameters from the request
+    const { descriptiveTag, campusTag, departmentTag, nsfw } = req.query;
+
+    // Build the query object based on available tags
+    let query = {};
+
+    // Add conditions to the query if the respective tags are provided in the request
+    if (descriptiveTag) query['tags.descriptiveTag'] = descriptiveTag;
+    if (campusTag) query['tags.campusTag'] = campusTag;
+    if (departmentTag) query['tags.departmentTag'] = departmentTag;
+    if (nsfw !== undefined) query['tags.nsfw'] = nsfw === 'true';  // Ensure nsfw is a boolean
+
+    // Log the query object to see how it's formed
+    console.log('Query Object:', query);
+
+    // Query the database to get posts that match the query
+    const posts = await Post.find(query).populate('author');
+
+    // Return the filtered posts in the response
+    res.status(200).json(posts);
+} catch (error) {
+    console.error('Error in /tags route:', error);
+    res.status(500).json({ message: 'Server error while fetching posts by tags' });
+}
+}
+
+
+
 
 export async function createPost(req, res){
   try {

@@ -162,5 +162,38 @@ export async function updateUser(req, res){
 }
 
 export async function resetPasword(req, res){
-    res.json('resetPassword route');
+    try {
+        const { userId, currentPassword, newPassword } = req.body;
+
+        // Validate the input
+        if (!userId || !currentPassword || !newPassword) {
+            return res.status(400).json({ message: 'Please provide all required fields' });
+        }
+
+        // Find the user by userId
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Compare the current password with the stored password
+        const isMatch = await bcrypt.compare(currentPassword, user.password);
+        if (!isMatch) {
+            return res.status(400).json({ message: 'Current password is incorrect' });
+        }
+
+        // Hash the new password
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+        // Update the password in the database
+        user.password = hashedPassword;
+        await user.save();
+
+        // Respond with success message
+        res.status(200).json({ message: 'Password updated successfully' });
+    } catch (error) {
+        console.error('Error changing password:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
 }

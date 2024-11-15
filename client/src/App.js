@@ -8,11 +8,9 @@ function App() {
   const [loading, setLoading] = useState(true);  // Loading state
   const [isInitiated, setIsInitiated] = useState(false);
   const [user, setUser] = useState(null);  // State to hold user data
-  // const axios = require('axios');
+  const axios = require('axios');
 
   useEffect(() => {
-    console.log('useEffect running');
-    console.log(Home);
     init();
   }, []);
 

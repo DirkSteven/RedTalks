@@ -24,6 +24,11 @@ app.use(bodyParser.json());
 const PORT = process.env.PORT || 5000;
 const __dirname = path.resolve(); 
 
+app.use((req, res, next) => {
+  console.log('Request URL:', req.url);
+  console.log('Request Method:', req.method);
+  next();
+});
 
 app.use('/api/user', userRouter);
 app.use('/api/posts', postRouter);
@@ -32,6 +37,7 @@ app.get('/', (req, res) => {
   console.log("Home route");
   res.status(201).json("Home");
 })
+
 
 
 // app.use(express.static(path.join(__dirname, '..', 'client', 'build')));
