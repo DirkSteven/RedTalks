@@ -1,5 +1,4 @@
 import './css/landing.css';
-//import * as ReactDOM from 'react-dom';
 import LoginForm from '../Components/Forms/LoginForm';
 import SignupForm from '../Components/Forms/SignupForm';
 
@@ -10,7 +9,7 @@ function Landing() {
     <div className='container'>
       <img alt='FlavorImg' src=''></img>
       <div className='panel'>
-        <SignupForm />
+        <LoginForm />
       </div>
     </div>
   );
