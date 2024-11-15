@@ -2,8 +2,8 @@
 import mongoose from 'mongoose';
 import fs from 'fs';
 import path from 'path';
-import User from 'file:///D:/Projects/RedTalks/server/src/models/User.js';
-import User from 'file:///D:/Projects/RedTalks/server/src/models/Post.js';
+import User from '../src/models/User.js';
+import User from '../src/models/Post.js';
 
 import { connectDB } from '../db/connectDB.js';
 

@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import {BrowserRouter, Routes, Route} from 'react-router-dom';
-import axios from 'axios';
 import AppContext from './Contexts/AppContext';
-import Home from './Pages/Home.js';
+import Main from './Pages/Main';
 // import { init } from '../../server/src/models/User.js';
 
 function App() {
@@ -45,22 +43,20 @@ function App() {
   }
 
   if (!user) {
-    return <div>No user data found</div>;
+    // return <div>No user data found</div>;
+    return <Main/>;
   }
 
 
   return (
     <div>
-    {isInitiated && (
-      <AppContext.Provider value={{ user, setUser }}>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Home />} />
-          </Routes>
-        </BrowserRouter>
-      </AppContext.Provider>
-    )}
-  </div>
+      {isInitiated && (
+        <AppContext.Provider value = {{user, setUser}}>
+            <Main/>
+        </AppContext.Provider>
+      )}
+    </div>
+    // <h1>Welcome, {user.name}</h1>
   );
 }
 
