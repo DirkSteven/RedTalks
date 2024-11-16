@@ -76,6 +76,7 @@
     align-items: center;
     position: sticky;
     top: 12vh;
+    z-index: 3;
 }
 
 .nav ul{
@@ -98,6 +99,22 @@
 }
 
 .page{
-    margin: 5%;
+    margin: 2% 5%;
     height: 100vh;
+    position: sticky;
+    display: flex;
+    justify-content: center;
+    z-index: 0;
+}
+
+.postlist{
+    width: 50%;
+}
+
+.postitem{
+    font-size: medium;
+    background-color: #dbdbdb;
+    border-radius: 15px;
+    padding: 5%;
+    margin: 5%;
 }

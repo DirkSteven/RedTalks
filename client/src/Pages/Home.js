@@ -28,15 +28,16 @@ function Home() {
     }, []);
 
     return (
-        <div className="postList">
-            <h2>Posts</h2>
+        <div className="postlist">
             {posts.length === 0 ? (
                 <p>No posts available</p>
             ) : (
                 posts.map(post => (
-                    <div key={post.id} className="postItem">
+                    <div className="postitem">
+                      <div key={post.id}>
                         <h3>{post.title}</h3>
                         <p>{post.content}</p>
+                      </div>
                     </div>
                 ))
             )}
