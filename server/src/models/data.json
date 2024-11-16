@@ -1,49 +1,297 @@
 {
-    "users": [
-      {
-        "name": "Alice Johnson",
-        "email": "alice@example.com",
-        "password": "password123",
-        "imageUrl": "https://example.com/images/alice.jpg",
-        "role": "admin"
+  "users": [
+    {
+      "_id": "60d34567f1b2c7d0e1234567",
+      "name": "John Doe",
+      "email": "12-34567@g.batstate-u.edu.ph",
+      "password": "hashedPassword123"
+    },
+    {
+      "_id": "60d34567f1b2c7d0e1234568",
+      "name": "Jane Smith",
+      "email": "23-45678@g.batstate-u.edu.ph",
+      "password": "hashedPassword456"
+    },
+    {
+      "_id": "60d34567f1b2c7d0e1234569",
+      "name": "Alice Johnson",
+      "email": "34-56789@g.batstate-u.edu.ph",
+      "password": "hashedPassword789"
+    },
+    {
+      "_id": "60d34567f1b2c7d0e1234570",
+      "name": "Bob Williams",
+      "email": "45-67890@g.batstate-u.edu.ph",
+      "password": "hashedPassword101"
+    },
+    {
+      "_id": "60d34567f1b2c7d0e1234571",
+      "name": "Charlie Brown",
+      "email": "56-78901@g.batstate-u.edu.ph",
+      "password": "hashedPassword202"
+    },
+    {
+      "_id": "60d34567f1b2c7d0e1234572",
+      "name": "David Lee",
+      "email": "67-89012@g.batstate-u.edu.ph",
+      "password": "hashedPassword303"
+    },
+    {
+      "_id": "60d34567f1b2c7d0e1234573",
+      "name": "Eve Green",
+      "email": "78-90123@g.batstate-u.edu.ph",
+      "password": "hashedPassword404"
+    },
+    {
+      "_id": "60d34567f1b2c7d0e1234574",
+      "name": "Sophia Taylor",
+      "email": "89-01234@g.batstate-u.edu.ph",
+      "password": "hashedPassword505"
+    },
+    {
+      "_id": "60d34567f1b2c7d0e1234575",
+      "name": "James King",
+      "email": "90-12345@g.batstate-u.edu.ph",
+      "password": "hashedPassword606"
+    },
+    {
+      "_id": "60d34567f1b2c7d0e1234576",
+      "name": "Olivia Martinez",
+      "email": "01-23456@g.batstate-u.edu.ph",
+      "password": "hashedPassword707"
+    }
+  ],
+  "posts": [
+    {
+      "title": "How to use Mongoose",
+      "content": "In this post, we will learn about Mongoose and how to populate data.",
+      "author": "12-34567@g.batstate-u.edu.ph",
+      "tags": {
+        "descriptiveTag": "discussion",
+        "campusTag": "Alangilan",
+        "departmentTag": "Computer Science",
+        "nsfw": false
       },
-      {
-        "name": "Bob Smith",
-        "email": "bob@example.com",
-        "password": "password456",
-        "imageUrl": "https://example.com/images/bob.jpg",
-        "role": "user"
+      "comments": [
+        {
+          "author": "23-45678@g.batstate-u.edu.ph",
+          "content": "Great post! I love how easy Mongoose makes it to interact with MongoDB.",
+          "comments": [
+            {
+              "author": "34-56789@g.batstate-u.edu.ph",
+              "content": "I agree! The integration between MongoDB and Mongoose is seamless.",
+              "comments": [
+                {
+                  "author": "12-34567@g.batstate-u.edu.ph",
+                  "content": "Exactly! And the syntax for populating data is just so clean."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "author": "34-56789@g.batstate-u.edu.ph",
+          "content": "This is very helpful. Thanks for sharing!",
+          "comments": [
+            {
+              "author": "12-34567@g.batstate-u.edu.ph",
+              "content": "Glad it helped! If you have any more questions, feel free to ask."
+            }
+          ]
+        }
+      ],
+      "upvotes": [
+        "23-45678@g.batstate-u.edu.ph",
+        "34-56789@g.batstate-u.edu.ph"
+      ]
+    },
+    {
+      "title": "Introduction to Node.js",
+      "content": "This post will guide you through setting up a Node.js application.",
+      "author": "45-67890@g.batstate-u.edu.ph",
+      "tags": {
+        "descriptiveTag": "help",
+        "campusTag": "Pablo Borbon",
+        "departmentTag": "Engineering",
+        "nsfw": false
       },
-      {
-        "name": "Charlie Brown",
-        "email": "charlie@example.com",
-        "password": "password789",
-        "imageUrl": "https://example.com/images/charlie.jpg",
-        "role": "user"
-      }
-    ],
-    "posts": [
-      {
-        "title": "My First Post",
-        "content": "This is the content of my first post.",
-        "imageUrl": "https://example.com/images/post1.jpg",
-        "tags": ["introduction", "first"],
-        "comments": [
-          {
-            "content": "Great post!"
-          },
-          {
-            "content": "Thanks for sharing!"
-          }
-        ]
+      "comments": [
+        {
+          "author": "34-56789@g.batstate-u.edu.ph",
+          "content": "Looking forward to learning more about Node.js!",
+          "comments": [
+            {
+              "author": "45-67890@g.batstate-u.edu.ph",
+              "content": "You’ll find Node.js really easy to work with once you get started."
+            }
+          ]
+        }
+      ],
+      "upvotes": [
+        "23-45678@g.batstate-u.edu.ph",
+        "45-67890@g.batstate-u.edu.ph"
+      ]
+    },
+    {
+      "title": "Rants About Late Submissions",
+      "content": "I am really frustrated with the number of late submissions. Why can't people just be on time?",
+      "author": "23-45678@g.batstate-u.edu.ph",
+      "tags": {
+        "descriptiveTag": "rants",
+        "campusTag": "Alangilan",
+        "departmentTag": "Accountancy",
+        "nsfw": true
       },
-      {
-        "title": "Learning Mongoose",
-        "content": "Mongoose is a great ODM for MongoDB.",
-        "imageUrl": "https://example.com/images/post2.jpg",
-        "tags": ["mongoose", "mongodb"],
-        "comments": []
-      }
-    ]
-  }
-  
+      "comments": [
+        {
+          "author": "45-67890@g.batstate-u.edu.ph",
+          "content": "I totally agree! It's so frustrating when deadlines are missed.",
+          "comments": [
+            {
+              "author": "12-34567@g.batstate-u.edu.ph",
+              "content": "What do you think about the new submission system?",
+              "comments": [
+                {
+                  "author": "45-67890@g.batstate-u.edu.ph",
+                  "content": "I think it’s a step in the right direction, but it still doesn’t help with procrastination."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "author": "12-34567@g.batstate-u.edu.ph",
+          "content": "What do you think about the new submission system?",
+          "comments": [
+            {
+              "author": "45-67890@g.batstate-u.edu.ph",
+              "content": "I think it’s a step in the right direction, but it still doesn’t help with procrastination."
+            }
+          ]
+        }
+      ],
+      "upvotes": [
+        "12-34567@g.batstate-u.edu.ph",
+        "34-56789@g.batstate-u.edu.ph"
+      ]
+    },
+    {
+      "title": "The Best Practices in REST APIs",
+      "content": "In this post, we'll discuss the best practices in building RESTful APIs.",
+      "author": "56-78901@g.batstate-u.edu.ph",
+      "tags": {
+        "descriptiveTag": "discussion",
+        "campusTag": "Alangilan",
+        "departmentTag": "Computer Science",
+        "nsfw": false
+      },
+      "comments": [
+        {
+          "author": "78-90123@g.batstate-u.edu.ph",
+          "content": "Great insights! I believe good documentation is crucial for REST APIs.",
+          "comments": [
+            {
+              "author": "56-78901@g.batstate-u.edu.ph",
+              "content": "Agreed! Documentation is often overlooked, but it saves so much time in the long run."
+            }
+          ]
+        },
+        {
+          "author": "34-56789@g.batstate-u.edu.ph",
+          "content": "I think versioning is also very important in API design.",
+          "comments": [
+            {
+              "author": "12-34567@g.batstate-u.edu.ph",
+              "content": "Yes! API versioning can avoid breaking changes for users of your API."
+            }
+          ]
+        }
+      ],
+      "upvotes": [
+        "12-34567@g.batstate-u.edu.ph",
+        "78-90123@g.batstate-u.edu.ph"
+      ]
+    },
+    {
+      "title": "Advanced JavaScript Techniques",
+      "content": "Explore some advanced JavaScript techniques for mastering the language.",
+      "author": "67-89012@g.batstate-u.edu.ph",
+      "tags": {
+        "descriptiveTag": "discussion",
+        "campusTag": "Pablo Borbon",
+        "departmentTag": "Engineering",
+        "nsfw": false
+      },
+      "comments": [
+        {
+          "author": "23-45678@g.batstate-u.edu.ph",
+          "content": "This will be useful for many developers. Thanks for sharing!",
+          "comments": [
+            {
+              "author": "45-67890@g.batstate-u.edu.ph",
+              "content": "Can't wait to try these techniques in my projects!"
+            }
+          ]
+        }
+      ],
+      "upvotes": [
+        "34-56789@g.batstate-u.edu.ph",
+        "45-67890@g.batstate-u.edu.ph"
+      ]
+    },
+    {
+      "title": "Introduction to Python Programming",
+      "content": "In this post, we will explore the basics of Python programming, including syntax and common libraries.",
+      "author": "78-90123@g.batstate-u.edu.ph",
+      "tags": {
+        "descriptiveTag": "discussion",
+        "campusTag": "Malvar",
+        "departmentTag": "Computer Science",
+        "nsfw": false
+      },
+      "comments": [
+        {
+          "author": "12-34567@g.batstate-u.edu.ph",
+          "content": "Python is a great language for beginners. It’s easy to learn and versatile.",
+          "comments": [
+            {
+              "author": "78-90123@g.batstate-u.edu.ph",
+              "content": "Yes, and the libraries like NumPy and Pandas make Python amazing for data analysis."
+            }
+          ]
+        }
+      ],
+      "upvotes": [
+        "12-34567@g.batstate-u.edu.ph",
+        "23-45678@g.batstate-u.edu.ph"
+      ]
+    },
+    {
+      "title": "Understanding Data Structures in Java",
+      "content": "Learn about common data structures like arrays, lists, and trees in Java programming.",
+      "author": "56-78901@g.batstate-u.edu.ph",
+      "tags": {
+        "descriptiveTag": "discussion",
+        "campusTag": "Rosario",
+        "departmentTag": "Computer Science",
+        "nsfw": false
+      },
+      "comments": [
+        {
+          "author": "34-56789@g.batstate-u.edu.ph",
+          "content": "Data structures are so crucial to understanding efficient algorithms. Thanks for the post!",
+          "comments": [
+            {
+              "author": "12-34567@g.batstate-u.edu.ph",
+              "content": "Definitely! Understanding how to choose the right data structure can improve algorithm efficiency."
+            }
+          ]
+        }
+      ],
+      "upvotes": [
+        "12-34567@g.batstate-u.edu.ph",
+        "34-56789@g.batstate-u.edu.ph"
+      ]
+    }
+  ]
+}

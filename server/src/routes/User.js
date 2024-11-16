@@ -1,100 +1,28 @@
 import { Router } from 'express';
-import jwt from 'jsonwebtoken';
-import bcrypt from 'bcryptjs'; 
-import User from '../models/User.js';
+// import jwt from 'jsonwebtoken';
+// import bcrypt from 'bcryptjs'; 
+// import User from '../models/User.js';
 
-export const router = Router();
+const router = Router();
+import * as userController from '../controllers/User.js'
 
 
-// router.get("/init", async (req, res) => {
-//     const token = req.query.token;
-//     let user = null;
-//     let response;
-
-//     try{
-//         const userData = jwt.verify(token, 'app');
-//         user = userData.userId;
-//         response = await User.findById(userData.userId);
-//     }catch(e){
-//         response = null;
-//     }
-
-//     if(user){
-//          response = user;
-//     }
-
-//     res.send({user: response});
-// });
-router.get("/init", async (req, res) => {
-    console.log('init route hit')
-    const token = req.query.token;
-    let user = null;
-    let response = null;
+// Route to register a new user
+router.post('/register', userController.register);
+// Invoke-WebRequest -Uri http://localhost:5000/api/user/register -Method POST -Body '{"name": "John", "email": "john@example.com", "password": "password"}' -ContentType "application/json"
   
-    if (!token) {
-      return res.status(400).json({ message: 'Token is missing' });
-    }
-  
-    try {
-      const userData = jwt.verify(token, 'app'); // Verify the token with secret
-      user = await User.findById(userData.userId); // Fetch user by ID
-  
-      if (!user) {
-        console.log('User not found');
-        return res.status(404).json({ message: 'User not found' });
-      }
-  
-      response = user; // Send user data if found
-    } catch (e) {
-      console.error('Error verifying token or fetching user:', e);
-      return res.status(401).json({ message: 'Invalid token or failed to fetch user' });
-    }
-  
-    res.send({ user: response });
-  });
+// Route to log in a user
+router.post('/login', userController.login);
+// Invoke-WebRequest -Uri http://localhost:5000/api/user/login -Method POST -Body '{"email": "alice@example.com", "password": "password123"}' -ContentType "application/json"
 
-router.post('/register', async (req, res) =>{
-    const userExists = await User.findOne({email: req.body.email});
-    if(userExists){
-        return res.status(400).json({
-            message: 'User already exists'
-        })
-    };
+// Route to initialize user data using token
+router.get('/init', userController.initUser);
+// Invoke-WebRequest -Uri "http://localhost:5000/api/user/init?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzJjOGM0NGYwYWI3NDZlNjhiZmNjYTkiLCJpYXQiOjE3MzEzMzIzNjIsImV4cCI6MTczMTMzNTk2Mn0.krx6leoMgZ5RMV8o3w6A03M0q_0xZEQdPlQHLB9aqWY" -Method GET
 
-    const newUser = User({
-        name: req.body.name,
-        email: req.body.email, 
-        password: await bcrypt.hash(req.body.password, 10), 
-        role: 'user'
-    });
+// Route to update user details
+router.put('/updateuser', userController.updateUser);
+// Invoke-RestMethod -Uri "http://localhost:5000/api/user/updateuser" -Method PUT -Headers @{ "Content-Type" = "application/json" } -Body '{"name": "Bobbb Smith", "email": "bob@example.com", "imageUrl": "https://example.com/images/bob.jpg"}'
 
-    await newUser.save();
+router.post('/changepassword', userController.resetPasword);
 
-    return res.sendStatus(201).json({
-        message: 'User created successfully'
-    });
-});
-
-router.post('/login', async (req,res) =>{
-    const user = await User.findOne({email: req.body.email});
-    if(!user){
-        return res.status(400).send({
-            message: 'User does not exist'
-        })
-    };
-
-    const passwordIsEqual = await bcrypt.compare(req.body.password, user.password);
-    if(!passwordIsEqual){
-        return res.status(401).send({
-            message: 'Password Incorrect'
-        });
-    };
-
-    const token = jwt.sign({userId: user._id}, 'app', {
-        expiresIn: '1h', //token expiration time
-    });
-    res.send({
-        user, 
-        token
-    });
-});
+export default router;
