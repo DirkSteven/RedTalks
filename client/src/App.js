@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import AppContext from './Contexts/AppContext';
 import Main from './Pages/Main';
-// import { init } from '../../server/src/models/User.js';
+//import { init } from '../../server/src/models/User.js';
 
 function App() {
 
@@ -41,7 +41,6 @@ function App() {
   }
 
   if (!user) {
-    // return <div>No user data found</div>;
     return <Main/>;
   }
 

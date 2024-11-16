@@ -9,7 +9,7 @@
 .header{
     z-index: 5;
     background-color: blueviolet;
-    position: fixed;
+    position: sticky;
     height: 10vh;
     width: 100%;
     top: 0;
@@ -17,11 +17,12 @@
 }
 
 .headitems{
-    margin: 0 5%;
+    justify-items: center;
+    align-items: center;
     padding: 0;
+    height: 100%;
+    width: 100%;
     display: grid;
-    text-align: center;
-    transform: translateY(50%);
     grid-template-columns: 10% 20% 50% 20%;
     overflow: hidden;
 }
@@ -51,28 +52,34 @@
 }
 
 .contents{
-    margin: 15% 0 0 35%;
     display: flex;
     flex-direction: row;
-    align-items: center;
+}
+
+.sidebar{
+    display: flex;
+    flex-basis: 15%;
 }
 
 .wall{
-    align-content: center;
-    height: 100%;
+    flex-basis: 85%;
     width: 100%;
+    height: fit-content;
 }
 
 .nav{
-    position: fixed;
-    left: 25%;
-    top: 12%;
-    width: 70%;
-    background-color: #7e1c1c;
+    margin: 0 10%;
+    display: flex;
+    flex-direction: row;
     border-radius: 15px;
+    background-color: #9e2525;
+    align-items: center;
+    position: sticky;
+    top: 12vh;
 }
 
 .nav ul{
+    width: 100%;
     display: flex;
     flex-direction: row;
     list-style: none;
@@ -81,27 +88,16 @@
 
 .nav ul li{
     display: flex;
+    justify-content: space-around;
 }
 
 .nav ul li a{
-    font-size: small;
-    font-weight: 500;
-    color: #dbdbdb;
+    font-size: .7em;
     text-decoration: none;
+    color: #f0f0e1;
 }
 
-.sidebar{
-    background-color: black;
-    width: 15%;
-    position: fixed;
-    top: 10%;
-    bottom: 0;
-    height: 90%;
-    left: 0;    
-}
-
-.postItem{
-    height: 50vh;
-    width: 50vw;
-    background-color: beige;
+.page{
+    margin: 5%;
+    height: 100vh;
 }

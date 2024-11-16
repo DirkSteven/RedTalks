@@ -24,6 +24,7 @@ img{
 }
 
 .panel h1{
+    color: #2c2c2c;
     margin: 0 0 10px 0;
 }
 
@@ -42,6 +43,7 @@ img{
 }
 
 .panel form input{
+    background-color: #dbdbdb;
     margin: 1em 0 1em 0;
     border: none;
     padding: 1.5em;
@@ -58,10 +60,13 @@ img{
 }
 
 .redirect{
+    color: #9e2525;
     font-style: italic;
 }
 
 .submit{
+    background-color: #9e2525;
+    color: #f0f0e1;
     width: 50%;
     margin: 15px 0 15px 0;
     padding: 0.5em;
