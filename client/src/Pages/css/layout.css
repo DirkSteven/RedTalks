@@ -59,6 +59,9 @@
 .sidebar{
     display: flex;
     flex-basis: 15%;
+    position: sticky;
+    height: 100%;
+    top: 10vh;
 }
 
 .wall{
@@ -68,53 +71,132 @@
 }
 
 .nav{
+    padding: 1em;
     margin: 0 10%;
     display: flex;
-    flex-direction: row;
     border-radius: 15px;
     background-color: #9e2525;
-    align-items: center;
     position: sticky;
     top: 12vh;
     z-index: 3;
 }
 
 .nav ul{
+    margin: 0;
+    padding: 0;
     width: 100%;
     display: flex;
     flex-direction: row;
+    justify-content: center;
+    align-items: center;
     list-style: none;
-    justify-content: space-around;
+    gap: 0.5%;
+    
 }
 
 .nav ul li{
+    box-sizing: border-box;
+    border-radius: 15px;
     display: flex;
-    justify-content: space-around;
+    flex-basis: 33%;
+    justify-content: center;
+}
+
+.nav ul li:hover{
+    background-color: #f0f0e1;
+}
+
+.nav ul li:hover a{
+    color: #9e2525;
 }
 
 .nav ul li a{
+    padding: .7em;
+    text-align: center;
+    text-justify: center;
+    height: 100%;
+    width: 100%;
     font-size: .7em;
     text-decoration: none;
     color: #f0f0e1;
 }
 
+.nav ul li.active{
+    background-color: #f0f0e1;
+}
+
+.nav ul li.active a{
+    color: #9e2525;
+}
+
 .page{
     margin: 2% 5%;
-    height: 100vh;
+    height: 80vh;
     position: sticky;
     display: flex;
     justify-content: center;
     z-index: 0;
 }
 
-.postlist{
-    width: 50%;
+.list{
+    width: 100%;
+    height: 100%;
+    justify-items: center;
 }
 
 .postitem{
+    width: 50%;
+    box-sizing: border-box;
     font-size: medium;
     background-color: #dbdbdb;
     border-radius: 15px;
-    padding: 5%;
-    margin: 5%;
+    padding: 1.5%;
+    margin: 20px;
+    cursor: pointer;
+}
+
+.interact{
+    display: flex;
+    flex-direction: row;
+    font-size: small;
+}
+
+.interact p{
+    margin:  0 1em;
+}
+
+.postmodal-overlay {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.postmodal-content {
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 600px;
+    width: 80%;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.modalClose {
+    margin-top: 20px;
+    padding: 8px 16px;
+    border: none;
+    background-color: #9e2525;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.modalClose:hover {
+    background-color: #f0f0e1;
+    color: #9e2525;
+}
+
+.comments-list ul{
+    list-style: none;
+    font-size: small;
 }

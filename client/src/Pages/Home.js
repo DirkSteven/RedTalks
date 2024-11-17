@@ -1,47 +1,69 @@
 import { React, useState, useEffect } from "react";
 import axios from 'axios';
+import PostModal from "../Components/Modals/Post Modal";
 
 function Home() {
     const [posts, setPosts] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [selected, setSelected] = useState(null)  // Loading state to show loading message
 
     useEffect(() => {
-        // Fetch data from the backend API
+        // Fetch posts from the backend API
         axios.get('api/posts')
             .then(response => {
-                console.log(response.data);  // Log response to inspect its structure
+                console.log(response.data);  // Log the response to inspect its structure
 
-                // Check if the response data is an array
-                if (Array.isArray(response.data)) {
-                    setPosts(response.data);
-                } else if (response.data && Array.isArray(response.data.posts)) {
-                    setPosts(response.data.posts);  // If data is inside a 'posts' key
-                } else if (response.data && Array.isArray(response.data.data)) {
-                    setPosts(response.data.data);  // If data is inside a 'data' key
-                } else {
-                    console.error('Unexpected response structure:', response.data);
-                    setPosts([]);  // Set empty array to avoid errors
-                }
+                // Assuming response.data contains an array of posts with comments included
+                const postsData = Array.isArray(response.data) ? response.data : [];
+
+                // Update the state with the fetched posts
+                setPosts(postsData);
+                setLoading(false);  // Set loading to false after fetching data
             })
             .catch(error => {
-                console.error('Error fetching data:', error);
+                console.error('Error fetching posts:', error);
+                setLoading(false);  // Set loading to false in case of error
             });
     }, []);
 
+    // Handle click on a post
+    const postClick = (post) => {
+        setSelected(post);
+    };
+
+    const closePost = () => {
+        setSelected(null);
+    };
+
     return (
-        <div className="postlist">
-            {posts.length === 0 ? (
+        <>
+        {selected === null?(
+        <div className="list">
+            {loading ? (
+                <p>Loading posts...</p>
+            ) : posts.length === 0 ? (
                 <p>No posts available</p>
             ) : (
                 posts.map(post => (
-                    <div className="postitem">
-                      <div key={post.id}>
+                    <div 
+                        className="postitem" 
+                        key={post.id} 
+                        onClick={() => postClick(post)}  // Add click handler
+                    >
                         <h3>{post.title}</h3>
                         <p>{post.content}</p>
-                      </div>
+                        <div className="interact">
+                            <p>{post.upvotes ? post.upvotes.length : 0} upvotes</p>
+                            <p>{post.comments ? post.comments.length : 0} comments</p>
+                        </div>
                     </div>
                 ))
             )}
         </div>
+        ) : (
+            <PostModal post={selected} onClose={closePost}/>
+        )}
+        </>
     );
 }
 

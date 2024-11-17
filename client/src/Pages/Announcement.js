@@ -28,7 +28,7 @@ function Announcement(){
     }, []);
 
     return (
-        <div className="announcement list">
+        <div className="list">
             {announcements.length === 0 ? (
                 <p>No announcements atm</p>
             ) : (

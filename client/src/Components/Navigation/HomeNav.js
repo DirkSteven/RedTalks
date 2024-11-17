@@ -1,23 +1,28 @@
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useLocation } from "react-router-dom";
 
-function HomeNav(){
-    return(
-        <div className='wall'>
-            <div className='nav'>
+function HomeNav() {
+    const location = useLocation();  // Get current location (pathname)
+
+    // Function to check if the current page matches the link
+    const isActive = (path) => location.pathname === path;
+
+    return (
+        <div className="wall">
+            <div className="nav">
                 <ul>
-                    <li>
-                        <Link to='/'>Home</Link>
+                    <li className={isActive("/") ? "active" : ""}>
+                        <Link to="/">Home</Link>
                     </li>
-                    <li>
-                        <Link to='/Announcement'>Announcement</Link>
+                    <li className={isActive("/Announcement") ? "active" : ""}>
+                        <Link to="/Announcement">Announcement</Link>
                     </li>
-                    <li>
-                        <Link to='/Marketplace'>Marketplace</Link>
+                    <li className={isActive("/Marketplace") ? "active" : ""}>
+                        <Link to="/Marketplace">Marketplace</Link>
                     </li>
                 </ul>
             </div>
-            <div className='page'>
-                <Outlet/>
+            <div className="page">
+                <Outlet />
             </div>
         </div>
     );
