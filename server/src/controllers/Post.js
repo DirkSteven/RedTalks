@@ -99,7 +99,8 @@ export async function getPost(req, res) {
 
 export async function getPostbyTags(req, res) {
   try {
-    console.log('Tags route accessed');
+    console.log('/api/posts/filter'); // This should print to the console if the route is hit
+
     // Extract query parameters from the request
     const { descriptiveTag, campusTag, departmentTag, nsfw } = req.query;
 
@@ -112,19 +113,22 @@ export async function getPostbyTags(req, res) {
     if (departmentTag) query['tags.departmentTag'] = departmentTag;
     if (nsfw !== undefined) query['tags.nsfw'] = nsfw === 'true';  // Ensure nsfw is a boolean
 
-    // Log the query object to see how it's formed
-    console.log('Query Object:', query);
+    console.log('Query Object:', query);  // Check the constructed query in the console
 
     // Query the database to get posts that match the query
-    const posts = await Post.find(query).populate('author');
+    const posts = await Post.find(query)
+      .populate('author')
+      .populate('comments.author', 'name email')  // Optional, if you want to include comment authors
+      .sort({ createdAt: -1 });  // Optional, if you want to sort the posts by creation date
 
     // Return the filtered posts in the response
     res.status(200).json(posts);
-} catch (error) {
-    console.error('Error in /tags route:', error);
-    res.status(500).json({ message: 'Server error while fetching posts by tags' });
+  } catch (error) {
+    console.error('Error in /filter route:', error);
+    res.status(500).json({ message: 'Server error while fetching posts by tags', error: error.message });
+  }
 }
-}
+
 
 
 
