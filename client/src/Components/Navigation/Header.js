@@ -8,7 +8,7 @@ function Header({ toggleSidebar }) {
       <div className="headitems">
         <Toggle />
         <div className="logo">Logo</div>
-        <div><Searchbar /></div>
+        <Searchbar />
         <div className="headbutt">Headerbuttons</div>
       </div>
     </div>

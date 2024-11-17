@@ -9,7 +9,7 @@
 .header{
     z-index: 5;
     background-color: blueviolet;
-    position: fixed;
+    position: sticky;
     height: 10vh;
     width: 100%;
     top: 0;
@@ -17,11 +17,12 @@
 }
 
 .headitems{
-    margin: 0 5%;
+    justify-items: center;
+    align-items: center;
     padding: 0;
+    height: 100%;
+    width: 100%;
     display: grid;
-    text-align: center;
-    transform: translateY(50%);
     grid-template-columns: 10% 20% 50% 20%;
     overflow: hidden;
 }
@@ -51,57 +52,151 @@
 }
 
 .contents{
-    margin: 15% 0 0 35%;
     display: flex;
     flex-direction: row;
-    align-items: center;
-}
-
-.wall{
-    align-content: center;
-    height: 100%;
-    width: 100%;
-}
-
-.nav{
-    position: fixed;
-    left: 25%;
-    top: 12%;
-    width: 70%;
-    background-color: #7e1c1c;
-    border-radius: 15px;
-}
-
-.nav ul{
-    display: flex;
-    flex-direction: row;
-    list-style: none;
-    justify-content: space-around;
-}
-
-.nav ul li{
-    display: flex;
-}
-
-.nav ul li a{
-    font-size: small;
-    font-weight: 500;
-    color: #dbdbdb;
-    text-decoration: none;
 }
 
 .sidebar{
-    background-color: black;
-    width: 15%;
-    position: fixed;
-    top: 10%;
-    bottom: 0;
-    height: 90%;
-    left: 0;    
+    display: flex;
+    flex-basis: 15%;
+    position: sticky;
+    height: 100%;
+    top: 10vh;
 }
 
-.postItem{
-    height: 50vh;
-    width: 50vw;
-    background-color: beige;
+.wall{
+    flex-basis: 85%;
+    width: 100%;
+    height: fit-content;
+}
+
+.nav{
+    padding: 1em;
+    margin: 0 10%;
+    display: flex;
+    border-radius: 15px;
+    background-color: #9e2525;
+    position: sticky;
+    top: 12vh;
+    z-index: 3;
+}
+
+.nav ul{
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    list-style: none;
+    gap: 0.5%;
+    
+}
+
+.nav ul li{
+    box-sizing: border-box;
+    border-radius: 15px;
+    display: flex;
+    flex-basis: 33%;
+    justify-content: center;
+}
+
+.nav ul li:hover{
+    background-color: #f0f0e1;
+}
+
+.nav ul li:hover a{
+    color: #9e2525;
+}
+
+.nav ul li a{
+    padding: .7em;
+    text-align: center;
+    text-justify: center;
+    height: 100%;
+    width: 100%;
+    font-size: .7em;
+    text-decoration: none;
+    color: #f0f0e1;
+}
+
+.nav ul li.active{
+    background-color: #f0f0e1;
+}
+
+.nav ul li.active a{
+    color: #9e2525;
+}
+
+.page{
+    margin: 2% 5%;
+    height: 80vh;
+    position: sticky;
+    display: flex;
+    justify-content: center;
+    z-index: 0;
+}
+
+.list{
+    width: 100%;
+    height: 100%;
+    justify-items: center;
+}
+
+.postitem{
+    width: 50%;
+    box-sizing: border-box;
+    font-size: medium;
+    background-color: #dbdbdb;
+    border-radius: 15px;
+    padding: 1.5%;
+    margin: 20px;
+    cursor: pointer;
+}
+
+.interact{
+    display: flex;
+    flex-direction: row;
+    font-size: small;
+}
+
+.interact p{
+    margin:  0 1em;
+}
+
+.postmodal-overlay {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.postmodal-content {
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 600px;
+    width: 80%;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.modalClose {
+    margin-top: 20px;
+    padding: 8px 16px;
+    border: none;
+    background-color: #9e2525;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.modalClose:hover {
+    background-color: #f0f0e1;
+    color: #9e2525;
+}
+
+.comments-list ul{
+    list-style: none;
+    font-size: small;
 }
