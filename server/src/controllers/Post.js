@@ -1,7 +1,9 @@
 import Post from '../models/Post.js'
+import User from '../models/User.js';
 import { Comment } from '../models/Comment.js'
 import { calculatePopularityScore } from '../utils/popularity.js'
 import { calculateRelevanceScore } from '../utils/relevance.js'
+
 
 export async function getAllPosts(req, res) {
     try {
@@ -65,10 +67,10 @@ export async function getRelevantPosts(req, res) {
         post: item.post,
         relevanceScore: item.relevanceScore
     })));
-} catch (error) {
-    console.error('Error fetching posts by relevance:', error);
-    res.status(500).json({ message: 'Server error' });
-}
+  } catch (error) {
+      console.error('Error fetching posts by relevance:', error);
+      res.status(500).json({ message: 'Server error' });
+  }
 }
 
 export async function getPost(req, res) {
@@ -94,6 +96,50 @@ export async function getPost(req, res) {
           message: 'Error retrieving post',
           error: error.message
       });
+  }
+}
+
+
+export async function search(req, res) {
+  try {
+    console.log('/api/posts/search');
+
+    // Extract the query parameter from the request
+    const { query } = req.query;  // Search term can be found in req.query.query
+
+    if (!query) {
+      return res.status(400).json({ message: 'Search query is required.' });
+    }
+
+    // Create a regular expression for case-insensitive search
+    const searchRegex = new RegExp(query, 'i');  // 'i' makes it case-insensitive
+
+    // Search in both users and posts
+    const users = await User.find({
+      $or: [
+        { name: searchRegex },
+        { email: searchRegex },
+      ]
+    });
+
+    const posts = await Post.find({
+      $or: [
+        { title: searchRegex },
+        { content: searchRegex },
+      ]
+    })
+    .populate('author', 'name email')  // Optionally populate author details
+    .populate('comments.author', 'name email');  // Optionally populate comment authors
+
+    // Return the search results in the response
+    return res.status(200).json({
+      users,
+      posts,
+    });
+
+  } catch (error) {
+    console.error('Error in /search route:', error);
+    res.status(500).json({ message: 'Server error while searching', error: error.message });
   }
 }
 
@@ -130,7 +176,55 @@ export async function getPostbyTags(req, res) {
 }
 
 
+export async function getPopularTags(req, res) {
+  try {
+    console.log('/api/posts/popular-tags'); // For debugging to ensure the route is hit
 
+    // Aggregation to count occurrences of descriptiveTag, campusTag, and departmentTag
+    const popularDescriptiveTags = await Post.aggregate([
+      { $group: { _id: "$tags.descriptiveTag", count: { $sum: 1 } } },
+      { $sort: { count: -1 } },  // Sort by count in descending order
+      { $limit: 10 }  // Limit to the top 10 tags
+    ]);
+
+    const popularCampusTags = await Post.aggregate([
+      { $group: { _id: "$tags.campusTag", count: { $sum: 1 } } },
+      { $sort: { count: -1 } },  // Sort by count in descending order
+      { $limit: 10 }  // Limit to the top 10 tags
+    ]);
+
+    const popularDepartmentTags = await Post.aggregate([
+      { $group: { _id: "$tags.departmentTag", count: { $sum: 1 } } },
+      { $sort: { count: -1 } },  // Sort by count in descending order
+      { $limit: 10 }  // Limit to the top 10 tags
+    ]);
+
+    // Format the response to return the popular tags
+    // return res.status(200).json({
+    //   popularDescriptiveTags,
+    //   popularCampusTags,
+    //   popularDepartmentTags,
+    // });
+
+    // Combine all the tags into one array
+    const combinedTags = [
+      ...popularDescriptiveTags,
+      ...popularCampusTags,
+      ...popularDepartmentTags
+    ];
+
+    // Sort the combined array by 'count' in descending order
+    combinedTags.sort((a, b) => b.count - a.count);
+
+    // Format the response to return the sorted combined tags
+    return res.status(200).json({
+      popularTags: combinedTags
+    });
+  } catch (error) {
+    console.error('Error in /popular-tags route:', error);
+    res.status(500).json({ message: 'Server error while fetching popular tags', error: error.message });
+  }
+}
 
 
 export async function createPost(req, res){

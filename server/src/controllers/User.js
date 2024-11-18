@@ -1,7 +1,62 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js'
+import Post from '../models/Post.js';
 import { validateEmail } from '../utils/validate.js'
+
+
+export async function getUserPosts(req, res) {
+    try {
+      const { userId } = req.params;
+  
+      const posts = await Post.find({ author: userId })
+        .populate('author', 'name email')  // Populate user data for the author
+        .sort({ createdAt: -1 });  // Optionally, sort by creation date
+  
+      return res.status(200).json(posts);
+    } catch (error) {
+      console.error('Error fetching user posts:', error);
+      return res.status(500).json({ message: 'Error fetching user posts', error: error.message });
+    }
+  }
+  
+  export async function getUserComments(req, res) {
+    try {
+      const { userId } = req.params;
+  
+      // Aggregate posts with comments by this user
+      const posts = await Post.find({ "comments.author": userId })
+        .populate('author', 'name email')
+        .populate('comments.author', 'name email')  // Populate user data for comment authors
+        .sort({ createdAt: -1 });
+  
+      // Filter and return only the comments by the specific user
+      const userComments = posts.flatMap(post =>
+        post.comments.filter(comment => comment.author._id.toString() === userId)
+      );
+  
+      return res.status(200).json(userComments);
+    } catch (error) {
+      console.error('Error fetching user comments:', error);
+      return res.status(500).json({ message: 'Error fetching user comments', error: error.message });
+    }
+  }
+  
+  export async function getUserUpvotes(req, res) {
+    try {
+      const { userId } = req.params;
+  
+      // Query posts where the user has upvoted
+      const posts = await Post.find({ upvotes: userId })
+        .populate('author', 'name email')  // Populate user data for the author
+        .sort({ createdAt: -1 });  // Optionally, sort by creation date
+  
+      return res.status(200).json(posts);
+    } catch (error) {
+      console.error('Error fetching user upvotes:', error);
+      return res.status(500).json({ message: 'Error fetching user upvotes', error: error.message });
+    }
+  }
 
 export async function register(req, res) {
     // res.json('register route');

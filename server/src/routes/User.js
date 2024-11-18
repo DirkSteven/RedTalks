@@ -1,11 +1,11 @@
 import { Router } from 'express';
-// import jwt from 'jsonwebtoken';
-// import bcrypt from 'bcryptjs'; 
-// import User from '../models/User.js';
-
-const router = Router();
 import * as userController from '../controllers/User.js'
+const router = Router();
 
+
+router.get('/:userId/posts', userController.getUserPosts);
+router.get('/:userId/comments', userController.getUserComments);
+router.get('/:userId/upvotes', userController.getUserUpvotes);
 
 // Route to register a new user
 router.post('/register', userController.register);
