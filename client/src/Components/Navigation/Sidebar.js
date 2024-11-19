@@ -6,7 +6,7 @@ function Sidebar({isCollapsed}) {
       <div className={`sidebar ${isCollapsed ? 'collapsed' : ''}`}>
         <ul>
           <li><Link to='/Login'>Login</Link></li>
-          <li><a>item 2</a></li>
+          <li><Link to ='/Login/Signup'>Signup</Link></li>
           <li><a>item 3</a></li>
         </ul>
       </div>
