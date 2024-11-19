@@ -32,6 +32,8 @@
     border: none;
     background-color: #7e1c1c;
     grid-column-start: 1;
+    height: 100%;
+    width: 100%;
 }
 
 .logo{
@@ -57,15 +59,22 @@
 }
 
 .sidebar{
+    transition: 0.3s ease;
     display: flex;
-    flex-basis: 15%;
+    flex-basis: 20%;
     position: sticky;
     height: 100%;
     top: 10vh;
 }
 
+.sidebar.collapsed{
+    flex-basis: 0%;
+    overflow: hidden;
+}
+
 .wall{
-    flex-basis: 85%;
+    transition: 0.3s ease;
+    flex-basis: 100%;
     width: 100%;
     height: fit-content;
 }
@@ -132,7 +141,6 @@
 .page{
     margin: 2% 5%;
     height: 80vh;
-    position: sticky;
     display: flex;
     justify-content: center;
     z-index: 0;
@@ -142,11 +150,17 @@
     width: 100%;
     height: 100%;
     justify-items: center;
+    margin-right: 35vh;
+}
+
+.list::-webkit-scrollbar{
+    display: none;
 }
 
 .postitem{
-    width: 50%;
+    width: 70%;
     box-sizing: border-box;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     font-size: medium;
     background-color: #dbdbdb;
     border-radius: 15px;
@@ -199,4 +213,16 @@
 .comments-list ul{
     list-style: none;
     font-size: small;
+}
+
+.schinfo{
+    background-color: #dbdbdb;
+    border-radius: 15px 15px 0 0;
+    height: 67%;
+    width: 20vw;
+    padding: 1.5em;
+    position: fixed;
+    bottom: 0;
+    right: 2%;
+    z-index: -1;
 }

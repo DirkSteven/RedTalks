@@ -38,6 +38,7 @@ function Home() {
     return (
         <>
         {selected === null?(
+        <>
         <div className="list">
             {loading ? (
                 <p>Loading posts...</p>
@@ -60,6 +61,22 @@ function Home() {
                 ))
             )}
         </div>
+
+        <div className="schinfo">
+            <img></img>
+            <h3>Batangas State University</h3>
+            <p>sch desc</p>
+            <div className="divider"></div>
+            <div className="schSocials">
+                <ul>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                </ul>
+            </div>
+        </div>
+        </>
+
         ) : (
             <PostModal post={selected} onClose={closePost}/>
         )}
