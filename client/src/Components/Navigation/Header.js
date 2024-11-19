@@ -2,11 +2,11 @@ import React from "react";
 import Searchbar from "./Searchbar";
 import Toggle from "../Buttons/Toggle";
 
-function Header({ toggleSidebar }) {
+function Header({ toggle }) {
   return (
     <div className="header">
       <div className="headitems">
-        <Toggle />
+        <Toggle onClick={toggle}/>
         <div className="logo">Logo</div>
         <Searchbar />
         <div className="headbutt">Headerbuttons</div>

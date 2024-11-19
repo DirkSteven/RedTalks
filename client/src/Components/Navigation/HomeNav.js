@@ -7,7 +7,7 @@ function HomeNav() {
     const isActive = (path) => location.pathname === path;
 
     return (
-        <div className="wall">
+        <>
             <div className="nav">
                 <ul>
                     <li className={isActive("/") ? "active" : ""}>
@@ -21,10 +21,7 @@ function HomeNav() {
                     </li>
                 </ul>
             </div>
-            <div className="page">
-                <Outlet />
-            </div>
-        </div>
+        </>
     );
 }
 

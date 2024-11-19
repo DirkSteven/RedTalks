@@ -1,8 +1,8 @@
 import React from "react";
 
-function Toggle() {
+function Toggle({onClick}) {
   return (
-    <button className="toggle">
+    <button onClick={onClick} className="toggle">
       ...
     </button>
   );
