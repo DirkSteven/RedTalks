@@ -59,9 +59,6 @@ export async function getUserPosts(req, res) {
   }
 
 export async function register(req, res) {
-    // res.json('register route');
-
-  // Validate incoming data
   const { name, email, password, imageUrl } = req.body;
 
   if (!name || !email || !password) {
@@ -72,45 +69,50 @@ export async function register(req, res) {
     return res.status(400).json({
         message: 'Invalid email format. It should match the pattern "user@g.batstate-u.edu.ph".',
     });
-}
-
-
-  try {
-      // Check if the user already exists
-      const userExists = await User.findOne({ email });
-      if (userExists) {
-          return res.status(400).json({
-              message: 'User already exists'
-          });
-      }
-
-      // Hash password and create new user
-      const hashedPassword = await bcrypt.hash(password, 10);
-      const newUser = new User({
-          name,
-          email,
-          password: hashedPassword,
-          imageUrl: imageUrl || '', // Default to empty string if no image URL is provided
-          role: 'user',
-      });
-
-      // Save user to the database
-      await newUser.save();
-      res.status(201).json({
-          message: 'User created successfully',
-          user: {
-              name: newUser.name,
-              email: newUser.email,
-              imageUrl: newUser.imageUrl,
-          },
-      });
-  } catch (error) {
-      res.status(500).json({
-          message: 'Error registering user',
-          error: error.message,
-      });
   }
 
+  try {
+    // Check if the user already exists
+    const userExists = await User.findOne({ email });
+    if (userExists) {
+      return res.status(400).json({
+          message: 'User already exists'
+      });
+    }
+
+    // Hash password and create new user
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newUser = new User({
+      name,
+      email,
+      password: hashedPassword,
+      imageUrl: imageUrl || '', // Default to empty string if no image URL is provided
+      role: 'user',
+    });
+
+    // Save user to the database
+    await newUser.save();
+
+    const token = jwt.sign({userId:  newUser._id}, 'app', {
+      expiresIn: '1h', //token expiration time
+    }); 
+
+    res.status(201).json({
+      message: 'User created successfully',
+      user: {
+          name: newUser.name,
+          email: newUser.email,
+          imageUrl: newUser.imageUrl,
+      },
+      token,
+    });
+  } catch (error) {
+    console.error('Error during registration:', error);
+    res.status(500).json({
+      message: 'Error registering user',
+      error: error.message,
+    });
+  }
 }
 
 export async function login(req, res) {
@@ -174,7 +176,8 @@ export async function updateUser(req, res){
     const { name, email, imageUrl } = req.body;
 
     try {
-        const user = await User.findOne({email: req.body.email});
+        // const user = await User.findOne({email: req.body.email});
+        const user = await User.findById(userId); 
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
       }
