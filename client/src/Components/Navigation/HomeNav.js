@@ -1,4 +1,4 @@
-import { Link, Outlet, useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 function HomeNav() {
     const location = useLocation();  // Get current location (pathname)
