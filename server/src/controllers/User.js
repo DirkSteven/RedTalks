@@ -137,33 +137,17 @@ export async function login(req, res) {
         token
     });
 
-    // const { email, password } = req.body;
-
-    // try {
-    //   const user = await User.findOne({ email });
-    //   if (!user) {
-    //     return res.status(400).json({ message: 'User does not exist' });
-    //   }
-  
-    //   const passwordIsEqual = await bcrypt.compare(password, user.password);
-    //   if (!passwordIsEqual) {
-    //     return res.status(401).json({ message: 'Password incorrect' });
-    //   }
-  
-    //   const token = jwt.sign({ userId: user._id }, 'app', { expiresIn: '1h' });
-    //   res.json({ user, token });
-    // } catch (error) {
-    //   res.status(500).json({ message: 'Error logging in', error: error.message });
-    // }
 
 }
 
 export async function initUser(req, res){
-    console.log('getUser/init route');
+    console.log('/init route');
 
-    const token = req.query.token;
+    // const token = req.query.token;
+    // console.log('Token received (init):', token);
+
+    const token = req.headers.authorization?.split(' ')[1];  // Get token from Authorization header
     console.log('Token received (init):', token);
-
 
     let user = null;
     let response = null;
@@ -171,24 +155,16 @@ export async function initUser(req, res){
     try{
         const userData = jwt.verify(token, 'app');
         response = await User.findById(userData.userId);
-        // console.log("User found: ", response);
     }catch(e){
-        // console.error("Error verifying token or fetching user:", e);
+        console.error("Error verifying token or fetching user:", e);
         return res.status(401).json({ message: 'Invalid token' });
-        // response = null;
     }
-
-    // if(user){
-    //      response = user;
-    // }
 
     if (response) {
         res.status(200).json({ user: response });
     } else {
         res.status(404).json({ message: 'User not found' });
     }
-    
-    res.send({user: response});
 
 }
 
