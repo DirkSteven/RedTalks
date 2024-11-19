@@ -71,6 +71,10 @@ export async function register(req, res) {
     });
   }
 
+  // if (password.length < 8) {
+  //   return res.status(400).json({ message: 'Password must be at least 8 characters long.' });
+  // }
+
   try {
     // Check if the user already exists
     const userExists = await User.findOne({ email });
@@ -80,17 +84,14 @@ export async function register(req, res) {
       });
     }
 
-    // Hash password and create new user
-    const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new User({
       name,
       email,
-      password: hashedPassword,
-      imageUrl: imageUrl || '', // Default to empty string if no image URL is provided
+      password: password,
+      imageUrl: imageUrl || '',
       role: 'user',
     });
 
-    // Save user to the database
     await newUser.save();
 
     const token = jwt.sign({userId:  newUser._id}, 'app', {
@@ -101,11 +102,10 @@ export async function register(req, res) {
       message: 'User created successfully',
       user: {
           name: newUser.name,
-          email: newUser.email,
-          imageUrl: newUser.imageUrl,
       },
       token,
     });
+
   } catch (error) {
     console.error('Error during registration:', error);
     res.status(500).json({
@@ -116,30 +116,43 @@ export async function register(req, res) {
 }
 
 export async function login(req, res) {
-    // res.json('login route');
-    const user = await User.findOne({email: req.body.email});
-    if(!user){
-        return res.status(400).send({
-            message: 'User does not exist'
-        })
-    };
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return res.status(400).json({ message: 'Please provide both email and password' });
+  } 
 
-    const passwordIsEqual = await bcrypt.compare(req.body.password, user.password);
-    if(!passwordIsEqual){
-        return res.status(401).send({
-            message: 'Password Incorrect'
-        });
-    };
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+        return res.status(400).json({ message: 'User does not exist' });
+    }
 
-    const token = jwt.sign({userId: user._id}, 'app', {
-        expiresIn: '1h', //token expiration time
+    console.log('Login - Entered password:', password);
+    console.log('Login - Stored hashed password:', user.password);
+
+
+    const passwordIsValid = await bcrypt.compare(password, user.password);
+    if (!passwordIsValid) {
+        return res.status(401).json({ message: 'Password Incorrect' });
+    }
+
+    const token = jwt.sign(
+      { userId: user._id }, 
+      'app', 
+      { expiresIn: '1h' }
+    );
+
+    res.status(200).json({
+        message: 'Login successful',
+        user: {
+            name: user.name,
+        },
+        token,
     });
-    res.send({
-        user, 
-        token
-    });
-
-
+  } catch (error) {
+      console.error('Error during login:', error);
+      res.status(500).json({ message: 'An error occurred during login', error: error.message });
+  }
 }
 
 export async function initUser(req, res){
@@ -171,9 +184,8 @@ export async function initUser(req, res){
 }
 
 export async function updateUser(req, res){
-    // res.json('updateuser route');
-
     const { name, email, imageUrl } = req.body;
+    const { userId } = req.params; 
 
     try {
         // const user = await User.findOne({email: req.body.email});
@@ -196,38 +208,39 @@ export async function updateUser(req, res){
 }
 
 export async function resetPasword(req, res){
-    try {
-        const { userId, currentPassword, newPassword } = req.body;
+  const { currentPassword, newPassword } = req.body;
 
-        // Validate the input
-        if (!userId || !currentPassword || !newPassword) {
-            return res.status(400).json({ message: 'Please provide all required fields' });
-        }
+  // Use userId from the authenticated user
+  const { userId } = req.user;
 
-        // Find the user by userId
-        const user = await User.findById(userId);
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
+  try {
+      // Validate the input
+      if (!currentPassword || !newPassword) {
+          return res.status(400).json({ message: 'Please provide all required fields' });
+      }
 
-        // Compare the current password with the stored password
-        const isMatch = await bcrypt.compare(currentPassword, user.password);
-        if (!isMatch) {
-            return res.status(400).json({ message: 'Current password is incorrect' });
-        }
+      // Find the user by userId
+      const user = await User.findById(userId);
+      if (!user) {
+          return res.status(404).json({ message: 'User not found' });
+      }
 
-        // Hash the new password
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(newPassword, salt);
+      // Compare the current password with the stored password
+      const isMatch = await bcrypt.compare(currentPassword, user.password);
+      if (!isMatch) {
+          return res.status(400).json({ message: 'Current password is incorrect' });
+      }
 
-        // Update the password in the database
-        user.password = hashedPassword;
-        await user.save();
+      // Hash the new password
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+      
+      // Update the user's password
+      user.password = hashedPassword;
+      await user.save();
 
-        // Respond with success message
-        res.status(200).json({ message: 'Password updated successfully' });
-    } catch (error) {
-        console.error('Error changing password:', error);
-        res.status(500).json({ message: 'Server error' });
-    }
+      res.status(200).json({ message: 'Password updated successfully' });
+  } catch (error) {
+      console.error('Error changing password:', error);
+      res.status(500).json({ message: 'Server error' });
+  }
 }

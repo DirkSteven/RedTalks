@@ -17,7 +17,7 @@ serve -s build
 cd ..
 
 cd server
-npm install express cookie-parser bcryptjs dotenv jsonwebtoken mongoose crypto react-router-dom body-parser 
+npm install express cookie-parser bcrypt dotenv jsonwebtoken mongoose crypto react-router-dom body-parser 
 npm i nodemon -D
 # ex
 # npm install swagger-ui-express express-openapi-validator 

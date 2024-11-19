@@ -40,6 +40,10 @@ function LoginForm() {
 
     setLoading(true);  // Set loading state while submitting the form
     
+    console.log('Email:', email); // Debug: log email
+    console.log('Password:', password); // Debug: log password
+
+    
     try {
       // Make the POST request to the backend with the email and password
       const response = await axios.post('/api/user/login', {
@@ -50,13 +54,12 @@ function LoginForm() {
       // Handle successful response
       const { token, user } = response.data;
 
-      // Store the JWT token in localStorage
       localStorage.setItem('token', token);
-      localStorage.setItem('user', JSON.stringify(user));
 
       console.log("Login successful, redirecting...");
       setLoading(false); 
       navigate('/');
+      
     } catch (error) {
       // Handle errors from the API (e.g., incorrect credentials)
       setError(error.response?.data?.message || 'An error occurred while logging in');

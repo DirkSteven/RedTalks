@@ -17,12 +17,14 @@ function SignupForm() {
     useEffect(() => {
       const token = localStorage.getItem('token');
       if (token) {
-        navigate('/'); // Redirect to home if already logged in
+        navigate('/');
       }
     }, [navigate]);
 
     const handleSubmit = async (e) => {
       e.preventDefault();
+      
+      if (loading) return;
 
       if (!name || !email || !password || !confirmPassword) {
         setError("Please fill out all fields.");
@@ -44,13 +46,10 @@ function SignupForm() {
           password,
         });
 
-        console.log("Signup successful:", response.data);
-
         if (response.data && response.data.token) {
-          const { token, user } = response.data;
+          const { token } = response.data;
 
           localStorage.setItem('token', token);
-          localStorage.setItem('user', JSON.stringify(user));
 
           navigate('/');
           setError('');
@@ -66,41 +65,46 @@ function SignupForm() {
       }
     };
 
+    const handleInputChange = (setter) => (e) => {
+      setter(e.target.value);
+      if (error) setError(''); // Clear the error if the user starts typing again
+    };
+
     return (
         <div>
-            <h1>SIGNUP</h1>
-            <form onSubmit={handleSubmit}>
-                <PlainInput 
-                    label="Name" 
-                    value={name} 
-                    onChange={(e) => setName(e.target.value)} 
-                />
-                <PlainInput 
-                    label="Email Address" 
-                    type="email"
-                    value={email} 
-                    onChange={(e) => setEmail(e.target.value)} 
-                />
-                <HiddenInput 
-                    label="Password" 
-                    value={password} 
-                    onChange={(e) => setPassword(e.target.value)} 
-                />
-                <HiddenInput 
-                    label="Confirm Password" 
-                    value={confirmPassword} 
-                    onChange={(e) => setConfirmPassword(e.target.value)} 
-                />
+          <h1>SIGNUP</h1>
+          <form onSubmit={handleSubmit}>
+            <PlainInput 
+              label="Name" 
+              value={name} 
+              onChange={handleInputChange(setName)} 
+            />
+            <PlainInput 
+              label="Email Address" 
+              type="email"
+              value={email} 
+              onChange={handleInputChange(setEmail)} 
+            />
+            <HiddenInput 
+              label="Password" 
+              value={password} 
+              onChange={handleInputChange(setPassword)} 
+            />
+            <HiddenInput 
+              label="Confirm Password" 
+              value={confirmPassword} 
+              onChange={handleInputChange(setConfirmPassword)} 
+            />
 
-                {error && <div className="error">{error}</div>}
+            {error && <div className="error">{error}</div>}
 
-                <Submit label="SIGNUP" disabled={loading} />
-            </form>
+            <Submit label="SIGNUP" disabled={loading} />
+          </form>
 
-            <p className="text">
-                Already have an account?
-                <Link to="/Login" className="text redirect signup"> Log in here.</Link>
-            </p>
+          <p className="text">
+              Already have an account?
+              <Link to="/Login" className="text redirect signup"> Log in here.</Link>
+          </p>
         </div>
     );
 }
