@@ -5,10 +5,11 @@ import { CommentSchema } from './Comment.js';
 const Schema = mongoose.Schema;
 
 
-const descriptiveTags = ['discussion', 'general', 'announcement', 'memes/fun', 'rants', 'help', 'admission/shifting/transferring', 'rateProf', 'others'];
+const descriptiveTags = ['discussion', 'general', 'announcement', 'memes/fun', 'rants', 'help', 'admission/shifting/transferring', 'rateProf', 'others'].map(tag => tag.toLowerCase());
 
-const campusTags = ['Alangilan', 'ARASOF-Nasugbu', 'Balayan', 'JPLPC-Malvar', 'Lemery', 'Lipa', 'Lobo', 'Mabini', 'Malvar', 'Pablo Borbon', 'Rosario', 'San Juan'];
-const departmentTags = ['Engineering', 'Industrial Technology', 'Fine Arts and Design', 'Arts and Science', 'Accountancy', 'Computer Science', 'Law', 'Hospitality', 'Business Administration', 'Education', 'Agriculture', 'Forestry', 'Criminilogy', 'Psychology', 'Development Communication', 'Nursing']; // Add all departments here
+const campusTags = ['Alangilan', 'ARASOF-Nasugbu', 'Balayan', 'JPLPC-Malvar', 'Lemery', 'Lipa', 'Lobo', 'Mabini', 'Malvar', 'Pablo Borbon', 'Rosario', 'San Juan'].map(tag => tag.toLowerCase());
+const departmentTags = ['College of Engineering', 'College of Architecture', 'College of Fine Arts, and Design', 'College of Accountancy, Business, Economics, and International Hospitality Management', 'College of Arts and Sciences', 'College of Informatics and Computing Sciences', 'College of Industrial Technology', 'College of Nursing and Allied Health Sciences', 'College of Law', 'College of Agriculture and Forestry', 'College of Teacher Education', 'College of Medicine'].map(tag => tag.toLowerCase()); 
+
 
 
 const PostSchema = new Schema({

@@ -1,7 +1,62 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js'
+import Post from '../models/Post.js';
 import { validateEmail } from '../utils/validate.js'
+
+
+export async function getUserPosts(req, res) {
+    try {
+      const { userId } = req.params;
+  
+      const posts = await Post.find({ author: userId })
+        .populate('author', 'name email')  // Populate user data for the author
+        .sort({ createdAt: -1 });  // Optionally, sort by creation date
+  
+      return res.status(200).json(posts);
+    } catch (error) {
+      console.error('Error fetching user posts:', error);
+      return res.status(500).json({ message: 'Error fetching user posts', error: error.message });
+    }
+  }
+  
+  export async function getUserComments(req, res) {
+    try {
+      const { userId } = req.params;
+  
+      // Aggregate posts with comments by this user
+      const posts = await Post.find({ "comments.author": userId })
+        .populate('author', 'name email')
+        .populate('comments.author', 'name email')  // Populate user data for comment authors
+        .sort({ createdAt: -1 });
+  
+      // Filter and return only the comments by the specific user
+      const userComments = posts.flatMap(post =>
+        post.comments.filter(comment => comment.author._id.toString() === userId)
+      );
+  
+      return res.status(200).json(userComments);
+    } catch (error) {
+      console.error('Error fetching user comments:', error);
+      return res.status(500).json({ message: 'Error fetching user comments', error: error.message });
+    }
+  }
+  
+  export async function getUserUpvotes(req, res) {
+    try {
+      const { userId } = req.params;
+  
+      // Query posts where the user has upvoted
+      const posts = await Post.find({ upvotes: userId })
+        .populate('author', 'name email')  // Populate user data for the author
+        .sort({ createdAt: -1 });  // Optionally, sort by creation date
+  
+      return res.status(200).json(posts);
+    } catch (error) {
+      console.error('Error fetching user upvotes:', error);
+      return res.status(500).json({ message: 'Error fetching user upvotes', error: error.message });
+    }
+  }
 
 export async function register(req, res) {
     // res.json('register route');
@@ -82,33 +137,17 @@ export async function login(req, res) {
         token
     });
 
-    // const { email, password } = req.body;
-
-    // try {
-    //   const user = await User.findOne({ email });
-    //   if (!user) {
-    //     return res.status(400).json({ message: 'User does not exist' });
-    //   }
-  
-    //   const passwordIsEqual = await bcrypt.compare(password, user.password);
-    //   if (!passwordIsEqual) {
-    //     return res.status(401).json({ message: 'Password incorrect' });
-    //   }
-  
-    //   const token = jwt.sign({ userId: user._id }, 'app', { expiresIn: '1h' });
-    //   res.json({ user, token });
-    // } catch (error) {
-    //   res.status(500).json({ message: 'Error logging in', error: error.message });
-    // }
 
 }
 
 export async function initUser(req, res){
-    console.log('getUser/init route');
+    console.log('/init route');
 
-    const token = req.query.token;
+    // const token = req.query.token;
+    // console.log('Token received (init):', token);
+
+    const token = req.headers.authorization?.split(' ')[1];  // Get token from Authorization header
     console.log('Token received (init):', token);
-
 
     let user = null;
     let response = null;
@@ -116,24 +155,16 @@ export async function initUser(req, res){
     try{
         const userData = jwt.verify(token, 'app');
         response = await User.findById(userData.userId);
-        // console.log("User found: ", response);
     }catch(e){
-        // console.error("Error verifying token or fetching user:", e);
+        console.error("Error verifying token or fetching user:", e);
         return res.status(401).json({ message: 'Invalid token' });
-        // response = null;
     }
-
-    // if(user){
-    //      response = user;
-    // }
 
     if (response) {
         res.status(200).json({ user: response });
     } else {
         res.status(404).json({ message: 'User not found' });
     }
-    
-    res.send({user: response});
 
 }
 

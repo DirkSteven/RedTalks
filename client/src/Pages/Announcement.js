@@ -6,7 +6,7 @@ function Announcement(){
 
     useEffect(() => {
         // Fetch data from the backend API
-        axios.get('api/announcements')
+        axios.get('/api/posts/filter?descriptiveTag=announcement')
             .then(response => {
                 console.log(response.data);  // Log response to inspect its structure
 
