@@ -1,0 +1,12 @@
+{
+  "name": "redtalks",
+  "version": "1.0.0",
+  "scripts": {
+    "client": "npm start --prefix client",
+    "server": "npm start --prefix server",
+    "dev": "concurrently \"npm run client\" \"npm run server\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  }
+}

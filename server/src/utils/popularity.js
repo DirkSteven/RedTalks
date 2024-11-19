@@ -39,17 +39,23 @@ export function calculatePopularityScore(post) {
     // Hot Score Algorithm (decaying with time)
     // const hotScore = (upvotes - downvotes) / Math.pow(postAgeInSeconds + 2, 1.5);
     const hotScore = upvotes / Math.pow(postAgeInSeconds + 2, 1.5);
-    
+    // number of upvotes by the age of the post (in seconds), with a small constant (+2) added to avoid division by zero when a post is very recent.
+    // The Math.pow(..., 1.5) part introduces a decay function, where the post's "hotness" decays faster as it ages (with the exponent 1.5). This means that older posts lose their popularity score more quickly, making newer posts more relevant in terms of popularity.
+
     // Wilson Score (Confidence Interval for Proportions)
     // const z = 1.96; // For 95% confidence
     // const p = upvotes / totalVotes; // Proportion of upvotes
     // const n = totalVotes; // Total number of votes
     // const wilsonScore = (p + (Math.pow(z, 2) / (2 * n)) - z * Math.sqrt((p * (1 - p) + Math.pow(z, 2) / (4 * n)) / n)) / (1 + Math.pow(z, 2) / n);
     const wilsonScore = upvotes / upvotes;
+    // percentage of upvotes in a voting system; account for both the number of votes and the proportion of positive votes
+    // 100% upvoted
 
     // Calculate the recency score
     const recencyScore = Math.max(0, 30 - postAgeInDays) * recencyWeight;
-    
+    // gives newer posts a higher score; subtracts it from 30 (days) applies the recencyWeight;
+    // Posts that are more recent (i.e., younger than 30 days) will have a positive recency score. Older posts will have a score of 0, effectively removing the recency effect.
+
     // Combine the scores
     const finalScore = hotScore + wilsonScore * upvoteWeight + post.comments.length * commentWeight + recencyScore;
 
