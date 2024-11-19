@@ -3,6 +3,7 @@
 <!-- https://www.youtube.com/watch?v=oNsf8sx9Fdg -->
 
 ```bash
+npm install concurrently --save-dev
 npm init -y
 npx create-react-app client
 
