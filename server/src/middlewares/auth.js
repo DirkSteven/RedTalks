@@ -1,4 +1,6 @@
 import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+dotenv.config();
 
 export function authenticate(req, res, next) {
   const token = req.headers.authorization?.split(' ')[1];  // Extract token from header
@@ -8,7 +10,7 @@ export function authenticate(req, res, next) {
   }
 
   try {
-    const decoded = jwt.verify(token, 'app');
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.user = decoded;  // Attach user data to the request object
     next();  // Continue to the next middleware/handler
   } catch (error) {

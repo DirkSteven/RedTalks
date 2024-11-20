@@ -3,7 +3,8 @@ import jwt from 'jsonwebtoken';
 import User from '../models/User.js'
 import Post from '../models/Post.js';
 import { validateEmail } from '../utils/validate.js'
-
+import dotenv from 'dotenv';
+dotenv.config();
 
 export async function getUserPosts(req, res) {
     try {
@@ -71,9 +72,9 @@ export async function register(req, res) {
     });
   }
 
-  // if (password.length < 8) {
-  //   return res.status(400).json({ message: 'Password must be at least 8 characters long.' });
-  // }
+  if (password.length < 8) {
+    return res.status(400).json({ message: 'Password must be at least 8 characters long.' });
+  }
 
   try {
     // Check if the user already exists
@@ -94,7 +95,7 @@ export async function register(req, res) {
 
     await newUser.save();
 
-    const token = jwt.sign({userId:  newUser._id}, 'app', {
+    const token = jwt.sign({userId:  newUser._id}, process.env.JWT_SECRET, {
       expiresIn: '1h', //token expiration time
     }); 
 
@@ -136,11 +137,9 @@ export async function login(req, res) {
         return res.status(401).json({ message: 'Password Incorrect' });
     }
 
-    const token = jwt.sign(
-      { userId: user._id }, 
-      'app', 
-      { expiresIn: '1h' }
-    );
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { 
+      expiresIn: '1h' 
+    });
 
     res.status(200).json({
         message: 'Login successful',
@@ -168,7 +167,7 @@ export async function initUser(req, res){
     let response = null;
 
     try{
-        const userData = jwt.verify(token, 'app');
+        const userData = jwt.verify(token, process.env.JWT_SECRET);
         response = await User.findById(userData.userId);
     }catch(e){
         console.error("Error verifying token or fetching user:", e);

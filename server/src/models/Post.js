@@ -15,30 +15,31 @@ const departmentTags = ['College of Engineering', 'College of Architecture', 'Co
 const PostSchema = new Schema({
     title: {
         type: String,
-        required: true, // Title is required
+        required: true,
+        maxlength: 200,
     },
     content: {
         type: String,
-        required: true, // Content is required
+        required: true,
     },
     author: {
-        type: Schema.Types.ObjectId, // Reference to User model
+        type: Schema.Types.ObjectId,
         ref: 'User',
-        required: true, // Author is required
+        required: true,
     },
     createdAt: {
         type: Date,
-        default: Date.now, // Default to current date
+        default: Date.now,
     },
     updatedAt: {
         type: Date,
-        default: Date.now, // Default to current date
+        default: Date.now,
     },
-    imageUrl: String, // Optional image URL
+    imageUrl: String,
     tags: {
         descriptiveTag: {
             type: String,
-            enum: descriptiveTags, // Enforce predefined descriptive tags
+            enum: descriptiveTags,
             required: true,
         },
         campusTag: {

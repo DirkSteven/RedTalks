@@ -6,7 +6,7 @@ function Sidebar({isCollapsed}) {
   const navigate = useNavigate();
 
   const logout = () => {
-    localStorage.removeItem('userToken');
+    localStorage.removeItem('token');
     navigate('/Login');
   };
 
