@@ -4,6 +4,8 @@ import * as userController from '../controllers/User.js'
 const router = Router();
 
 router.get('/init', userController.initUser);
+router.get('/verify-email/:verificationToken', userController.verifyEmail);
+
 router.get('/:userId/posts', userController.getUserPosts);
 router.get('/:userId/comments', userController.getUserComments);
 router.get('/:userId/upvotes', userController.getUserUpvotes);

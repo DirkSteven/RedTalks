@@ -2,7 +2,9 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js'
 import Post from '../models/Post.js';
+import Token from '../models/Token.js';
 import { validateEmail } from '../utils/validate.js'
+import sendEmail from '../utils/sendEmail.js'
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -85,22 +87,48 @@ export async function register(req, res) {
       });
     }
 
+    //hashing in models
+
     const newUser = new User({
       name,
       email,
       password: password,
       imageUrl: imageUrl || '',
+      verified: false,
       role: 'user',
     });
 
     await newUser.save();
+    
+    const verificationToken = jwt.sign({ userId: newUser._id }, process.env.JWT_SECRET, {
+      expiresIn: '1h',
+    });
+
+    const tokenRecord = new Token({
+      userId: newUser._id,
+      token: verificationToken,
+      expiresAt: Date.now() + 3600000, // token expires in 1 hour
+    });
+
+    await tokenRecord.save();
+
+    const verificationLink = `${process.env.FRONTEND_URL}/verify-email/${verificationToken}`;
+
+    const emailSubject = 'Please verify your email address';
+    const emailText = `Hello ${name},\n\nClick the following link to verify your email: ${verificationLink}`;
+    const emailHtml = `
+      <p>Hello ${name},</p>
+      <p>Click <a href="${verificationLink}">here</a> to verify your email address.</p>
+    `;
+
+    await sendEmail(email, emailSubject, emailText, emailHtml);
 
     const token = jwt.sign({userId:  newUser._id}, process.env.JWT_SECRET, {
       expiresIn: '1h', //token expiration time
     }); 
 
     res.status(201).json({
-      message: 'User created successfully',
+      message: 'User created successfully. A verification email has been sent.',
       user: {
           name: newUser.name,
       },
@@ -115,6 +143,41 @@ export async function register(req, res) {
     });
   }
 }
+
+export async function verifyEmail(req, res) {
+  const { verificationToken } = req.params;
+  // console.log('Received token from URL:', verificationToken);
+
+  try {
+    const decoded = jwt.verify(verificationToken, process.env.JWT_SECRET);
+    console.log('Decoded token:', decoded);
+
+    const user = await User.findById(decoded.userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    if (user.verified) {
+      return res.status(200).json({ message: 'Email already verified' });
+    }
+
+    user.verified = true;
+    await user.save();
+
+    await Token.deleteOne({ token: verificationToken });
+
+    res.status(200).json({ message: 'Email verified successfully' });
+  } catch (error) {
+    console.error('Error during email verification:', error);
+
+    if (error.name === 'TokenExpiredError') {
+      return res.status(400).json({ message: 'Verification token has expired. Please request a new verification link.' });
+    }
+
+    return res.status(400).json({ message: 'Invalid or expired verification token' });
+  }
+}
+
 
 export async function login(req, res) {
   const { email, password } = req.body;
@@ -155,7 +218,7 @@ export async function login(req, res) {
 }
 
 export async function initUser(req, res){
-    console.log('/init route');
+    // console.log('/init route');
 
     // const token = req.query.token;
     // console.log('Token received (init):', token);
