@@ -17,6 +17,7 @@ function Sidebar({isCollapsed}) {
           <li><Link to='/Login'>Login</Link></li>
           <li><Link to ='/Login/Signup'>Signup</Link></li>
           <li><button onClick={logout}>Logout</button></li>
+          <li><Link to='/CreatePost'>Create</Link></li>
         </ul>
       </div>
   );

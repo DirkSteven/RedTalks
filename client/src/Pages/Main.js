@@ -8,6 +8,7 @@ import Marketplace from './Marketplace';
 import Entry from './Entry';
 import Login from './Login';
 import Signup from './Signup';
+import CreatePost from "./CreatePost";
 import VerifyEmail from '../Components/verifyEmail';
 
 function ProtectedRoute({ children }) {
@@ -60,6 +61,7 @@ function Main() {
           } />
           <Route path="Announcement" element={<Announcement />} />
           <Route path="Marketplace" element={<Marketplace />} />
+          <Route path="CreatePost" element={<CreatePost />} />
         </Route>
 
         <Route path="/Login" element={<Entry />}>
