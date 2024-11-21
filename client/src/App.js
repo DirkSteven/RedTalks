@@ -40,9 +40,9 @@ function App() {
     return <div>Loading...</div>;
   }
 
-  if (!user) {
-    return <Main/>;
-  }
+  // if (!user) {
+  //   return <Main/>;
+  // }
 
 
   return (

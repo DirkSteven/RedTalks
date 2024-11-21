@@ -233,14 +233,15 @@
     display: flex;
     flex-direction: column;
     align-items: start;
+    overflow: hidden;
 }
 
 .postcreation form{
-    margin: 0 0 0 1%;
+    width: 50%;
 }
 
 .postcreation h3{
-    margin: 0;
+    margin: 20px 0 0 0;
     padding: 0;
 }
 
@@ -248,17 +249,26 @@
     font-family: 'Poppins', serif;
 }
 
+.postcreation input{
+    width: 100%;
+}
+
+.postcreation textarea{
+    width: 100%;
+    height: 50%;
+    resize: none;
+}
+
 .publish{
     width: 100%;
     display: flex;
-    justify-content: space-around;
 }
 
 .publish button{
     border: none;
     font-family: 'Poppins', serif;
     font-size: large;
-    margin: 10% 10% 0 0;
+    margin: 20px 50px 0 0;
     padding: 0.5em 1em;
     border-radius: 20px;
 }

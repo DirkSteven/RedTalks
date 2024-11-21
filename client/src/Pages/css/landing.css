@@ -28,29 +28,57 @@ img{
     margin: 0 0 10px 0;
 }
 
-.panel div{
+.panelform{
     height: 100%;
-    width: 70%;
+    width: 80%;
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
 
-.panel div form{
+.inputdiv{
+    width: 100%;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.panelform form{
     margin: 0;
     display: flex;
     flex-direction: column;
 }
 
-.panel form input{
+.panelform input{
+    box-sizing: border-box;
+    width: 100%;
     background-color: #dbdbdb;
-    margin: 1em 0 1em 0;
+    margin: 1em 0;
     border: none;
     padding: 1.5em;
     border-radius: 15px;
 }
 
+.panelform .inputpass{
+    margin: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+.inputpass input{
+    width: 80%;
+}
+
+.hidechar{
+    border: none;
+    font-family: 'Poppins', serif;
+    background-color: transparent;
+    text-align: center;
+    width: 20%;
+}
+
 .text{
+    margin: 0;
     font-size: small;
     text-decoration: none;
 }
@@ -68,13 +96,26 @@ img{
     background-color: #9e2525;
     color: #f0f0e1;
     width: 50%;
-    margin: 15px 0 15px 0;
-    padding: 0.5em;
+    height: 50px;
+    box-sizing: border-box;
+    margin: 10% 0;
+    text-align: center;
     border: none;
     font-family: 'Poppins', serif;
     border-radius: 15px;
     font-weight: bold;
     align-self: center;
+}
+
+.error{
+    margin: 10px 0;
+    display: flex;
+    font-size: small;
+}
+
+.verify{
+    display: flex;
+    flex-direction: row;
 }
 
 @media (min-width: 768px){
@@ -85,7 +126,7 @@ img{
     .panel{
         flex-basis: 60%;
     }
-    .panel div{
+    .panelform, .retrieve{
         width: 40%;
     }
 }

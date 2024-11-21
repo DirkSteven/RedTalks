@@ -66,7 +66,7 @@ function LoginForm() {
 
 
   return (
-    <div>
+    <div className="panelform">
       <h1>Login</h1>
       <form onSubmit={handleSubmit}>
         <PlainInput 
@@ -80,17 +80,16 @@ function LoginForm() {
           value={password} 
           onChange={handlePasswordChange} 
         />
-
-        {/* Show error message if there's any */}
-        {error && <div className="error">{error}</div>} 
+        <Link to='/Login/ForgotPassword' className="text redirect forgot">Forgot Password?</Link>
 
         <Submit label="LOGIN"/>
       </form>
-      <a href="#" className="text redirect forgot">Forgot Password?</a>
       <p className="text">
         Don't have an account?
         <Link to='/Login/Signup' className="text redirect signup"> Sign up here.</Link>
       </p>
+
+      {error && <div className="error">{error}</div>} 
     </div>
   );
 }

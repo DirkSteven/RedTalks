@@ -67,7 +67,7 @@ function SignupForm() {
     };
 
     return (
-        <div>
+        <div className="panelform">
             <h1>SIGNUP</h1>
             <form onSubmit={handleSubmit}>
                 <PlainInput 
