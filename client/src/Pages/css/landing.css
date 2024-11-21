@@ -49,6 +49,7 @@ img{
 }
 
 .panelform input{
+    font-family: 'Poppins', serif;
     box-sizing: border-box;
     width: 100%;
     background-color: #dbdbdb;
@@ -69,7 +70,7 @@ img{
     width: 80%;
 }
 
-.hidechar{
+.hidechar, .verify button{
     border: none;
     font-family: 'Poppins', serif;
     background-color: transparent;

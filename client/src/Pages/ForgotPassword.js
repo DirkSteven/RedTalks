@@ -5,7 +5,7 @@ import './css/landing.css';
 function Forgot(){
     return(
         <div className='panelform'>
-            <form className='retrieve'>
+            <form>
                 <PlainInput label="Email Address"/>
                 <div className='verify'>
                     <PlainInput label="Verification Code"/>

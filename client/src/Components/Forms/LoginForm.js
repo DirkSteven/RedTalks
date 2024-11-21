@@ -84,6 +84,8 @@ function LoginForm() {
           onChange={handlePasswordChange} 
         />
         <Link to='/Login/ForgotPassword' className="text redirect forgot">Forgot Password?</Link>
+        {error && <div className="error">{error}</div>} 
+
 
         <Submit label="LOGIN"/>
       </form>
@@ -92,7 +94,6 @@ function LoginForm() {
         <Link to='/Login/Signup' className="text redirect signup"> Sign up here.</Link>
       </p>
 
-      {error && <div className="error">{error}</div>} 
     </div>
   );
 }

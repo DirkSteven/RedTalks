@@ -10,6 +10,7 @@ import Login from './Login';
 import Signup from './Signup';
 import CreatePost from "./CreatePost";
 import VerifyEmail from '../Components/verifyEmail';
+import Forgot from "./ForgotPassword";
 
 function ProtectedRoute({ children }) {
   const token = localStorage.getItem('token');
@@ -67,6 +68,7 @@ function Main() {
         <Route path="/Login" element={<Entry />}>
           <Route index element={<Login />} />
           <Route path="Signup" element={<Signup />} />
+          <Route path="ForgotPassword" element={<Forgot/>}></Route>
         </Route>
 
         <Route path="/verify-email/:verificationToken" element={<VerifyEmail />} />
