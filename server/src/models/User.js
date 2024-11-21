@@ -17,6 +17,10 @@ const UserSchema = new Schema({
         type: Date
     }, 
     imageUrl: String,
+    verified: {
+        type: Boolean,
+        default: false,
+      },      
     role: {
         type: String,
         enum: ['user', 'admin'],

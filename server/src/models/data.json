@@ -292,6 +292,19 @@
         "12-34567@g.batstate-u.edu.ph",
         "34-56789@g.batstate-u.edu.ph"
       ]
+    },
+    {
+      "title": "Important Announcement: System Maintenance",
+      "content": "Please be advised that the system will undergo scheduled maintenance from 10:00 PM to 2:00 AM tonight. During this period, the platform will be unavailable. We apologize for the inconvenience and appreciate your patience.",
+      "author": "90-12345@g.batstate-u.edu.ph",
+      "tags": {
+        "descriptiveTag": "announcement",
+        "campusTag": "alangilan",
+        "departmentTag": "college of informatics and computing sciences",
+        "nsfw": false
+      },
+      "comments": [],
+      "upvotes": []
     }
   ]
 }

@@ -33,6 +33,11 @@ app.use((req, res, next) => {
 app.use('/api/user', userRouter);
 app.use('/api/posts', postRouter);
 
+app.use('/api/user/verify-email', (req, res, next) => {
+  res.set('Cache-Control', 'no-store');
+  next();
+});
+
 app.get('/', (req, res) => {
   console.log("Home route");
   res.status(201).json("Home");
