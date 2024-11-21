@@ -9,6 +9,7 @@ const tokenSchema = new mongoose.Schema({
   token: {
     type: String,
     required: true,
+    unique: true,
   },
   expiresAt: {
     type: Date,
@@ -16,6 +17,7 @@ const tokenSchema = new mongoose.Schema({
   },
 }, { timestamps: true });
 
+tokenSchema.index({ userId: 1, expiresAt: 1 });
 const Token = mongoose.model('Token', tokenSchema);
 
 export default Token;

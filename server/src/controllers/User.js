@@ -87,7 +87,7 @@ export async function register(req, res) {
       });
     }
 
-    //hashing in models
+    //hashing already in models (pre save hook)
 
     const newUser = new User({
       name,
@@ -190,14 +190,59 @@ export async function login(req, res) {
         return res.status(400).json({ message: 'User does not exist' });
     }
 
-    console.log('Login - Entered password:', password);
-    console.log('Login - Stored hashed password:', user.password);
+    if (user.lockoutTime) {
+      const lockoutRemainingTime = user.lockoutTime - Date.now();
 
+      //if lockout time not expired, block attempts
+      if (lockoutRemainingTime > 0) {
+        const lockoutMinutes = Math.floor(lockoutRemainingTime / 1000 / 60);
+        return res.status(403).json({
+          message: `Account locked. Please try again in ${lockoutMinutes} minutes.`,
+        });
+      } else {
+        // Reset lockout time if the lockout period has expired
+        user.lockoutTime = null;
+        // user.failedAttempts = 0; 
+        await user.save();
+      }
+    }
 
     const passwordIsValid = await bcrypt.compare(password, user.password);
     if (!passwordIsValid) {
-        return res.status(401).json({ message: 'Password Incorrect' });
+      user.failedAttempts += 1;
+
+      let lockoutDuration;
+
+      if (user.failedAttempts >= 5) {
+        lockoutDuration = 60 * 60 * 1000; // 1 hour
+      } else if (user.failedAttempts >= 3) {
+        lockoutDuration = 5 * 60 * 1000; // 5 minutes
+      }
+
+      if (lockoutDuration) {
+        user.lockoutTime = Date.now() + lockoutDuration;
+      }
+
+      const remainingAttempts = 3 - user.failedAttempts;
+
+      await user.save();
+
+      if (user.failedAttempts >= 3) {
+        // If failed attempts exceed or equal 3, show a generic message
+        return res.status(401).json({
+          message: 'Invalid email or password.',
+        });
+      }
+
+      return res.status(401).json({
+        message: `Invalid email or password. ${remainingAttempts} attempts before lockout.`,
+        lockoutTimeRemaining: remainingAttempts >= 1 ? null : lockoutDuration / 1000 / 60 // Time left if locked out
+      });
     }
+
+    user.failedAttempts = 0;
+    user.lockoutTime = null;
+    await user.save();
 
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { 
       expiresIn: '1h' 
@@ -223,7 +268,7 @@ export async function initUser(req, res){
     // console.log('Token received (init):', token);
 
     const token = req.headers.authorization?.split(' ')[1];  // Get token from Authorization header
-    console.log('Token received (init):', token);
+    // console.log('Token received (init):', token);
 
     let user = null;
     let response = null;
@@ -268,40 +313,118 @@ export async function updateUser(req, res){
 
 }
 
-export async function resetPasword(req, res){
-  const { currentPassword, newPassword } = req.body;
+// export async function resetPasword(req, res){
+//   const { currentPassword, newPassword } = req.body;
 
-  // Use userId from the authenticated user
-  const { userId } = req.user;
+//   // Use userId from the authenticated user
+//   const { userId } = req.user;
+
+//   try {
+//       // Validate the input
+//       if (!currentPassword || !newPassword) {
+//           return res.status(400).json({ message: 'Please provide all required fields' });
+//       }
+
+//       // Find the user by userId
+//       const user = await User.findById(userId);
+//       if (!user) {
+//           return res.status(404).json({ message: 'User not found' });
+//       }
+
+//       // Compare the current password with the stored password
+//       const isMatch = await bcrypt.compare(currentPassword, user.password);
+//       if (!isMatch) {
+//           return res.status(400).json({ message: 'Current password is incorrect' });
+//       }
+
+//       // Hash the new password
+//       const hashedPassword = await bcrypt.hash(newPassword, 10);
+      
+//       // Update the user's password
+//       user.password = hashedPassword;
+//       await user.save();
+
+//       res.status(200).json({ message: 'Password updated successfully' });
+//   } catch (error) {
+//       console.error('Error changing password:', error);
+//       res.status(500).json({ message: 'Server error' });
+//   }
+// }
+
+
+export async function requestVerificationCode(req, res) {
+  const { email } = req.body;
+
+  if (!email) {
+      return res.status(400).json({ message: 'Email is required' });
+  }
 
   try {
-      // Validate the input
-      if (!currentPassword || !newPassword) {
-          return res.status(400).json({ message: 'Please provide all required fields' });
-      }
-
-      // Find the user by userId
-      const user = await User.findById(userId);
+      const user = await User.findOne({ email });
       if (!user) {
           return res.status(404).json({ message: 'User not found' });
       }
 
-      // Compare the current password with the stored password
-      const isMatch = await bcrypt.compare(currentPassword, user.password);
-      if (!isMatch) {
-          return res.status(400).json({ message: 'Current password is incorrect' });
+      const existingToken = await Token.findOne({ userId: user._id });
+      if (existingToken && existingToken.expiresAt > Date.now()) {
+          return res.status(400).json({ message: 'A verification code has already been sent and is still valid.' });
       }
 
-      // Hash the new password
-      const hashedPassword = await bcrypt.hash(newPassword, 10);
-      
-      // Update the user's password
-      user.password = hashedPassword;
-      await user.save();
+      // Generate a random verification code
+      const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
 
-      res.status(200).json({ message: 'Password updated successfully' });
+      const newToken = new Token({
+        userId: user._id, 
+        token: verificationCode,
+        expiresAt: Date.now() + 3600000,
+      });
+
+      const emailSubject = 'Password Reset Verification Code';
+      const emailText = `Your verification code is: ${verificationCode}`;
+      const emailHtml = `<p>Your verification code is: <strong>${verificationCode}</strong></p>`;
+
+
+      await newToken.save();
+      await sendEmail(email, emailSubject, emailText, emailHtml);
+
+      res.status(200).json({ message: 'Verification code sent to your email' });
   } catch (error) {
-      console.error('Error changing password:', error);
-      res.status(500).json({ message: 'Server error' });
+      console.error('Error sending verification code:', error);
+      res.status(500).json({ message: 'An error occurred while sending the verification code' });
+  }
+}
+
+export async function resetPasswordWithCode(req, res) {
+  const { email, verificationCode, newPassword } = req.body;
+
+  if ( !email || !verificationCode || !newPassword) {
+    return res.status(400).json({ message: 'Email, verification code, and new password are required' });
+  }
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    const tokenDoc = await Token.findOne({ userId: user._id, token: verificationCode });
+    if (!tokenDoc) {
+      return res.status(400).json({ message: 'Invalid verification code' });
+    }
+
+    if (tokenDoc.expiresAt < Date.now()) {
+      return res.status(400).json({ message: 'Verification code has expired' });
+    }
+
+    user.password = newPassword;
+    await user.save();
+
+    // Optionally delete the token after use (or mark it as used)
+    await Token.deleteOne({ userId: user._id, token: verificationCode });
+
+    res.status(200).json({ message: 'Password reset successful' });
+    
+  } catch (error) {
+    console.error('Error resetting password:', error);
+    res.status(500).json({ message: 'An error occurred while resetting the password' });
   }
 }

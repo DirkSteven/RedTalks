@@ -34,25 +34,20 @@ function LoginForm() {
 
     if (!email || !password) {
       setError("Please enter both email and password.");
-      console.log("blank form");
       return;
     }
 
-    setLoading(true);  // Set loading state while submitting the form
-    
-    console.log('Email:', email); // Debug: log email
-    console.log('Password:', password); // Debug: log password
+    setLoading(true);
 
     
     try {
-      // Make the POST request to the backend with the email and password
       const response = await axios.post('/api/user/login', {
         email,
         password
       });
 
       // Handle successful response
-      const { token, user } = response.data;
+      const { token } = response.data;
 
       localStorage.setItem('token', token);
 
@@ -87,7 +82,8 @@ function LoginForm() {
         {error && <div className="error">{error}</div>} 
 
 
-        <Submit label="LOGIN"/>
+        <Submit label={loading ? "Loading..." : "LOGIN"} disabled={loading} />
+
       </form>
       <p className="text">
         Don't have an account?

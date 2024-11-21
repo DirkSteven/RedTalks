@@ -17,6 +17,8 @@ const UserSchema = new Schema({
         type: Date
     }, 
     imageUrl: String,
+    failedAttempts: { type: Number, default: 0 },
+    lockoutTime: { type: Date, default: null },
     verified: {
         type: Boolean,
         default: false,

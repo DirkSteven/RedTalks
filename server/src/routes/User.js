@@ -13,7 +13,11 @@ router.get('/:userId/upvotes', userController.getUserUpvotes);
 router.post('/register', userController.register);  
 router.post('/login', userController.login);
 
-router.post('/changepassword', authenticate, userController.resetPasword);
+// router.post('/request-password-reset', userController.requestPasswordReset);
+router.post('/request-verification-code', userController.requestVerificationCode);
+router.post('/reset-password-with-code', userController.resetPasswordWithCode);
+
+// router.post('/changepassword', authenticate, userController.resetPasword);
 
 // Route to update user details
 router.put('/updateuser', authenticate, userController.updateUser);
