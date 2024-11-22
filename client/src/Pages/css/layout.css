@@ -1,18 +1,22 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
 .container{
-    height: 100vh;
+    background-color: #f0f0e1;
+    height: fit-content;
     width: 100%;
     font-family: 'Poppins', serif;
+    z-index: -99;
 }
 
 .header{
     z-index: 5;
-    background-color: blueviolet;
+    background-color: #f9f9ed;
     position: sticky;
     height: 10vh;
     width: 100%;
     top: 0;
+    box-sizing: border-box;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.1);
     overflow: hidden;
 }
 
@@ -23,17 +27,17 @@
     height: 100%;
     width: 100%;
     display: grid;
-    grid-template-columns: 10% 20% 50% 20%;
+    grid-template-columns: 5% 25% 50% 20%;
     overflow: hidden;
+    color: #2c2c2c;
 }
 
 .toggle{
     font-family: 'Poppins', serif;
+    font-size: large;
     border: none;
-    background-color: #7e1c1c;
+    background-color: transparent;
     grid-column-start: 1;
-    height: 100%;
-    width: 100%;
 }
 
 .logo{
@@ -42,11 +46,17 @@
 
 .searchbar{
     font-family: 'Poppins', serif;
-    border: none;
+    border: 2px solid rgba(0, 0, 0, 0.1);
     padding: 0.5em 0.5em 0.5em 3.5em;
+    background-color: #d9d9d9;
     border-radius: 15px;
     width: 80%;
     grid-column-start: 3;
+}
+
+.searchbar::selection{
+    background-color: #d9d9d9;
+    border: 2px solid rgba(0, 0, 0, 0.1);
 }
 
 .headbutt{
@@ -55,16 +65,20 @@
 
 .contents{
     display: flex;
+    height: fit-content;
     flex-direction: row;
 }
 
 .sidebar{
+    background-color: #f9f9ed;
     transition: 0.3s ease;
     display: flex;
     flex-basis: 20%;
     position: sticky;
-    height: 100%;
+    border-right: 2px solid rgba(0, 0, 0, 0.1);
+    height: 90vh;
     top: 10vh;
+    overflow-y: hidden;
 }
 
 .sidebar.collapsed{
@@ -81,12 +95,12 @@
 
 .nav{
     padding: 1em;
-    margin: 0 10%;
+    margin: 0 5px;
     display: flex;
     border-radius: 20px;
     background-color: #9e2525;
     position: sticky;
-    top: 12vh;
+    top: 11vh;
     z-index: 3;
 }
 
@@ -120,14 +134,22 @@
 }
 
 .nav ul li a{
+    box-sizing: border-box;
+    display: flex;
     padding: .7em;
-    text-align: center;
-    text-justify: center;
     height: 100%;
     width: 100%;
-    font-size: .7em;
+    font-size: small;
+    font-weight: 500;
     text-decoration: none;
+    align-items: center;
+    justify-content: center;
     color: #f0f0e1;
+}
+
+.homenavicon{
+    box-sizing: content-box;
+    margin: 0 5px;
 }
 
 .nav ul li.active{
@@ -140,7 +162,7 @@
 
 .page{
     margin: 2% 5%;
-    height: 80vh;
+    height: fit-content;
     display: flex;
     justify-content: center;
     z-index: 0;
@@ -148,34 +170,41 @@
 
 .list{
     width: 100%;
-    height: 100%;
+    height: fit-content;
     justify-items: center;
-    margin-right: 35vh;
-}
-
-.list::-webkit-scrollbar{
-    display: none;
+    margin-right: 20vw;
 }
 
 .postitem{
-    width: 70%;
+    width: 90%;
     box-sizing: border-box;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    max-height: 70vh;
     font-size: medium;
-    background-color: #dbdbdb;
+    background-color: #f9f9ed;
+    box-sizing: border-box;
+    border: 2px solid rgba(0, 0, 0, 0.1);
     border-radius: 15px;
-    padding: 1.5%;
+    padding: 10px 20px;
     margin: 20px;
-    cursor: pointer;
+    cursor: default;
+    text-wrap: wrap;
+    text-overflow:ellipsis;
+}
+
+.postitem h3{
+    font-size: medium;
+}
+
+.postpreview{
+    font-size: small;
 }
 
 .interact{
     display: flex;
     flex-direction: row;
-    font-size: small;
-}
-
-.interact p{
+    width: 50%;
+    font-size: smaller;
+    justify-content: space-around;
     margin:  0 1em;
 }
 
@@ -188,9 +217,9 @@
 .postmodal-content {
     padding: 20px;
     border-radius: 8px;
+    background-color: #f9f9ed;
     max-width: 600px;
     width: 80%;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     position: relative;
 }
 
@@ -216,7 +245,7 @@
 }
 
 .schinfo{
-    background-color: #dbdbdb;
+    background-color: #f9f9ed;
     border-radius: 15px 15px 0 0;
     height: 67%;
     width: 20vw;
@@ -224,7 +253,7 @@
     position: fixed;
     bottom: 0;
     right: 2%;
-    z-index: -1;
+    z-index: 0;
 }
 
 .postcreation{
@@ -250,10 +279,12 @@
 }
 
 .postcreation input{
+    padding: 10px;
     width: 100%;
 }
 
 .postcreation textarea{
+    padding: 10px;
     width: 100%;
     height: 50%;
     resize: none;

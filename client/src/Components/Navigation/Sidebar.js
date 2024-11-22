@@ -14,8 +14,8 @@ function Sidebar({isCollapsed}) {
   return (
       <div className={`sidebar ${isCollapsed ? 'collapsed' : ''}`}>
         <ul>
-          <li><Link to='/Login'>Login</Link></li>
-          <li><Link to ='/Login/Signup'>Signup</Link></li>
+          <li></li>
+          <li></li>
           <li><button onClick={logout}>Logout</button></li>
           <li><Link to='/CreatePost'>Create</Link></li>
         </ul>

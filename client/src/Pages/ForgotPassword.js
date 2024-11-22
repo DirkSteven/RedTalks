@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import PlainInput from '../Components/Text Input/PlainInput';
 import HiddenInput  from '../Components/Text Input/HiddenInput';
 import './css/landing.css';
@@ -77,8 +77,11 @@ function Forgot() {
             <form onSubmit={handleResetSubmit}>
                 <HiddenInput label="New Password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
                 <HiddenInput label="Confirm New Password" value={confirmNewPassword} onChange={(e) => setConfirmNewPassword(e.target.value)} />
-                <button type="submit">Reset Password</button>
             </form>
+            <div class="forgotsubmit">
+            <button type="submit" className='submit reset'>Reset Password</button>
+            <Link to="/Login" className='submit cancel'>Cancel</Link>
+            </div>
             {message && <p>{message}</p>}
         </div>
     );

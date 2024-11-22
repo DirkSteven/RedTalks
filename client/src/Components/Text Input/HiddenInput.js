@@ -1,4 +1,5 @@
 import React, {useState} from "react";
+import { FaEyeSlash, FaEye } from "react-icons/fa";
 
 function HiddenInput({ label, value, onChange }) {
 
@@ -17,7 +18,7 @@ function HiddenInput({ label, value, onChange }) {
         onChange={onChange}   // Pass the onChange handler from the parent
       />
       <button type="button" className='hidechar' onClick={toggleVisibility}>
-        {toggleHide ? "Hide" : "Show"} {/* Button text changes based on visibility */}
+        {toggleHide ? <FaEyeSlash/> : <FaEye/> } {/* Button text changes based on visibility */}
       </button>
     </div>
 

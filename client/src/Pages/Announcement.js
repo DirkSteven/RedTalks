@@ -33,7 +33,7 @@ function Announcement(){
                 <p>No announcements atm</p>
             ) : (
                 announcements.map(announcement => (
-                    <div key={announcement.id} className="announcementItem">
+                    <div key={announcement.id} className="postitem shoutout">
                         <h3>{announcement.title}</h3>
                         <p>{announcement.content}</p>
                     </div>

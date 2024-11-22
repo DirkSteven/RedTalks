@@ -1,10 +1,9 @@
 import React from "react";
+import { FaBars } from "react-icons/fa";
 
 function Toggle({onClick}) {
   return (
-    <button onClick={onClick} className="toggle">
-      ...
-    </button>
+    <FaBars onClick={onClick} className="toggle"/>
   );
 }
 

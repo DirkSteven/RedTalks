@@ -14,13 +14,14 @@ img{
 }
 
 .panel{
-    background-color: aqua;
+    background-color: #f0f0e1;
     height: 100vh;
     width: 100vw;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
 }
 
 .panel h1{
@@ -30,7 +31,7 @@ img{
 
 .panelform{
     height: 100%;
-    width: 80%;
+    width: 70%;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -74,8 +75,15 @@ img{
     border: none;
     font-family: 'Poppins', serif;
     background-color: transparent;
+    align-items: center;
+    justify-content: center;
     text-align: center;
     width: 20%;
+}
+
+.hidechar{
+    font-size: x-large;
+    color: #2c2c2c;
 }
 
 .text{
@@ -108,6 +116,32 @@ img{
     align-self: center;
 }
 
+.forgotsubmit{
+    box-sizing: border-box;
+    margin: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.cancel, .reset{
+    font-weight: 500;
+    margin: 0 2.5%;
+}
+
+.cancel{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    background-color: transparent;
+    color: #9e2525;
+}
+
+.cancel a{
+    display: block;
+}
+
 .error{
     margin: 10px 0;
     display: flex;
@@ -128,6 +162,6 @@ img{
         flex-basis: 60%;
     }
     .panelform, .retrieve{
-        width: 40%;
+        width: 50%;
     }
 }

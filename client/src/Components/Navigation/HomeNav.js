@@ -1,4 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
+import { FaHouse, FaBullhorn, FaStore } from "react-icons/fa6";
 
 function HomeNav() {
     const location = useLocation();  // Get current location (pathname)
@@ -11,13 +12,13 @@ function HomeNav() {
             <div className="nav">
                 <ul>
                     <li className={isActive("/") ? "active" : ""}>
-                        <Link to="/">Home</Link>
+                        <Link to="/"><FaHouse className="homenavicon"/>Home</Link>
                     </li>
                     <li className={isActive("/Announcement") ? "active" : ""}>
-                        <Link to="/Announcement">Announcement</Link>
+                        <Link to="/Announcement"><FaBullhorn className="homenavicon"/>Announcement</Link>
                     </li>
                     <li className={isActive("/Marketplace") ? "active" : ""}>
-                        <Link to="/Marketplace">Marketplace</Link>
+                        <Link to="/Marketplace"><FaStore className="homenavicon"/>Marketplace</Link>
                     </li>
                 </ul>
             </div>
