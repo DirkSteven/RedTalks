@@ -60,6 +60,10 @@ img{
     border-radius: 15px;
 }
 
+.panelform input:focus{
+    outline: 2px solid rgba(158, 37, 37, 0.7);
+}
+
 .panelform .inputpass{
     margin: 0;
     width: 100%;

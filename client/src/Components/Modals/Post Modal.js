@@ -1,10 +1,12 @@
 import React from 'react';
+import { FaArrowLeft } from 'react-icons/fa6';
 
 function PostModal({ post, onClose }) {
     if (!post) return null; 
 
     return (
         <div className="postmodal-overlay" onClick={onClose}> 
+            <FaArrowLeft className="modalClose" onClick={onClose}/>
             <div className="postmodal-content" onClick={(e) => e.stopPropagation()}>
                 <h3>{post.title}</h3>
                 <p>{post.content}</p>
@@ -28,7 +30,6 @@ function PostModal({ post, onClose }) {
                     <p>No comments yet.</p>
                 )}
 
-                <button className='modalClose' onClick={onClose}>Close</button>
             </div>
         </div>
     );

@@ -33,6 +33,10 @@
 }
 
 .toggle{
+    display: block;
+    box-sizing: border-box;
+    height: 20px;
+    width: 20px;
     font-family: 'Poppins', serif;
     font-size: large;
     border: none;
@@ -54,9 +58,13 @@
     grid-column-start: 3;
 }
 
-.searchbar::selection{
-    background-color: #d9d9d9;
-    border: 2px solid rgba(0, 0, 0, 0.1);
+.searchbar::placeholder{
+    color: #999999;
+}
+
+.searchbar:focus{
+    border: none;
+    outline: 2px solid rgba(158, 37, 37, 0.5);
 }
 
 .headbutt{
@@ -210,8 +218,7 @@
 
 .postmodal-overlay {
     display: flex;
-    justify-content: center;
-    align-items: center;
+    justify-content: space-between;
 }
 
 .postmodal-content {
@@ -223,20 +230,17 @@
     position: relative;
 }
 
-.modalClose {
-    margin-top: 20px;
-    padding: 8px 16px;
-    border: none;
-    background-color: #9e2525;
-    color: white;
-    font-size: 16px;
+.modalClose{
+    padding: .5em 1.5em;
+    border-radius: 20px;
+    background-color: #f0f0e1;
+    color: #9e2525;
+    font-size: medium;
     cursor: pointer;
-    border-radius: 4px;
 }
 
 .modalClose:hover {
-    background-color: #f0f0e1;
-    color: #9e2525;
+    background-color: #999999;
 }
 
 .comments-list ul{
@@ -247,12 +251,13 @@
 .schinfo{
     background-color: #f9f9ed;
     border-radius: 15px 15px 0 0;
+    border: 2px solid rgba(0, 0, 0, 0.1);
     height: 67%;
     width: 20vw;
     padding: 1.5em;
     position: fixed;
     bottom: 0;
-    right: 2%;
+    right: 1.5%;
     z-index: 0;
 }
 

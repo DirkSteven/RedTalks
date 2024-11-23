@@ -1,16 +1,17 @@
+import { Link } from "react-router-dom";
+import { FaArrowLeft } from "react-icons/fa6";
+
 function CreatePost(){
     return(
         <>
+        <Link to="/" className="modalClose"><FaArrowLeft/></Link>
         <div className="postcreation">
             <h1>Create Post</h1>
             <form>
-            <h3>Title</h3>
-            <input type="text" className="inputPostTitle"></input>
-            <h3>Body</h3>
-            <textarea></textarea>
+            <input type="text" className="inputPostTitle" placeholder="Title"></input>
+            <textarea placeholder="Body"></textarea>
             <div className="publish">
                 <button>Post</button>
-                <button>Cancel</button>
             </div>
             </form>
         </div>
