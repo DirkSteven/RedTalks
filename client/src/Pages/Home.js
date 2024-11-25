@@ -1,7 +1,7 @@
 import { React, useState, useEffect } from "react";
 import axios from 'axios';
 import PostModal from "../Components/Modals/Post Modal";
-import { FaHeart, FaHeartPulse } from "react-icons/fa6";
+import { FaRegComment, FaHeart, FaRegHeart, FaRegShareFromSquare } from "react-icons/fa6";
 
 function Home() {
     const [posts, setPosts] = useState([]);
@@ -37,6 +37,21 @@ function Home() {
         setSelected(null);
     };
 
+    // Helper function to render tags
+    const renderTags = (tags) => {
+        if (!tags) return null;
+        const { descriptiveTag, departmentTag, campusTag, nsfw } = tags;
+
+        return (
+            <div className="post-tags">
+                {descriptiveTag && <span className="tag descriptiveTag">{descriptiveTag}</span>}
+                {campusTag && <span className="tag campusTag">{campusTag}</span>}
+                {departmentTag && <span className="tag departmentTag">{departmentTag}</span>}
+                {nsfw && <span className="tag nsfwTag">NSFW</span>}
+            </div>
+        );
+    };
+
     return (
         <>
             {selected === null ? (
@@ -55,16 +70,20 @@ function Home() {
                                 >
                                     <h3>{post.title}</h3>
                                     <p className="postpreview">{post.content}</p>
+                                    
+                                    {/* Render tags for each post */}
+                                    {renderTags(post.tags)}
+
                                     <div className="interact">
-                                        <button onClick={(e) =>{
+                                        <p onClick={(e) => {
                                             e.stopPropagation();
                                             toggleUpvote(post);
-                                        }}
-                                        >
+                                        }}>
                                             {post.upvotes ? post.upvotes.length : 0} 
-                                            {isUpvote ? <FaHeartPulse/> : <FaHeart/>}
-                                        </button>
-                                        <p>{post.comments ? post.comments.length : 0} comments</p>
+                                            {isUpvote ? <FaHeart /> : <FaRegHeart />}
+                                        </p>
+                                        <p>{post.comments ? post.comments.length : 0} <FaRegComment /></p>
+                                        <p><FaRegShareFromSquare /></p>
                                     </div>
                                 </div>
                             ))

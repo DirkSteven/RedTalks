@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaArrowLeft } from 'react-icons/fa6';
+import { FaArrowLeft, FaRegComment, FaHeart, FaRegHeart, FaRegShareFromSquare } from 'react-icons/fa6';
 
 function PostModal({ post, onClose }) {
     if (!post) return null; 
@@ -11,13 +11,20 @@ function PostModal({ post, onClose }) {
                 <h3>{post.title}</h3>
                 <p>{post.content}</p>
                 <div className="interact">
-                    <p>{post.upvotes ? post.upvotes.length : 0} upvotes</p>
-                    <p>{post.comments ? post.comments.length : 0} comments</p>
-                </div>
+                    <p>
+                        {post.upvotes ? post.upvotes.length : 0} 
+                        <FaRegHeart/>
+                    </p>
+                    <p>{post.comments ? post.comments.length : 0} <FaRegComment/> </p>
+                    <p><FaRegShareFromSquare/></p>
+                 </div>
                 {post.comments && post.comments.length > 0 ? (
                     <div className="comments-list">
                         <h4>Comments:</h4>
-                        <input type='text' className='addComment' placeholder='Add comment'></input>
+                        <div className='addComment'>
+                        <input type='text' placeholder='Add comment'></input>
+                        <button>post</button>
+                        </div>
                         <ul>
                             {post.comments.map((comment) => (
                                 <li key={comment.id}>
