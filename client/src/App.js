@@ -22,7 +22,7 @@ function App() {
         return;
       }
 
-      console.log("Sending token:", token);
+      // console.log("Sending token:", token);
       try {
         const { data } = await axios.get(`/api/user/init?token=${token}`);
         setUser (data.user);
@@ -33,8 +33,6 @@ function App() {
         setLoading(false); 
       }
     };
-
-
     init();
   }, []);
 

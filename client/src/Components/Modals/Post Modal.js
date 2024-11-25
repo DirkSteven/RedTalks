@@ -1,38 +1,84 @@
-import React from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { FaArrowLeft } from 'react-icons/fa6';
+import AppContext from '../../Contexts/AppContext'; // Importing AppContext
+import axios from 'axios';
 
 function PostModal({ post, onClose }) {
-    if (!post) return null; 
+  const { user } = useContext(AppContext); // Get user from AppContext
+  const [commentContent, setCommentContent] = useState('');
+  const [comments, setComments] = useState(post.comments || []);
 
-    return (
-        <div className="postmodal-overlay" onClick={onClose}> 
-            <FaArrowLeft className="modalClose" onClick={onClose}/>
-            <div className="postmodal-content" onClick={(e) => e.stopPropagation()}>
-                <h3>{post.title}</h3>
-                <p>{post.content}</p>
-                <div className="interact">
-                    <p>{post.upvotes ? post.upvotes.length : 0} upvotes</p>
-                    <p>{post.comments ? post.comments.length : 0} comments</p>
-                </div>
-                {post.comments && post.comments.length > 0 ? (
-                    <div className="comments-list">
-                        <h4>Comments:</h4>
-                        <input type='text' className='addComment' placeholder='Add comment'></input>
-                        <ul>
-                            {post.comments.map((comment) => (
-                                <li key={comment.id}>
-                                    <p>{comment.content}</p>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                ) : (
-                    <p>No comments yet.</p>
-                )}
+  useEffect(() => {
+    setComments(post.comments);
+  }, [post]);
 
-            </div>
+  const handleCommentChange = (e) => {
+    setCommentContent(e.target.value);
+  };
+
+  const handleCommentSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!commentContent) return; // Don't submit empty comments
+
+    if (!user) {
+      alert('You must be logged in to post a comment.');
+      return;
+    }
+
+    try {
+      // Post the comment to the backend
+      const response = await axios.post(`/api/posts/${post._id}/comment`, {
+        content: commentContent,
+        author: user._id, // Use user._id from context
+      });
+
+      // Add the new comment to the state and clear the input
+      setComments([response.data.comment, ...comments]);
+      setCommentContent('');
+    } catch (error) {
+      console.error('Error adding comment:', error);
+      alert('Failed to add comment');
+    }
+  };
+
+  if (!post) return null; // If no post is available, return null
+
+  return (
+    <div className="postmodal-overlay" onClick={onClose}>
+      <FaArrowLeft className="modalClose" onClick={onClose} />
+      <div className="postmodal-content" onClick={(e) => e.stopPropagation()}>
+        <h3>{post.title}</h3>
+        <p>{post.content}</p>
+
+        <div className="comments-section">
+          <h4>Comments:</h4>
+          <form onSubmit={handleCommentSubmit}>
+            <textarea
+              value={commentContent}
+              onChange={handleCommentChange}
+              placeholder="Add your comment..."
+              required
+            />
+            <button type="submit">Post Comment</button>
+          </form>
+
+          {/* Displaying the list of comments */}
+          {comments && comments.length > 0 ? (
+            <ul>
+              {comments.map((comment) => (
+                <li key={comment._id}>
+                  <p><strong>{comment.author?.name}</strong>: {comment.content}</p> {/* Assuming comment has author name */}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>No comments yet.</p>
+          )}
         </div>
-    );
+      </div>
+    </div>
+  );
 }
 
 export default PostModal;

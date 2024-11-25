@@ -236,6 +236,12 @@ export async function createPost(req, res){
         return res.status(400).json({ message: 'Missing required fields: title, content, author, or descriptiveTag' });
     }
 
+    const user = await User.findById(author);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+
     // If the descriptiveTag is 'others', campusTag and departmentTag are optional
     if (tags.descriptiveTag !== 'others') {
         if (!tags.campusTag || !tags.departmentTag) {
@@ -276,40 +282,42 @@ export async function createPost(req, res){
 
 export async function commentOnPost(req, res) {
     try {
-        const postId = req.params.postId;
-        const { content, author, parentCommentId } = req.body; // Capture the parentCommentId
+      const postId = req.params.postId;
+      const { content, author, parentCommentId } = req.body; // Capture the parentCommentId
 
-        
-        // Find the post by ID and populate its comments
-        const post = await Post.findById(postId).populate("comments");
-        if (!post) {
-            return res.status(404).json({ message: "Post not found" });
-        }
+      
+      // Find the post by ID and populate its comments
+      const post = await Post.findById(postId).populate("comments");
+      if (!post) {
+          return res.status(404).json({ message: "Post not found" });
+      }
 
-        // Check if there's a parent comment to reply to
-        let parentComment = null;
-        if (parentCommentId) {
-            parentComment = post.comments.id(parentCommentId); // Find the comment by its ID in the post
-            if (!parentComment) {
-                return res.status(404).json({ message: "Parent comment not found" });
-            }
-        }
+      // Check if there's a parent comment to reply to
+      let parentComment = null;
+      if (parentCommentId) {
+          parentComment = post.comments.id(parentCommentId); // Find the comment by its ID in the post
+          if (!parentComment) {
+              return res.status(404).json({ message: "Parent comment not found" });
+          }
+      }
 
-        // Create a new comment
-        const newComment = new Comment({
-            content,
-            author,
-            parentComment: parentCommentId || null,  // If no parent comment, this stays null
-        });
+      await newComment.save(); //delete?
 
-        // Push the new comment into the post's comments array
-        post.comments.push(newComment);
-        await post.save();
+      // Create a new comment
+      const newComment = new Comment({
+          content,
+          author,
+          parentComment: parentCommentId || null,  // If no parent comment, this stays null
+      });
 
-        return res.status(201).json({ message: 'Comment added successfully', comment: newComment });
+      // Push the new comment into the post's comments array
+      post.comments.push(newComment);
+      await post.save();
+
+      return res.status(201).json({ message: 'Comment added successfully', comment: newComment });
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Error adding comment', error: error.message });
+      console.error(error);
+      res.status(500).json({ message: 'Error adding comment', error: error.message });
     }
 }
 
