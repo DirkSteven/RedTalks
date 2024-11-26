@@ -11,6 +11,7 @@ router.get('/popular', postController.getPopularPosts);
 router.get('/relevance', postController.getRelevantPosts);
 router.get('/popular-tags', postController.getPopularTags);
 router.get('/:postId', postController.getPost); 
+router.get('/:postId/upvote-count', postController.getUpvoteCount);
 
 // http://localhost:5000/api/posts/filter?descriptiveTag=announcement
 

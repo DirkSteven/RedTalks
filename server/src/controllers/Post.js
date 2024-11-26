@@ -143,6 +143,28 @@ export async function search(req, res) {
   }
 }
 
+export async function getUpvoteCount(req, res) {
+  try {
+    const { postId } = req.params; // Get postId from the URL params
+    
+    // Find the post by its ID
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(404).json({ message: 'Post not found' });
+    }
+
+    // Respond with the upvote count
+    res.status(200).json({
+      upvoteCount: post.upvotes.length, // Send the length of upvotes array
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: 'Error fetching upvote count',
+      error: error.message,
+    });
+  }
+}
+
 export async function getPostbyTags(req, res) {
   try {
     console.log('/api/posts/filter'); // This should print to the console if the route is hit
@@ -283,37 +305,34 @@ export async function createPost(req, res){
 export async function commentOnPost(req, res) {
     try {
       const postId = req.params.postId;
-      const { content, author, parentCommentId } = req.body; // Capture the parentCommentId
+      const { content, author, parentCommentId } = req.body; 
 
-      
-      // Find the post by ID and populate its comments
       const post = await Post.findById(postId).populate("comments");
       if (!post) {
           return res.status(404).json({ message: "Post not found" });
       }
 
-      // Check if there's a parent comment to reply to
       let parentComment = null;
       if (parentCommentId) {
-          parentComment = post.comments.id(parentCommentId); // Find the comment by its ID in the post
+          parentComment = post.comments.id(parentCommentId);
           if (!parentComment) {
               return res.status(404).json({ message: "Parent comment not found" });
           }
       }
 
-      // Create a new comment
       const newComment = new Comment({
           content,
           author,
-          parentComment: parentCommentId || null,  // If no parent comment, this stays null
+          parentComment: parentCommentId || null,
       });
 
-      // Push the new comment into the post's comments array
+      await newComment.save();// this
+
       post.comments.push(newComment);
       await post.save();
 
       await newComment.populate("author", "name");
-      
+
       return res.status(201).json({ message: 'Comment added successfully', comment: newComment });
     } catch (error) {
       console.error(error);
@@ -437,3 +456,4 @@ export async function downvote(req, res){
         });
       }
 }
+
