@@ -66,16 +66,26 @@ img{
 
 .panelform .inputpass{
     margin: 0;
-    width: 100%;
+    width: 108%;
     display: flex;
     flex-direction: row;
 }
 
 .inputpass input{
-    width: 80%;
+    width: 100%;
+    z-index: 2;
 }
 
-.hidechar, .verify button{
+.hidechar{
+    border: none;
+    transform: translate(-130%, 2.5%);
+    background-color: transparent;
+    font-size: x-large;
+    color: #2c2c2c;
+    z-index: 3;
+}
+
+.verify button{
     border: none;
     font-family: 'Poppins', serif;
     background-color: transparent;
@@ -83,11 +93,6 @@ img{
     justify-content: center;
     text-align: center;
     width: 20%;
-}
-
-.hidechar{
-    font-size: x-large;
-    color: #2c2c2c;
 }
 
 .text{

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { FaArrowLeft } from 'react-icons/fa6';
+import { FaArrowLeft, FaRegComment, FaHeart, FaRegHeart, FaRegShareFromSquare } from 'react-icons/fa6';
 import AppContext from '../../Contexts/AppContext'; 
 import axios from 'axios';
 
@@ -7,9 +7,14 @@ function PostModal({ post, onClose }) {
   const { user } = useContext(AppContext);
   const [commentContent, setCommentContent] = useState('');
   const [comments, setComments] = useState(post.comments || []);
+  // const [upvoted, setUpvoted] = useState(false); // Track upvote status
+  // const [upvoteCount, setUpvoteCount] = useState(post.upvotes ? post.upvotes.length : 0);
+
 
   useEffect(() => {
     setComments(post.comments);
+    // setUpvoteCount(post.upvotes ? post.upvotes.length : 0);
+    // setUpvoted(post.upvotes && post.upvotes.includes(user?._id));
   }, [post]);
 
   const handleCommentChange = (e) => {
@@ -73,45 +78,52 @@ function PostModal({ post, onClose }) {
 
   if (!post) return null; // If no post is available, return null
 
-  return (
-    <div className="postmodal-overlay" onClick={onClose}>
-      <FaArrowLeft className="modalClose" onClick={onClose} />
-      <div className="postmodal-content" onClick={(e) => e.stopPropagation()}>
-        <h3>{post.title}</h3>
-        <p>{post.content}</p>
+    return (
+      <div className="postmodal-overlay" onClick={onClose}> 
+        <FaArrowLeft className="modalClose" onClick={onClose}/>
+        <div className="postmodal-content" onClick={(e) => e.stopPropagation()}>
+          <h3>{post.title}</h3>
+          <p>{post.content}</p>
+          <div className="interact">
+            <p>
+                {post.upvotes ? post.upvotes.length : 0} 
+                <FaRegHeart/>
+            </p>
+            <p>{post.comments ? post.comments.length : 0} <FaRegComment/> </p>
+            <p><FaRegShareFromSquare/></p>
+          </div>
+          <div className="comments-list">
+            <h4>Comments:</h4>
+            <form onSubmit={handleCommentSubmit}>
+              <textarea
+                value={commentContent}
+                onChange={handleCommentChange}
+                placeholder="Add your comment..."
+                required
+              />
+              <button type="submit">Post</button>
+            </form>
 
-        <div className="comments-section">
-          <h4>Comments:</h4>
-          <form onSubmit={handleCommentSubmit}>
-            <textarea
-              value={commentContent}
-              onChange={handleCommentChange}
-              placeholder="Add your comment..."
-              required
-            />
-            <button type="submit">Post Comment</button>
-          </form>
-
-          {comments && comments.length > 0 ? (
-            <ul>
-              {comments.map((comment) => (
-                <li key={comment._id}>
-                  <p>
-                    <strong>{comment.author?.name}</strong>: {comment.content}
-                    </p>
-                    {comment.author?._id === user._id && (
-                      <button onClick={() => handleDeleteComment(comment._id)}>Delete</button>
-                    )}
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p>No comments yet.</p>
-          )}
+            {comments && comments.length > 0 ? (
+              <ul>
+                {comments.map((comment) => (
+                  <li key={comment._id}>
+                    <p>
+                      <strong>{comment.author?.name}</strong>: {comment.content}
+                      </p>
+                      {comment.author?._id === user._id && (
+                        <button onClick={() => handleDeleteComment(comment._id)}>Delete</button>
+                      )}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>No comments yet.</p>
+            )}
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
 }
 
 export default PostModal;
