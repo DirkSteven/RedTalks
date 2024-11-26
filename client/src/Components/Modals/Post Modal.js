@@ -51,6 +51,26 @@ function PostModal({ post, onClose }) {
     }
   };
 
+  const handleDeleteComment = async (commentId) => {
+    try {
+      const response = await axios.delete(`/api/posts/${post._id}/comments/${commentId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`, // Send the token for authorization
+        },
+      });
+  
+      // Filter out the deleted comment from the comments state
+      setComments((prevComments) =>
+        prevComments.filter((comment) => comment._id !== commentId)
+      );
+  
+      alert(response.data.message); // Show success message
+    } catch (error) {
+      console.error('Error deleting comment:', error);
+      alert('Failed to delete comment');
+    }
+  };
+
   if (!post) return null; // If no post is available, return null
 
   return (
@@ -72,12 +92,16 @@ function PostModal({ post, onClose }) {
             <button type="submit">Post Comment</button>
           </form>
 
-          {/* Displaying the list of comments */}
           {comments && comments.length > 0 ? (
             <ul>
               {comments.map((comment) => (
                 <li key={comment._id}>
-                  <p><strong>{comment.author?.name}</strong>: {comment.content}</p> {/* Assuming comment has author name */}
+                  <p>
+                    <strong>{comment.author?.name}</strong>: {comment.content}
+                    </p>
+                    {comment.author?._id === user._id && (
+                      <button onClick={() => handleDeleteComment(comment._id)}>Delete</button>
+                    )}
                 </li>
               ))}
             </ul>
