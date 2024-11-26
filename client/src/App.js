@@ -24,7 +24,9 @@ function App() {
 
       // console.log("Sending token:", token);
       try {
-        const { data } = await axios.get(`/api/user/init?token=${token}`);
+        const { data } = await axios.get(`/api/user/init`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
         setUser (data.user);
       } catch (error) {
         console.error('Error during initialization:', error);

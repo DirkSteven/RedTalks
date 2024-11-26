@@ -19,7 +19,7 @@ function CreatePost() {
         {
           title,
           content,
-          author: "user_id", // Replace with the actual user ID
+          author: 'user._id', // Replace with the actual user ID
           imageUrl: "", // Optionally handle image URL
           tags: {
             descriptiveTag: "discussion",

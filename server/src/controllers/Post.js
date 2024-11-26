@@ -301,8 +301,6 @@ export async function commentOnPost(req, res) {
           }
       }
 
-      await newComment.save(); //delete?
-
       // Create a new comment
       const newComment = new Comment({
           content,
@@ -314,6 +312,8 @@ export async function commentOnPost(req, res) {
       post.comments.push(newComment);
       await post.save();
 
+      await newComment.populate("author", "name");
+      
       return res.status(201).json({ message: 'Comment added successfully', comment: newComment });
     } catch (error) {
       console.error(error);

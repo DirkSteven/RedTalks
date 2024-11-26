@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { FaArrowLeft } from 'react-icons/fa6';
-import AppContext from '../../Contexts/AppContext'; // Importing AppContext
+import AppContext from '../../Contexts/AppContext'; 
 import axios from 'axios';
 
 function PostModal({ post, onClose }) {
-  const { user } = useContext(AppContext); // Get user from AppContext
+  const { user } = useContext(AppContext);
   const [commentContent, setCommentContent] = useState('');
   const [comments, setComments] = useState(post.comments || []);
 
@@ -26,14 +26,23 @@ function PostModal({ post, onClose }) {
       return;
     }
 
+    const token = localStorage.getItem('token');
+  
+    if (!token) {
+      alert('You must be logged in to post a comment.');
+      return;
+    }
+
     try {
-      // Post the comment to the backend
       const response = await axios.post(`/api/posts/${post._id}/comment`, {
         content: commentContent,
-        author: user._id, // Use user._id from context
+        author: user._id,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,  // Include the token in the headers
+        }
       });
-
-      // Add the new comment to the state and clear the input
       setComments([response.data.comment, ...comments]);
       setCommentContent('');
     } catch (error) {
