@@ -153,8 +153,9 @@ function PostModal({ post, onClose }) {
 
 
   const handleShare = () => {
-    // const postUrl = window.location.href;
-    const postUrl = `${window.location.origin}/posts/${post._id}`;
+    const postUrl = window.location.href;
+    // const postUrl = `${window.location.origin}/posts/${post._id}`;
+    
     
     if (navigator.share) {
       navigator.share({

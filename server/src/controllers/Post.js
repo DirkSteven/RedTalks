@@ -197,6 +197,36 @@ export async function getPostbyTags(req, res) {
   }
 }
 
+export async function getAllCollegeTags(req, res) {
+  try {
+    // Use aggregate to group posts by departmentTag and count occurrences
+    const collegeTags = await Post.aggregate([
+      { 
+        $group: { 
+          _id: "$tags.departmentTag", // Group by the departmentTag
+          count: { $sum: 1 } // Count how many posts have each departmentTag
+        }
+      },
+      { 
+        $sort: { count: -1 } // Sort by the count of posts for each department tag (most popular first)
+      }
+    ]);
+
+    // Map the results to extract only the department names and counts
+    const formattedTags = collegeTags.map(tag => ({
+      name: tag._id,
+      count: tag.count
+    }));
+
+    // Send the list of all distinct department tags
+    return res.status(200).json({ collegeTags: formattedTags });
+
+  } catch (error) {
+    console.error('Error in fetching college tags:', error);
+    res.status(500).json({ message: 'Error fetching college tags', error: error.message });
+  }
+}
+
 
 export async function getPopularTags(req, res) {
   try {
@@ -221,26 +251,44 @@ export async function getPopularTags(req, res) {
       { $limit: 10 }  // Limit to the top 10 tags
     ]);
 
-    // Format the response to return the popular tags
-    // return res.status(200).json({
-    //   popularDescriptiveTags,
-    //   popularCampusTags,
-    //   popularDepartmentTags,
-    // });
 
     // Combine all the tags into one array
+    // const combinedTags = [
+    //   ...popularDescriptiveTags,
+    //   ...popularCampusTags,
+    //   ...popularDepartmentTags
+    // ];
+
+    // // Sort the combined array by 'count' in descending order
+    // combinedTags.sort((a, b) => b.count - a.count);
+
+    // // Format the response to return the sorted combined tags
+    // return res.status(200).json({
+    //   popularTags: combinedTags
+    // });
+    // Combine all the tags into one array (preserving their type: descriptive, campus, department)
     const combinedTags = [
-      ...popularDescriptiveTags,
-      ...popularCampusTags,
-      ...popularDepartmentTags
+      ...popularDescriptiveTags.map(tag => ({ name: tag._id, type: 'descriptive', count: tag.count })),
+      ...popularCampusTags.map(tag => ({ name: tag._id, type: 'campus', count: tag.count })),
+      ...popularDepartmentTags.map(tag => ({ name: tag._id, type: 'department', count: tag.count }))
     ];
 
     // Sort the combined array by 'count' in descending order
     combinedTags.sort((a, b) => b.count - a.count);
 
-    // Format the response to return the sorted combined tags
+    // Optionally, remove duplicates (in case some tags overlap across categories)
+    const uniqueTags = [];
+    const seen = new Set();
+    combinedTags.forEach(tag => {
+      if (!seen.has(tag.name)) {
+        seen.add(tag.name);
+        uniqueTags.push(tag);
+      }
+    });
+
+    // Return the sorted and deduplicated tags
     return res.status(200).json({
-      popularTags: combinedTags
+      popularTags: uniqueTags
     });
   } catch (error) {
     console.error('Error in /popular-tags route:', error);

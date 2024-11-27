@@ -9,6 +9,7 @@ router.get('/filter', postController.getPostbyTags);
 router.get('/search', postController.search);
 router.get('/popular', postController.getPopularPosts);
 router.get('/relevance', postController.getRelevantPosts);
+router.get('/college-tags', postController.getAllCollegeTags);
 router.get('/popular-tags', postController.getPopularTags);
 router.get('/:postId', postController.getPost); 
 router.get('/:postId/upvote-count', postController.getUpvoteCount);
