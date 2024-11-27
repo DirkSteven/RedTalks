@@ -117,10 +117,10 @@ function Home() {
 
         return (
             <div className="post-tags">
-                {descriptiveTag && <span className="tag descriptiveTag">{descriptiveTag}</span>}
-                {campusTag && <span className="tag campusTag">{campusTag}</span>}
-                {departmentTag && <span className="tag departmentTag">{departmentTag}</span>}
-                {nsfw && <span className="tag nsfwTag">NSFW</span>}
+                {descriptiveTag && <p className="tag descriptiveTag">{descriptiveTag}</p>}
+                {campusTag && <p className="tag campusTag">{campusTag}</p>}
+                {departmentTag && <p className="tag departmentTag">{departmentTag}</p>}
+                {nsfw && <p className="tag nsfwTag">NSFW</p>}
             </div>
         );
     };
@@ -144,10 +144,8 @@ function Home() {
                                         onClick={() => postClick(post)}  
                                     >
                                         <h3>{post.title}</h3>
-                                        <p className="postpreview">{post.content}</p>
-
-                                        {/* Render tags for each post */}
                                         {renderTags(post.tags)}
+                                        <p className="postpreview">{post.content}</p>
 
                                         <div className="interact">
                                             <p onClick={(e) => {
