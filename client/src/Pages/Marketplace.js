@@ -1,6 +1,6 @@
 function Marketplace(){
     return(
-        <div>Marketplace</div>
+        <div>This page is under maintenance</div>
     );
 }
 

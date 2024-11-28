@@ -47,10 +47,7 @@ function CreatePost() {
         <FaArrowLeft />
       </Link>
       <div className="postcreation">
-        <div className="publish">
           <h1>Create Post</h1>
-          <button type="submit">Post</button>
-        </div>
         <form onSubmit={handleSubmit}>
           <input
             type="text"
@@ -60,13 +57,15 @@ function CreatePost() {
             onChange={(e) => setTitle(e.target.value)}
           />
 
-          <button>Add tags</button>
+          <button className="formbtn">Add tags</button>
 
           <textarea
             placeholder="Body"
             value={content}
             onChange={(e) => setContent(e.target.value)}
           ></textarea>
+
+        <button type="submit" className="formbtn">Post</button>
         </form>
       </div>
     </>

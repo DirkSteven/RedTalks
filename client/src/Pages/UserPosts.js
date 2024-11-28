@@ -5,7 +5,7 @@ import PostModal from "../Components/Modals/Post Modal";
 import { FaRegComment, FaHeart, FaRegHeart, FaRegShareFromSquare } from "react-icons/fa6";
 import AppContext from '../Contexts/AppContext'; 
 
-function Home() {
+function UserPosts() {
     const { user } = useContext(AppContext);
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -130,7 +130,6 @@ function Home() {
     return (
         <>
             {selected === null ? (
-                <>
                     <div className="list">
                         {loading ? (
                             <p>Loading posts...</p>
@@ -165,21 +164,6 @@ function Home() {
                             })
                         )}
                     </div>
-
-                    <div className="schinfo">
-                        <img alt="School img" />
-                        <h3>Batangas State University</h3>
-                        <p>sch desc</p>
-                        <div className="divider"></div>
-                        <div className="schSocials">
-                            <ul>
-                                <li></li>
-                                <li></li>
-                                <li></li>
-                            </ul>
-                        </div>
-                    </div>
-                </>
             ) : (
                 <PostModal post={selected} onClose={closePost} />
             )}
@@ -187,4 +171,4 @@ function Home() {
     );
 }
 
-export default Home;
+export default UserPosts;
