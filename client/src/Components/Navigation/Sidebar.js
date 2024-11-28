@@ -44,6 +44,11 @@ function Sidebar({ isCollapsed }) {
       .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize first letter of each word
       .join(' '); // Join back the words with a space
   };
+  
+  if (!user) {
+    return <div>Loading...</div>;
+  }
+  
 
   return (
     <div className={`sidebar ${isCollapsed ? 'collapsed' : ''}`}>
