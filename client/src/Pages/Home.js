@@ -1,5 +1,4 @@
 import { React, useState, useEffect, useContext } from "react";
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import PostModal from "../Components/Modals/Post Modal";
 import { FaRegComment, FaHeart, FaRegHeart, FaRegShareFromSquare } from "react-icons/fa6";
@@ -12,8 +11,6 @@ function Home() {
     const [selected, setSelected] = useState(null);
     const [upvotedPosts, setUpvotedPosts] = useState({});  // Keep track of upvoted posts by postId
     const [refreshPosts, setRefreshPosts] = useState(false); // State to trigger re-fetch
-
-    const [modalPostId, setModalPostId] = useState(null);
 
     useEffect(() => {
         setLoading(true);
