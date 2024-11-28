@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import axios from 'axios';
 import Layout from './Layout';
@@ -11,6 +11,7 @@ import Signup from './Signup';
 import CreatePost from "./CreatePost";
 import VerifyEmail from '../Components/verifyEmail';
 import Forgot from "./ForgotPassword";
+import AppContext from '../Contexts/AppContext'; 
 
 function ProtectedRoute({ children }) {
   const token = localStorage.getItem('token');
@@ -22,6 +23,7 @@ function ProtectedRoute({ children }) {
 
 function Main() {
   const [loading, setLoading] = useState(true);
+  const { setUser } = useContext(AppContext);  // Removed `user` from destructuring
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -30,8 +32,9 @@ function Main() {
         headers: { 
           Authorization: `Bearer ${token}` 
         } 
-      })
-      .catch(error => {
+      }).then(response => {
+        setUser(response.data.user);
+      }).catch(error => {
         localStorage.removeItem('token');
       })
       .finally(() => {
@@ -40,7 +43,7 @@ function Main() {
     } else {
       setLoading(false);
     }
-  }, []);
+  }, [setUser]);  // Added setUser as a dependency (optional)
 
   if (loading) {
     return <p>Loading...</p>;
@@ -68,11 +71,10 @@ function Main() {
         <Route path="/Login" element={<Entry />}>
           <Route index element={<Login />} />
           <Route path="Signup" element={<Signup />} />
-          <Route path="ForgotPassword" element={<Forgot/>}></Route>
+          <Route path="ForgotPassword" element={<Forgot />} />
         </Route>
 
         <Route path="/verify-email/:verificationToken" element={<VerifyEmail />} />
-
         <Route path="*" element={<div>Page not found</div>} />
       </Routes>
     </BrowserRouter>

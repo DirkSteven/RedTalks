@@ -6,34 +6,36 @@ import axios from 'axios';
 import AppContext from '../../Contexts/AppContext'; 
 
 function Sidebar({ isCollapsed }) {
-  const { user } = useContext(AppContext);
+  const { user, setUser } = useContext(AppContext);
   const [collegeTags, setCollegeTags] = useState([]); 
   const [popularTags, setPopularTags] = useState([]); // State to store popular tags
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Fetch college tags from the backend
-    axios.get('/api/posts/college-tags')
-      .then(response => {
-        setCollegeTags(response.data.collegeTags); // Set the college tags in state
-      })
-      .catch(error => {
-        console.error("Error fetching college tags:", error);
-      });
+    if (user !== null) {
+      // Fetch college tags from the backend only if the user is not null
+      axios.get('/api/posts/college-tags')
+        .then(response => {
+          setCollegeTags(response.data.collegeTags); // Set the college tags in state
+        })
+        .catch(error => {
+          console.error("Error fetching college tags:", error);
+        });
 
-    // Fetch popular tags from the backend
-    axios.get('/api/posts/popular-tags')
-      .then(response => {
-        setPopularTags(response.data.popularTags); // Set popular tags in state
-      })
-      .catch(error => {
-        console.error("Error fetching popular tags:", error);
-      });
-      
+      // Fetch popular tags from the backend
+      axios.get('/api/posts/popular-tags')
+        .then(response => {
+          setPopularTags(response.data.popularTags); // Set popular tags in state
+        })
+        .catch(error => {
+          console.error("Error fetching popular tags:", error);
+        });
+    }
   }, [user]);
 
   const logout = () => {
     localStorage.removeItem('token');
+    setUser(null);
     navigate('/Login');
   };
 
@@ -45,9 +47,9 @@ function Sidebar({ isCollapsed }) {
       .join(' '); // Join back the words with a space
   };
   
-  if (!user) {
-    return <div>Loading...</div>;
-  }
+  if (user === null) {
+    return <div>Loading user...</div>; // Show a different loading state for user initialization
+  }  
   
 
   return (

@@ -1,15 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Submit from "../Buttons/Submit";
 import PlainInput from "../Text Input/PlainInput";
 import HiddenInput from "../Text Input/HiddenInput";
+import AppContext from '../../Contexts/AppContext'; 
 
 function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const { user, setUser } = useContext(AppContext);
   const navigate = useNavigate();
 
   // Handle email input change
@@ -50,6 +52,7 @@ function LoginForm() {
       const { token } = response.data;
 
       localStorage.setItem('token', token);
+      setUser(user);
 
       console.log("Login successful, redirecting...");
       setLoading(false); 
