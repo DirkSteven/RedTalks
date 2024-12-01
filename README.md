@@ -54,7 +54,7 @@ To start the application
 
 
 
-## Utilities
+## ⚒️ Utilities
 
 
 
@@ -114,7 +114,7 @@ emailPattern = /^\d{2}-\d{5}@g.batstate-u.edu.ph$/
 ```
 
 
-## Technology Stack and Tools
+## ⚙️Technology Stack and Tools
 
 <b>Backend </b> <br>
 
