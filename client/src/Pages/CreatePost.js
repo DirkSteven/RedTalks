@@ -6,7 +6,22 @@ import axios from "axios";
 function CreatePost() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [tagsModalOpen, setTagsModalOpen] = useState(false); // For controlling the tag modal visibility
+  const [selectedTags, setSelectedTags] = useState({
+    descriptiveTag: "discussion",
+    campusTag: "Alangilan",
+    departmentTag: "Computer Science",
+    nsfw: false, // Checkbox state for NSFW
+  });
 
+  // Predefined tag options
+  const availableTags = {
+    descriptiveTag: ["discussion", "announcement", "question", "tutorial"],
+    campusTag: ["Alangilan", "Main Campus", "San Isidro"],
+    departmentTag: ["Computer Science", "Engineering", "Business", "Arts"],
+  };
+
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -19,14 +34,9 @@ function CreatePost() {
         {
           title,
           content,
-          author: 'user._id', // Replace with the actual user ID
+          author: "user._id", // Replace with actual user ID
           imageUrl: "", // Optionally handle image URL
-          tags: {
-            descriptiveTag: "discussion",
-            campusTag: "Alangilan",
-            departmentTag: "Computer Science",
-            nsfw: false,
-          },
+          tags: selectedTags,
         },
         {
           headers: {
@@ -34,11 +44,32 @@ function CreatePost() {
           },
         }
       );
-      // Handle successful post creation
+      // Handle successful post creation, perhaps redirect or show a success message
     } catch (error) {
       console.error("Error creating post", error);
       // Optionally show an error message to the user
     }
+  };
+
+  // Handle opening and closing of the tag selection modal
+  const handleTagModalToggle = () => {
+    setTagsModalOpen(!tagsModalOpen);
+  };
+
+  // Handle tag selection
+  const handleTagChange = (tagType, tagValue) => {
+    setSelectedTags({
+      ...selectedTags,
+      [tagType]: tagValue,
+    });
+  };
+
+  // Handle NSFW checkbox change
+  const handleNSFWChange = (e) => {
+    setSelectedTags({
+      ...selectedTags,
+      nsfw: e.target.checked, // Update nsfw based on checkbox state
+    });
   };
 
   return (
@@ -47,7 +78,7 @@ function CreatePost() {
         <FaArrowLeft />
       </Link>
       <div className="postcreation">
-          <h1>Create Post</h1>
+        <h1>Create Post</h1>
         <form onSubmit={handleSubmit}>
           <input
             type="text"
@@ -57,7 +88,44 @@ function CreatePost() {
             onChange={(e) => setTitle(e.target.value)}
           />
 
-          <button className="formbtn">Add tags</button>
+          <div className="tags-display">
+            <button
+              type="button"
+              className="formbtn"
+              onClick={handleTagModalToggle}
+            >
+              Add tags
+            </button>
+            <div className="selected-tags">
+              {Object.entries(selectedTags).map(([key, value]) => {
+                if (key === "nsfw" && value) {
+                  return (
+                    <span key={key} className="tag nsfwTag">
+                      NSFW
+                    </span>
+                  );
+                }
+                // Skip the NSFW tag if false
+                if (key === "nsfw") return null;
+
+                // Assign different classes based on tag type
+                const tagClass =
+                  key === "descriptiveTag"
+                    ? "descriptiveTag"
+                    : key === "campusTag"
+                    ? "campusTag"
+                    : key === "departmentTag"
+                    ? "departmentTag"
+                    : "";
+
+                return (
+                  <span key={key} className={`tag ${tagClass}`}>
+                    {value.toString()}
+                  </span>
+                );
+              })}
+            </div>
+          </div>
 
           <textarea
             placeholder="Body"
@@ -65,9 +133,82 @@ function CreatePost() {
             onChange={(e) => setContent(e.target.value)}
           ></textarea>
 
-        <button type="submit" className="formbtn">Post</button>
+          <button type="submit" className="formbtn doneCreate">
+            Post
+          </button>
         </form>
       </div>
+
+      {/* Tag selection modal (overlay) */}
+      {tagsModalOpen && (
+        <div className="tagsModalOverlay">
+          <div className="tagsModal">
+            <h3>Select Tags</h3>
+            <div>
+              <label>Descriptive Tag:</label>
+              <select
+                value={selectedTags.descriptiveTag}
+                onChange={(e) =>
+                  handleTagChange("descriptiveTag", e.target.value)
+                }
+              >
+                {availableTags.descriptiveTag.map((tag) => (
+                  <option key={tag} value={tag}>
+                    {tag}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label>Campus Tag:</label>
+              <select
+                value={selectedTags.campusTag}
+                onChange={(e) => handleTagChange("campusTag", e.target.value)}
+              >
+                {availableTags.campusTag.map((tag) => (
+                  <option key={tag} value={tag}>
+                    {tag}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label>Department Tag:</label>
+              <select
+                value={selectedTags.departmentTag}
+                onChange={(e) =>
+                  handleTagChange("departmentTag", e.target.value)
+                }
+              >
+                {availableTags.departmentTag.map((tag) => (
+                  <option key={tag} value={tag}>
+                    {tag}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label>NSFW:</label>
+              <input
+                type="checkbox"
+                checked={selectedTags.nsfw}
+                onChange={handleNSFWChange} // Update the state when checked/unchecked
+              />
+            </div>
+
+            <button
+              type="button"
+              onClick={handleTagModalToggle}
+              className="formbtn"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </>
   );
 }

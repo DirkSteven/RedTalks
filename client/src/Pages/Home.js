@@ -169,14 +169,10 @@ function Home() {
                     <div className="schinfo">
                         <img alt="School img" />
                         <h3>Batangas State University</h3>
-                        <p>sch desc</p>
-                        <div className="divider"></div>
-                        <div className="schSocials">
-                            <ul>
-                                <li></li>
-                                <li></li>
-                                <li></li>
-                            </ul>
+                        <p className="schdesc">BatStateU, designated as the Philippines’ National Engineering University (The NEU), was established in 1903. Located in CALABARZON, it serves as a hub for higher learning and economic development. As The NEU, BatStateU focuses on world-class academic training and the development of industry-driven engineering programs to produce globally competitive leaders and professionals.</p>
+                        <div className="divider infodiv"></div>
+                        <div className="schLinks">
+                            
                         </div>
                     </div>
                 </>
