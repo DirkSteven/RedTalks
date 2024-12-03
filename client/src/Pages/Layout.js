@@ -8,6 +8,10 @@ import HomeNav from '../Components/Navigation/HomeNav';
 function Layout() {
 
   const [sidebar, setSidebar] = useState(false);
+  const [selectedTag, setSelectedTag] = useState(null);
+  const [campusTag, setCampusTag] = useState(null);
+  const [departmentTag, setDepartmentTag] = useState(null);
+  const [nsfw, setNsfw] = useState(null);
   
   const toggle = () => {
     setSidebar(prevState => !prevState);
@@ -20,14 +24,18 @@ function Layout() {
       
       <div className='contents'>
 
-      <Sidebar isCollapsed={sidebar}/>
+        <Sidebar  isCollapsed={sidebar}
+          setSelectedTag={setSelectedTag}
+          setCampusTag={setCampusTag}
+          setDepartmentTag={setDepartmentTag}
+          setNsfw={setNsfw} />
 
-      <div className={`wall ${sidebar ? 'collapsed' : ''}`}>
-      <HomeNav />
-        <div className="page">
-                  <Outlet />
+        <div className={`wall ${sidebar ? 'collapsed' : ''}`}>
+          <HomeNav />
+          <div className="page">
+            <Outlet context={{ selectedTag, campusTag, departmentTag, nsfw }}/>
+          </div>
         </div>
-      </div>
      
       </div>
     </div>

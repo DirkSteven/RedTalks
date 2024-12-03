@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa6";
 import axios from "axios";
+import AppContext from '../Contexts/AppContext'; 
 
 function CreatePost() {
+  const { user } = useContext(AppContext);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [tagsModalOpen, setTagsModalOpen] = useState(false); // For controlling the tag modal visibility
@@ -28,15 +30,22 @@ function CreatePost() {
     const token = localStorage.getItem("token");
     if (!token) return; // Handle case where token is missing
 
+    const formattedTags = {
+      descriptiveTag: selectedTags.descriptiveTag.toLowerCase(),
+      campusTag: selectedTags.campusTag.toLowerCase(),
+      departmentTag: selectedTags.departmentTag.toLowerCase(),
+      nsfw: selectedTags.nsfw,
+    };
+
     try {
       await axios.post(
         "/api/posts/create",
         {
           title,
           content,
-          author: "user._id", // Replace with actual user ID
+          author: user._id, // Replace with actual user ID
           imageUrl: "", // Optionally handle image URL
-          tags: selectedTags,
+          tags: formattedTags,
         },
         {
           headers: {

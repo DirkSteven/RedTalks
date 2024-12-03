@@ -5,7 +5,7 @@ import axios from 'axios';
 import AppContext from '../../Contexts/AppContext'; 
 import UserAvatar from '../Assets/UserAvatar.png';
 
-function Sidebar({ isCollapsed }) {
+function Sidebar({ isCollapsed, setSelectedTag, setCampusTag, setDepartmentTag, setNsfw }) {
   const { user, setUser } = useContext(AppContext);
   const [collegeTags, setCollegeTags] = useState([]); 
   const [popularTags, setPopularTags] = useState([]); // State to store popular tags
@@ -43,6 +43,31 @@ function Sidebar({ isCollapsed }) {
     navigate('/Login');
   };
 
+  const handleTagClick = (tag, type) => {
+    if (type === 'descriptive') {
+        setSelectedTag(tag);
+        setCampusTag(null);
+        setDepartmentTag(null); 
+        setNsfw(null); 
+    } else if (type === 'campus') {
+        setCampusTag(tag);
+        setSelectedTag(null);
+        setDepartmentTag(null);
+        setNsfw(null);
+    } else if (type === 'department') {
+        setDepartmentTag(tag);
+        setSelectedTag(null);
+        setCampusTag(null);
+        setNsfw(null); 
+    } else if (type === 'nsfw') {
+        setNsfw(tag);
+        setSelectedTag(null);
+        setCampusTag(null);
+        setDepartmentTag(null);
+    }
+};
+
+
   // Helper function to capitalize each word in a string
   const capitalizeTag = (tag) => {
     return tag
@@ -77,7 +102,7 @@ function Sidebar({ isCollapsed }) {
           {collegeTags.length > 0 ? (
             // Loop through collegeTags and display only the tag names
             collegeTags.map((tag, index) => (
-              <li key={index}>{capitalizeTag(tag.name)}</li> // Only show tag name, no post count
+              <li key={index} onClick={() => handleTagClick(tag.name, 'department')}>{capitalizeTag(tag.name)}</li> // Only show tag name, no post count
             ))
           ) : (
             <li>Loading college tags...</li> // Show loading message while fetching
@@ -90,7 +115,7 @@ function Sidebar({ isCollapsed }) {
           {popularTags.length > 0 ? (
             // Limit the displayed tags to the first 10
             popularTags.slice(0, 10).map((tag, index) => (
-              <li key={index}>{capitalizeTag(tag.name)}</li> // Apply capitalization and display tag names
+              <li key={index} onClick={() => handleTagClick(tag.name, tag.type)}>{capitalizeTag(tag.name)}</li> // Apply capitalization and display tag names
             ))
           ) : (
             <li>Loading popular tags...</li> // Show loading message while fetching
