@@ -2,6 +2,8 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import Searchbar from "./Searchbar";
 import Toggle from "../Buttons/Toggle";
+import HeaderButtons from "../Buttons/HeaderButtons";
+import RedTalksLogo from "../Assets/RedTalksLogo.png";
 
 function Header({ toggle }) {
 
@@ -11,9 +13,9 @@ function Header({ toggle }) {
     <div className="header">
       <div className="headitems">
         <Toggle onClick={toggle}/>
-        <div className="logo" onClick={() => navigate('/')}>Logo</div>
+        <div className="logo" onClick={() => navigate('/')}><img src={RedTalksLogo}/></div>
         <Searchbar />
-        <div className="headbutt">Headerbuttons</div>
+        <HeaderButtons />
       </div>
     </div>
   );

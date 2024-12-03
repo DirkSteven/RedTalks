@@ -61,7 +61,7 @@ img{
 }
 
 .panelform input:focus{
-    outline: 2px solid rgba(158, 37, 37, 0.7);
+    outline: 2px solid #9e2525b3;
 }
 
 .panelform .inputpass{

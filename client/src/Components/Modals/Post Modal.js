@@ -200,7 +200,7 @@ function PostModal({ post, onClose }) {
           </div>
           <div className="comments-list">
             <h4>Comments:</h4>
-            <form onSubmit={handleCommentSubmit}>
+            <form className='addComment' onSubmit={handleCommentSubmit}>
               <textarea
                 value={commentContent}
                 onChange={handleCommentChange}

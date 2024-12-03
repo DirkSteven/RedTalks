@@ -87,7 +87,7 @@ function Searchbar() {
         />
       </form>
 
-      {loading && <div className="searchResult">Loading...</div>}
+      {loading && <div className="searchResult"><p>Loading...</p></div>}
 
       {results.length > 0 && (
         <div className="searchResult">
@@ -106,7 +106,7 @@ function Searchbar() {
       )}
 
       {results.length === 0 && query && !loading && (
-        <div className="searchResult">No results found</div>
+        <div className="searchResult"><p>No Results Found.</p></div>
       )}
     </div>
   );
