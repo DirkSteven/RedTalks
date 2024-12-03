@@ -43,7 +43,7 @@ function CreatePost() {
         {
           title,
           content,
-          author: user._id, // Replace with actual user ID
+          author: user._id,
           imageUrl: "", // Optionally handle image URL
           tags: formattedTags,
         },

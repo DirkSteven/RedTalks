@@ -1,5 +1,6 @@
 import Post from '../models/Post.js'
 import User from '../models/User.js';
+import Notification from '../models/Notification.js';
 import { Comment } from '../models/Comment.js'
 import { calculatePopularityScore } from '../utils/popularity.js'
 import { calculateRelevanceScore } from '../utils/relevance.js'
@@ -374,12 +375,22 @@ export async function commentOnPost(req, res) {
           parentComment: parentCommentId || null,
       });
 
-      await newComment.save();// this
-
+      await newComment.save();
       post.comments.push(newComment);
       await post.save();
 
       await newComment.populate("author", "name");
+
+      if (author.toString() !== post.author.toString()) {
+        const notification = new Notification({
+            user: post.author,  // The user receiving the notification (post author)
+            type: 'comment',    // The type of notification
+            message: `${newComment.author.name} commented on your post: "${post.title}"`,
+            relatedPost: post._id,  // The post being commented on
+            relatedUser: newComment.author._id,
+        });
+        await notification.save();
+    }
 
       return res.status(201).json({ message: 'Comment added successfully', comment: newComment });
     } catch (error) {
@@ -387,7 +398,6 @@ export async function commentOnPost(req, res) {
       res.status(500).json({ message: 'Error adding comment', error: error.message });
     }
 }
-
 
 export async function upvotePost(req, res){
     try {
@@ -411,7 +421,20 @@ export async function upvotePost(req, res){
         // Save the post with the new upvote
         await post.save();
     
-        // Respond with the updated post
+        if (userId.toString() !== post.author.toString()) {
+          const postAuthor = await User.findById(post.author);
+          const upvoter = await User.findById(userId);
+
+          const notification = new Notification({
+              user: post.author,  // The user receiving the notification (post author)
+              type: 'upvote',     // The type of notification
+              message: `User ${upvoter.name} upvoted your post: "${post.title}"`,
+              relatedPost: post._id, 
+              relatedUser: upvoter._id, // The post that was upvoted
+          });
+          await notification.save();
+        }
+        
         res.status(200).json({
           message: 'Post upvoted successfully',
           post: post,

@@ -1,24 +1,52 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaPlus, FaRegBell, FaRegEnvelope } from "react-icons/fa";
+import AppContext from '../../Contexts/AppContext'; 
 
 function HeaderButtons() {
+  const { user } = useContext(AppContext);
   const navigate = useNavigate();
 
-  // State to manage dropdown visibility
   const [isBellDropdownOpen, setBellDropdownOpen] = useState(false);
   const [isEnvelopeDropdownOpen, setEnvelopeDropdownOpen] = useState(false);
+  const [notifications, setNotifications] = useState([]);
+
+  const [loading, setLoading] = useState(false); 
+
+ const fetchNotifications = async () => {
+    try {
+      setLoading(true);
+      // Replace 'userId' with actual logged-in user's ID
+      const response = await fetch(`/api/notifications/${user._id}`);
+      const data = await response.json();
+      
+      if (response.ok) {
+        setNotifications(data.notifications);
+      } else {
+        console.error("Failed to fetch notifications:", data.message);
+      }
+    } catch (error) {
+      console.error("Error fetching notifications:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Toggle Bell dropdown visibility
   const toggleBellDropdown = () => {
     setBellDropdownOpen((prevState) => !prevState);
+
+    if (!isBellDropdownOpen) {
+      fetchNotifications();
+    }
   };
 
   // Toggle Envelope dropdown visibility
   const toggleEnvelopeDropdown = () => {
     setEnvelopeDropdownOpen((prevState) => !prevState);
   };
-
+  
+  
   return (
     <div className="headbutt">
       {/* Create Post Button */}
@@ -35,11 +63,21 @@ function HeaderButtons() {
         />
         {isBellDropdownOpen && (
           <div className="dropdown-menu bell-dropdown">
-            <ul>
-              <li>New comment on your post</li>
-              <li>Someone liked your post</li>
-              <li>New follower</li>
-            </ul>
+            {loading ? (
+              <p>Loading notifications...</p>
+            ) : (
+              <ul>
+                {notifications.length > 0 ? (
+                  notifications.map((notification) => (
+                    <li key={notification._id}>
+                      {notification.message}
+                    </li>
+                  ))
+                ) : (
+                  <li>No new notifications</li>
+                )}
+              </ul>
+            )}
           </div>
         )}
       </div>

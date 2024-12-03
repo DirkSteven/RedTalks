@@ -6,6 +6,7 @@ import path from 'path';
 import { connectDB } from './src/config/connectDB.js'
 import userRouter from './src/routes/User.js';
 import postRouter from './src/routes/Post.js';
+import notificationRouter from './src/routes/Notification.js';
 
 // Load environment variables first
 dotenv.config();
@@ -35,6 +36,7 @@ app.use((req, res, next) => {
 
 app.use('/api/user', userRouter);
 app.use('/api/posts', postRouter);
+app.use('/api/notifications', notificationRouter);
 
 app.use('/api/user/verify-email', (req, res, next) => {
   res.set('Cache-Control', 'no-store');
