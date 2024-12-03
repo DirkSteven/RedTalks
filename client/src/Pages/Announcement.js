@@ -28,12 +28,12 @@ function Announcement(){
     }, []);
 
     return (
-        <div className="list">
+        <div className="list shoutout">
             {announcements.length === 0 ? (
                 <p>No announcements atm</p>
             ) : (
                 announcements.map(announcement => (
-                    <div key={announcement.id} className="postitem shoutout">
+                    <div key={announcement.id} className="postitem">
                         <h3>{announcement.title}</h3>
                         <p>{announcement.content}</p>
                     </div>

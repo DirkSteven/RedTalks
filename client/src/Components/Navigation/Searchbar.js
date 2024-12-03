@@ -76,7 +76,7 @@ function Searchbar() {
   };
 
   return (
-    <div>
+    <div className="searchFunction">
       <form onSubmit={(e) => e.preventDefault()}>
         <input
           type="text"
@@ -87,12 +87,12 @@ function Searchbar() {
         />
       </form>
 
-      {loading && <div>Loading...</div>}
+      {loading && <div className="searchResult"><p>Loading...</p></div>}
 
       {results.length > 0 && (
-        <ul className="dropdown">
+        <div className="searchResult">
           {results.map((result, index) => (
-            <li key={index}>
+            <p key={index}>
               {result.type === 'user' ? (
                 // Render user information (e.g., name, email)
                 highlightText(result.name || result.email || "No name available")
@@ -100,14 +100,13 @@ function Searchbar() {
                 // Render post information (e.g., title, content)
                 highlightText(result.title || result.content || "No title available")
               )}
-            </li>
+            </p>
           ))}
-        </ul>
+        </div>
       )}
 
-      {/* If no results found */}
       {results.length === 0 && query && !loading && (
-        <div>No results found</div>
+        <div className="searchResult"><p>No Results Found.</p></div>
       )}
     </div>
   );

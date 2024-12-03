@@ -22,11 +22,11 @@ function Layout() {
 
       <Sidebar isCollapsed={sidebar}/>
 
-      <div className='wall'>
+      <div className={`wall ${sidebar ? 'collapsed' : ''}`}>
       <HomeNav />
-      <div className="page">
-                <Outlet />
-            </div>
+        <div className="page">
+                  <Outlet />
+        </div>
       </div>
      
       </div>

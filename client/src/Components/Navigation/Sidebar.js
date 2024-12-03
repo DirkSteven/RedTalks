@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from "react";
 import { FaArrowTrendUp, FaGraduationCap } from "react-icons/fa6";
-import { Link } from "react-router-dom";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import AppContext from '../../Contexts/AppContext'; 
+import UserAvatar from '../Assets/UserAvatar.png';
 
 function Sidebar({ isCollapsed }) {
   const { user, setUser } = useContext(AppContext);
@@ -33,6 +33,10 @@ function Sidebar({ isCollapsed }) {
     }
   }, [user]);
 
+  const viewProfile = () => {
+    navigate('/Profile');
+  }
+
   const logout = () => {
     localStorage.removeItem('token');
     setUser(null);
@@ -52,12 +56,19 @@ function Sidebar({ isCollapsed }) {
   }  
   
 
+  if (!user){
+    return <div className="sidebar">Loading...</div>;
+  }
+
   return (
     <div className={`sidebar ${isCollapsed ? 'collapsed' : ''}`}>
       <div className="sideitems">
-        <div className="profileview">
-        <img alt="user pic" className="user-pic" />
-        <span className="user-name">{user.name}</span>
+        <div className="profileview" onClick={viewProfile}>
+          <img alt="pfp" className="user-pic" src={UserAvatar}/>
+          <div className="displayName">
+            <span>{user.name}</span>
+            <p>view profile</p>
+          </div>
         </div>
         <div className="divider"></div>
 
@@ -88,10 +99,7 @@ function Sidebar({ isCollapsed }) {
         <div className="divider"></div>
 
         <ul>
-          <li></li>
-          <li></li>
           <li><button onClick={logout}>Logout</button></li>
-          <li><Link to='/CreatePost'>Create</Link></li>
         </ul>
       </div>
     </div>

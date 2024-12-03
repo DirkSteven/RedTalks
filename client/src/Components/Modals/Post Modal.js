@@ -82,7 +82,7 @@ function PostModal({ post, onClose }) {
         });
         setUpvoted(false);
         fetchUpvoteCount();
-        alert(response.data.message);
+
       } else {
         const response = await axios.post(`/api/posts/${post._id}/upvote`, 
           { userId: user._id }, 
@@ -96,7 +96,6 @@ function PostModal({ post, onClose }) {
       }
     } catch (error) {
       console.error('Error handling upvote:', error);
-      alert('Failed to handle upvote');
     }
   };
 
@@ -201,7 +200,7 @@ function PostModal({ post, onClose }) {
           </div>
           <div className="comments-list">
             <h4>Comments:</h4>
-            <form onSubmit={handleCommentSubmit}>
+            <form className='addComment' onSubmit={handleCommentSubmit}>
               <textarea
                 value={commentContent}
                 onChange={handleCommentChange}

@@ -11,6 +11,8 @@ import Signup from './Signup';
 import CreatePost from "./CreatePost";
 import VerifyEmail from '../Components/verifyEmail';
 import Forgot from "./ForgotPassword";
+import Profile from "./Profile";
+import UserPosts from "./UserPosts";
 import AppContext from '../Contexts/AppContext'; 
 
 function ProtectedRoute({ children }) {
@@ -58,14 +60,28 @@ function Main() {
               <Home />
             </ProtectedRoute>
           } />
-          <Route path="Home" element={
+
+          <Route path="Announcement" element={
             <ProtectedRoute>
-              <Home />
+              <Announcement />
             </ProtectedRoute>
           } />
-          <Route path="Announcement" element={<Announcement />} />
-          <Route path="Marketplace" element={<Marketplace />} />
-          <Route path="CreatePost" element={<CreatePost />} />
+
+          <Route path="Marketplace" element={
+            <ProtectedRoute>
+              <Marketplace />
+            </ProtectedRoute>
+          } />
+          
+          <Route path="CreatePost" element={
+            <ProtectedRoute>
+              <CreatePost />
+            </ProtectedRoute>
+          } />
+        </Route>
+
+        <Route path="/Profile" element={<Profile />}>
+          <Route index element={<UserPosts/>}/>
         </Route>
 
         <Route path="/Login" element={<Entry />}>
