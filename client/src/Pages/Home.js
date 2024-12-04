@@ -4,6 +4,7 @@ import axios from 'axios';
 import PostModal from "../Components/Modals/Post Modal";
 import { FaRegComment, FaHeart, FaRegHeart, FaRegShareFromSquare } from "react-icons/fa6";
 import AppContext from '../Contexts/AppContext'; 
+import homepic from '../Assets/homepic.png';
 
 function Home() {
     const { user } = useContext(AppContext);
@@ -167,9 +168,9 @@ function Home() {
                     </div>
 
                     <div className="schinfo">
-                        <img alt="School img" />
+                        <img alt="School img" src={homepic}></img>
                         <h3>Batangas State University</h3>
-                        <p className="schdesc">BatStateU, designated as the Philippines’ National Engineering University (The NEU), was established in 1903. Located in CALABARZON, it serves as a hub for higher learning and economic development. As The NEU, BatStateU focuses on world-class academic training and the development of industry-driven engineering programs to produce globally competitive leaders and professionals.</p>
+                        <p className="schdesc"><b>RedTalks</b> is an exclusive online platform for BATANGAS STATE UNIVERSITY students, faculty, and staff to connect, share ideas, and engage in meaningful discussions. Whether you're looking for academic advice, campus news, or a place to chat with fellow BatSU members, RedTalks is here to bring the community together. Where Red Spartans share, engage, and rise. Join today and be part of the conversation!</p>
                         <div className="divider infodiv"></div>
                         <div className="schLinks">
                             
