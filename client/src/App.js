@@ -30,6 +30,7 @@ function App() {
         setUser (data.user);
       } catch (error) {
         console.error('Error during initialization:', error);
+        localStorage.removeItem('token');
       } finally {
         setIsInitiated(true);
         setLoading(false); 
@@ -42,11 +43,6 @@ function App() {
   if (loading) {
     return <div>Loading...</div>;
   }
-
-  // if (!user) {
-  //   return <Main/>;
-  // }
-
 
   return (
     <div>

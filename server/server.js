@@ -1,37 +1,42 @@
-
 import express from 'express';
 import dotenv from 'dotenv';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-
 import path from 'path';
 import { connectDB } from './src/config/connectDB.js'
 import userRouter from './src/routes/User.js';
 import postRouter from './src/routes/Post.js';
-// import { userRouter, postRouter } from './src/routes/index.js';
+import notificationRouter from './src/routes/Notification.js';
 
+// Load environment variables first
 dotenv.config();
 
+// Define PORT constant at the top level
+const PORT = process.env.PORT || 5000;
 const app = express();
 
 app.use(cors({
-  origin: 'http://localhost:3000', 
+  origin: ['http://localhost:3000', 'http://127.0.0.1:3000'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
+  optionsSuccessStatus: 200
 }));
 
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: '10mb' }));
+app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
 
-const PORT = process.env.PORT || 5000;
-const __dirname = path.resolve(); 
+const __dirname = path.resolve();
 
 app.use((req, res, next) => {
-  console.log('Request URL:', req.url);
-  console.log('Request Method:', req.method);
+  console.log(`${req.method} ${req.url}`);
+  console.log('Headers:', req.headers);
   next();
 });
 
 app.use('/api/user', userRouter);
 app.use('/api/posts', postRouter);
+app.use('/api/notifications', notificationRouter);
 
 app.use('/api/user/verify-email', (req, res, next) => {
   res.set('Cache-Control', 'no-store');
@@ -41,32 +46,21 @@ app.use('/api/user/verify-email', (req, res, next) => {
 app.get('/', (req, res) => {
   console.log("Home route");
   res.status(201).json("Home");
-})
+});
 
-
-
-// app.use(express.static(path.join(__dirname, '..', 'client', 'build')));
-
-// // HTTP GET REQUEST
-// app.get('*', (req, res) => {
-//     res.sendFile(path.join(__dirname, '..', 'client', 'build','index.html'));
-//     // console.log(path.join(__dirname, '..', "client/build/index.html"));
-// });
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Something broke!');
+});
 
 // Start server when connection is valid
 connectDB().then(() => {
   app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
+    console.log('CORS enabled for:', ['http://localhost:3000', 'http://127.0.0.1:3000']);
   });
 }).catch((err) => {
   console.error('Failed to start the server:', err);
-  process.exit(1); // Exit if MongoDB connection fails
+  process.exit(1);
 });
-
-
-// Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
-// Set-ExecutionPolicy AllSigned -Scope CurrentUser
-
-
-// bxyCi9t1lQ51Jvd3
-// admin admin

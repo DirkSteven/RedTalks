@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa6";
 import axios from "axios";
+import AppContext from '../Contexts/AppContext'; 
 
 function CreatePost() {
+  const { user } = useContext(AppContext);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [tagsModalOpen, setTagsModalOpen] = useState(false); // For controlling the tag modal visibility
@@ -16,9 +18,9 @@ function CreatePost() {
 
   // Predefined tag options
   const availableTags = {
-    descriptiveTag: ["discussion", "announcement", "question", "tutorial"],
-    campusTag: ["Alangilan", "Main Campus", "San Isidro"],
-    departmentTag: ["Computer Science", "Engineering", "Business", "Arts"],
+    descriptiveTag: ['discussion', 'general', 'announcement', 'memes/fun', 'rants', 'help', 'admission/shifting/transferring', 'rateProf', 'others'],
+    campusTag: ['Alangilan', 'ARASOF-Nasugbu', 'Balayan', 'JPLPC-Malvar', 'Lemery', 'Lipa', 'Lobo', 'Mabini', 'Malvar', 'Pablo Borbon', 'Rosario', 'San Juan'],
+    departmentTag: ['College of Engineering', 'College of Architecture', 'College of Fine Arts, and Design', 'College of Accountancy, Business, Economics, and International Hospitality Management', 'College of Arts and Sciences', 'College of Informatics and Computing Sciences', 'College of Industrial Technology', 'College of Nursing and Allied Health Sciences', 'College of Law', 'College of Agriculture and Forestry', 'College of Teacher Education', 'College of Medicine'],
   };
 
   // Handle form submission
@@ -28,15 +30,22 @@ function CreatePost() {
     const token = localStorage.getItem("token");
     if (!token) return; // Handle case where token is missing
 
+    const formattedTags = {
+      descriptiveTag: selectedTags.descriptiveTag.toLowerCase(),
+      campusTag: selectedTags.campusTag.toLowerCase(),
+      departmentTag: selectedTags.departmentTag.toLowerCase(),
+      nsfw: selectedTags.nsfw,
+    };
+
     try {
       await axios.post(
         "/api/posts/create",
         {
           title,
           content,
-          author: "user._id", // Replace with actual user ID
+          author: user._id,
           imageUrl: "", // Optionally handle image URL
-          tags: selectedTags,
+          tags: formattedTags,
         },
         {
           headers: {

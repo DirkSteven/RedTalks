@@ -18,7 +18,7 @@ function UserPosts() {
     useEffect(() => {
         setLoading(true);
         // Fetch posts from the backend API
-        axios.get('api/posts')
+        axios.get(`api/user/${user._id}/posts`)
             .then(response => {
                 console.log(response.data);  // Log the response to inspect its structure
                 const postsData = Array.isArray(response.data) ? response.data : [];

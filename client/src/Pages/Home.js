@@ -1,186 +1,173 @@
-import { React, useState, useEffect, useContext } from "react";
-// import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useContext } from "react";
 import axios from 'axios';
-import PostModal from "../Components/Modals/Post Modal";
 import { FaRegComment, FaHeart, FaRegHeart, FaRegShareFromSquare } from "react-icons/fa6";
+import PostModal from "../Components/Modals/Post Modal";
 import AppContext from '../Contexts/AppContext'; 
+import { useOutletContext } from "react-router-dom"; // Import the hook
 
 function Home() {
-    const { user } = useContext(AppContext);
-    const [posts, setPosts] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [selected, setSelected] = useState(null);
-    const [upvotedPosts, setUpvotedPosts] = useState({});  // Keep track of upvoted posts by postId
-    const [refreshPosts, setRefreshPosts] = useState(false); // State to trigger re-fetch
+  const { user } = useContext(AppContext);
+  const { selectedTag, campusTag, departmentTag, nsfw } = useOutletContext(); // Use the context to access selectedTag
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [selected, setSelected] = useState(null);
+  const [upvotedPosts, setUpvotedPosts] = useState({});
+  const [refreshPosts, setRefreshPosts] = useState(false);
 
-    // const [modalPostId, setModalPostId] = useState(null);
+  const buildUrl = () => {
+    let url = '/api/posts/filter?';
 
-    useEffect(() => {
-        setLoading(true);
-        // Fetch posts from the backend API
-        axios.get('api/posts')
-            .then(response => {
-                console.log(response.data);  // Log the response to inspect its structure
-                const postsData = Array.isArray(response.data) ? response.data : [];
-                setPosts(postsData);
+    // Add selected tags only if they are not null or undefined
+    if (selectedTag) url += `descriptiveTag=${encodeURIComponent(selectedTag)}&`;
+    if (campusTag) url += `campusTag=${encodeURIComponent(campusTag)}&`;
+    if (departmentTag) url += `departmentTag=${encodeURIComponent(departmentTag)}&`;
+    if (nsfw !== undefined && nsfw !== null) url += `nsfw=${encodeURIComponent(nsfw)}&`;
 
-                const upvotedPosts = postsData.reduce((acc, post) => {
-                    if (post.upvotes && post.upvotes.includes(user._id)) {
-                        acc[post._id] = true;
-                    }
-                    return acc;
-                }, {});
-                setUpvotedPosts(upvotedPosts);    
+    // Remove the last '&' if present
+    if (url.endsWith('&')) {
+        url = url.slice(0, -1);
+    }
 
-                setLoading(false);  // Set loading to false after fetching data
-            })
-            .catch(error => {
-                console.error('Error fetching posts:', error);
-                setLoading(false);  // Set loading to false in case of error
-            });
-    }, [user, refreshPosts]);
+    return url;
+};
 
-    const toggleUpvote = (postId) => {
-        if (!user) {
-            alert('You must be logged in to upvote.');
-            return;
+
+  useEffect(() => {
+    setLoading(true);
+    const url = buildUrl();
+
+    axios.get(url)
+      .then(response => {
+        console.log(response.data);
+        const postsData = Array.isArray(response.data) ? response.data : [];
+        setPosts(postsData);
+
+        const upvotedPosts = postsData.reduce((acc, post) => {
+          if (post.upvotes && post.upvotes.includes(user._id)) {
+            acc[post._id] = true;
           }
+          return acc;
+        }, {});
+        setUpvotedPosts(upvotedPosts);    
 
-        const isUpvoted = upvotedPosts[postId] || false;
-    
-        // Ensure that token exists
-        const token = localStorage.getItem('token');
-        if (!token) {
-            alert('You must be logged in to upvote.');
-            return;
-        }
-    
-        // Set the URL based on whether the post is currently upvoted
-        const url = isUpvoted
-            ? `/api/posts/${postId}/downvote`   // If already upvoted, send DELETE request (downvote)
-            : `/api/posts/${postId}/upvote`;    // Otherwise, send POST request (upvote)
-    
-        // Determine the HTTP method (POST for upvote, DELETE for downvote)
-        const method = isUpvoted ? 'delete' : 'post';
-    
-        // Send the request to the backend
-        axios({
-            method,  // Use POST or DELETE depending on the action
-            url,
-            headers: {
-                Authorization: `Bearer ${token}`,
-                 // Add token for authorization if needed
-            },
-            data: { userId: user._id } 
-        })
-        .then((response) => {
-            // Get the updated post object from the response
-            const updatedPost = response.data.post; // Assuming the updated post is returned in response.data.post
+        setLoading(false);
+      })
+      .catch(error => {
+        console.error('Error fetching posts:', error);
+        setLoading(false);
+      });
+  }, [user, refreshPosts, selectedTag, campusTag, departmentTag, nsfw]);
 
-            // Update the posts state with the new upvote count and status
-            setPosts(prevPosts => {
-                return prevPosts.map(post => {
-                    if (post._id === postId) {
-                        return updatedPost; // Replace the post with the updated one
-                    }
-                    return post;
-                });
-            });
+  const toggleUpvote = (postId) => {
+    if (!user) {
+      alert('You must be logged in to upvote.');
+      return;
+    }
 
-            // If upvote/downvote is successful, update local state
-            setUpvotedPosts(prevState => ({
-                ...prevState,
-                [postId]: !isUpvoted,  // Toggle the upvote status
-            }));
+    const isUpvoted = upvotedPosts[postId] || false;
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('You must be logged in to upvote.');
+      return;
+    }
 
-        })
-        .catch((error) => {
-            console.error('Error toggling upvote:', error.response ? error.response.data : error.message);
-            alert('Failed to update upvote status');
+    const url = isUpvoted
+      ? `/api/posts/${postId}/downvote`
+      : `/api/posts/${postId}/upvote`;
+
+    const method = isUpvoted ? 'delete' : 'post';
+
+    axios({
+      method,
+      url,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      data: { userId: user._id }
+    })
+    .then((response) => {
+      const updatedPost = response.data.post;
+
+      setPosts(prevPosts => {
+        return prevPosts.map(post => {
+          if (post._id === postId) {
+            return updatedPost;
+          }
+          return post;
         });
-    };
-    
-    // Handle click on a post
-    const postClick = (post) => {
-        setSelected(post);
-    };
+      });
 
-    const closePost = () => {
-        setSelected(null);
-        setRefreshPosts(Date.now()); // Toggle refreshPosts state to trigger re-fetch of posts
-    };
+      setUpvotedPosts(prevState => ({
+        ...prevState,
+        [postId]: !isUpvoted,
+      }));
+    })
+    .catch((error) => {
+      console.error('Error toggling upvote:', error.response ? error.response.data : error.message);
+      alert('Failed to update upvote status');
+    });
+  };
 
-    
+  const postClick = (post) => {
+    setSelected(post);
+  };
 
-    // Helper function to render tags
-    const renderTags = (tags) => {
-        if (!tags) return null;
-        const { descriptiveTag, departmentTag, campusTag, nsfw } = tags;
+  const closePost = () => {
+    setSelected(null);
+    setRefreshPosts(Date.now());
+  };
 
-        return (
-            <div className="post-tags">
-                {descriptiveTag && <span className="tag descriptiveTag">{descriptiveTag}</span>}
-                {campusTag && <span className="tag campusTag">{campusTag}</span>}
-                {departmentTag && <span className="tag departmentTag">{departmentTag}</span>}
-                {nsfw && <span className="tag nsfwTag">NSFW</span>}
-            </div>
-        );
-    };
+  const renderTags = (tags) => {
+    if (!tags) return null;
+    const { descriptiveTag, departmentTag, campusTag, nsfw } = tags;
 
     return (
-        <>
-            {selected === null ? (
-                <>
-                    <div className="list">
-                        {loading ? (
-                            <p>Loading posts...</p>
-                        ) : posts.length === 0 ? (
-                            <p>No posts available</p>
-                        ) : (
-                            posts.map(post => {
-                                const postId = post._id;  // Ensure you're using _id consistently
-                                return (
-                                    <div 
-                                        className="postitem" 
-                                        key={postId} 
-                                        onClick={() => postClick(post)}  
-                                    >
-                                        <h3>{post.title}</h3>
-                                        {renderTags(post.tags)}
-                                        <p className="postpreview">{post.content}</p>
-
-                                        <div className="interact">
-                                            <p onClick={(e) => {
-                                                e.stopPropagation();
-                                                toggleUpvote(postId);  // Pass the correct ID
-                                            }}>
-                                                {post.upvotes ? post.upvotes.length : 0} 
-                                                {upvotedPosts[postId] ? <FaHeart /> : <FaRegHeart />}
-                                            </p>
-                                            <p>{post.comments ? post.comments.length : 0} <FaRegComment /></p>
-                                            <p><FaRegShareFromSquare /></p>
-                                        </div>
-                                    </div>
-                                );
-                            })
-                        )}
-                    </div>
-
-                    <div className="schinfo">
-                        <img alt="School img" />
-                        <h3>Batangas State University</h3>
-                        <p className="schdesc">BatStateU, designated as the Philippines’ National Engineering University (The NEU), was established in 1903. Located in CALABARZON, it serves as a hub for higher learning and economic development. As The NEU, BatStateU focuses on world-class academic training and the development of industry-driven engineering programs to produce globally competitive leaders and professionals.</p>
-                        <div className="divider infodiv"></div>
-                        <div className="schLinks">
-                            
-                        </div>
-                    </div>
-                </>
-            ) : (
-                <PostModal post={selected} onClose={closePost} />
-            )}
-        </>
+      <div className="post-tags">
+        {descriptiveTag && <span className="tag descriptiveTag">{descriptiveTag}</span>}
+        {campusTag && <span className="tag campusTag">{campusTag}</span>}
+        {departmentTag && <span className="tag departmentTag">{departmentTag}</span>}
+        {nsfw && <span className="tag nsfwTag">NSFW</span>}
+      </div>
     );
+  };
+
+  return (
+    <>
+      {selected === null ? (
+        <div className="list">
+          {loading ? (
+            <p>Loading posts...</p>
+          ) : posts.length === 0 ? (
+            <p>No posts available</p>
+          ) : (
+            posts.map(post => {
+              const postId = post._id;
+              return (
+                <div className="postitem" key={postId} onClick={() => postClick(post)}>
+                  <h3>{post.title}</h3>
+                  {renderTags(post.tags)}
+                  <p className="postpreview">{post.content}</p>
+                  <div className="interact">
+                    <p onClick={(e) => {
+                      e.stopPropagation();
+                      toggleUpvote(postId);
+                    }}>
+                      {post.upvotes ? post.upvotes.length : 0}
+                      {upvotedPosts[postId] ? <FaHeart /> : <FaRegHeart />}
+                    </p>
+                    <p>{post.comments ? post.comments.length : 0} <FaRegComment /></p>
+                    <p><FaRegShareFromSquare /></p>
+                  </div>
+                </div>
+              );
+            })
+          )}
+        </div>
+      ) : (
+        <PostModal post={selected} onClose={closePost} />
+      )}
+    </>
+  );
 }
 
 export default Home;
