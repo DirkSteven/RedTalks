@@ -3,7 +3,8 @@ import axios from 'axios';
 import { FaRegComment, FaHeart, FaRegHeart, FaRegShareFromSquare } from "react-icons/fa6";
 import PostModal from "../Components/Modals/Post Modal";
 import AppContext from '../Contexts/AppContext'; 
-import { useOutletContext } from "react-router-dom"; // Import the hook
+import UserAvatar from '../Assets/UserAvatar.png';
+import { Link, useOutletContext } from "react-router-dom"; // Import the hook
 
 function Home() {
   const { user } = useContext(AppContext);
@@ -144,6 +145,10 @@ function Home() {
               const postId = post._id;
               return (
                 <div className="postitem" key={postId} onClick={() => postClick(post)}>
+                  <div className="postAuthor">
+                    <img src={UserAvatar} className="user-pic" alt="pfp"></img>
+                    {post.author && <p className="post-author">{post.author.name || 'Unknown Author'}</p>}
+                  </div>
                   <h3>{post.title}</h3>
                   {renderTags(post.tags)}
                   <p className="postpreview">{post.content}</p>
@@ -162,10 +167,28 @@ function Home() {
               );
             })
           )}
+          <div className="schinfo">
+            <img alt='school'></img>
+            <h3>Batangas State University</h3>
+            <div className="divider"></div>
+            <p>BATSTATEU OFFICIAL LINKS</p>
+              <div className="links batsu">
+                <Link to='https://batstateu.edu.ph/' target="_blank">Official Website</Link>
+                <Link to='https://batstateu.edu.ph/academic-calendar/2023-2024/' target="_blank">Academic Calendar 2023-2024</Link>
+                <Link to='https://dione.batstate-u.edu.ph/student/#/' target="_blank">Student Portal</Link>
+              </div>
+            <p>BATSTATEU SOCIAL MEDIA LINKS</p>
+              <div className="links socmed">
+                <Link to='https://www.facebook.com/BatStateUTheNEU' target="_blank">fb</Link>
+                <Link to='https://twitter.com/BatStateUTheNEU' target="_blank">X</Link>
+                <Link to='https://www.instagram.com/batstateu_/' target="_blank">insta</Link>
+              </div>
+          </div>
         </div>
       ) : (
         <PostModal post={selected} onClose={closePost} />
       )}
+
     </>
   );
 }

@@ -8,16 +8,16 @@ function ProfileNav() {
 
     return (
         <>
-            <div className="profilenav">
+            <div className="nav profilenav">
                 <ul>
                     <li className={isActive("/Profile") ? "active" : ""}>
                         <Link to="/Profile">Posts</Link>
                     </li>
                     <li className={isActive("/Announcement") ? "active" : ""}>
-                        <Link to="/Comments">Comments</Link>
+                        <Link to="/Profile/Comments">Comments</Link>
                     </li>
                     <li className={isActive("/Marketplace") ? "active" : ""}>
-                        <Link to="/Liked">Liked</Link>
+                        <Link to="/Profile/Liked">Liked Posts</Link>
                     </li>
                 </ul>
             </div>

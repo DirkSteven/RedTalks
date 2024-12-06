@@ -1,4 +1,4 @@
-import { React, useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 // import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import PostModal from "../Components/Modals/Post Modal";
@@ -136,9 +136,10 @@ function UserPosts() {
                         ) : posts.length === 0 ? (
                             <p>No posts available</p>
                         ) : (
-                            posts.map(post => {
+                            posts.map((post, index) => {
                                 const postId = post._id;  // Ensure you're using _id consistently
                                 return (
+                                    <React.Fragment key={postId}>
                                     <div 
                                         className="postitem" 
                                         key={postId} 
@@ -160,6 +161,8 @@ function UserPosts() {
                                             <p><FaRegShareFromSquare /></p>
                                         </div>
                                     </div>
+                                    {index < posts.length - 1 && <div className="divider"></div>}
+                                    </React.Fragment>
                                 );
                             })
                         )}

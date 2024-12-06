@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext, useCallback } from 'react';
 import { FaArrowLeft, FaRegComment, FaHeart, FaRegHeart, FaRegShareFromSquare } from 'react-icons/fa6';
 import AppContext from '../../Contexts/AppContext'; 
+import UserAvatar from '../../Assets/UserAvatar.png';
 import axios from 'axios';
 
 function PostModal({ post, onClose }) {
@@ -177,13 +178,32 @@ function PostModal({ post, onClose }) {
     }
   };
 
+  const renderTags = (tags) => {
+    if (!tags) return null;
+    const { descriptiveTag, departmentTag, campusTag, nsfw } = tags;
+
+    return (
+      <div className="post-tags">
+        {descriptiveTag && <span className="tag descriptiveTag">{descriptiveTag}</span>}
+        {campusTag && <span className="tag campusTag">{campusTag}</span>}
+        {departmentTag && <span className="tag departmentTag">{departmentTag}</span>}
+        {nsfw && <span className="tag nsfwTag">NSFW</span>}
+      </div>
+    );
+  };
+
   if (!post) return null;
 
     return (
       <div className="postmodal-overlay" onClick={onClose}> 
         <FaArrowLeft className="modalClose" onClick={onClose}/>
         <div className="postmodal-content" onClick={(e) => e.stopPropagation()}>
+          <div className="postAuthor">
+            <img src={UserAvatar} className="user-pic" alt="pfp"></img>
+            {post.author && <p className="post-author">{post.author.name || 'Unknown Author'}</p>}
+          </div>
           <h3>{post.title}</h3>
+          {renderTags(post.tags)}
           <p>{post.content}</p>
           <div className="interact">
             <p>
@@ -196,7 +216,7 @@ function PostModal({ post, onClose }) {
             </p>
             <p>{post.comments ? post.comments.length : 0} <FaRegComment/> </p>
             <p><FaRegShareFromSquare onClick={handleShare}/></p>
-            {shareStatus && <p>{shareStatus}</p>}
+            {shareStatus && <span>{shareStatus}</span>}
           </div>
           <div className="comments-list">
             <h4>Comments:</h4>

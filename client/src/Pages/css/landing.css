@@ -166,6 +166,7 @@ img{
     img{
         display: flex;
         flex-basis: 40%;
+        max-height: 100vh;
     }
     .panel{
         flex-basis: 60%;

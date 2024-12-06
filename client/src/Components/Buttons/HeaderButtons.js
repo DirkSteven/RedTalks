@@ -1,22 +1,19 @@
 import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaPlus, FaRegBell, FaRegEnvelope } from "react-icons/fa";
-import AppContext from '../../Contexts/AppContext'; 
+import AppContext from '../../Contexts/AppContext';
 
 function HeaderButtons() {
   const { user } = useContext(AppContext);
   const navigate = useNavigate();
 
-  const [isBellDropdownOpen, setBellDropdownOpen] = useState(false);
-  const [isEnvelopeDropdownOpen, setEnvelopeDropdownOpen] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState(null); // Track the open dropdown
   const [notifications, setNotifications] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  const [loading, setLoading] = useState(false); 
-
- const fetchNotifications = async () => {
+  const fetchNotifications = async () => {
     try {
       setLoading(true);
-      // Replace 'userId' with actual logged-in user's ID
       const response = await fetch(`/api/notifications/${user._id}`);
       const data = await response.json();
       
@@ -32,21 +29,14 @@ function HeaderButtons() {
     }
   };
 
-  // Toggle Bell dropdown visibility
-  const toggleBellDropdown = () => {
-    setBellDropdownOpen((prevState) => !prevState);
-
-    if (!isBellDropdownOpen) {
+  // Toggle dropdown and ensure only one dropdown is open
+  const toggleDropdown = (dropdown) => {
+    setOpenDropdown(prev => prev === dropdown ? null : dropdown);
+    if (dropdown === "bell" && openDropdown !== "bell") {
       fetchNotifications();
     }
   };
 
-  // Toggle Envelope dropdown visibility
-  const toggleEnvelopeDropdown = () => {
-    setEnvelopeDropdownOpen((prevState) => !prevState);
-  };
-  
-  
   return (
     <div className="headbutt">
       {/* Create Post Button */}
@@ -56,48 +46,40 @@ function HeaderButtons() {
       />
 
       {/* Notification Bell with Dropdown */}
-      <div className="dropdown-container">
-        <FaRegBell
-          className="headIcon bell"
-          onClick={toggleBellDropdown}
-        />
-        {isBellDropdownOpen && (
-          <div className="dropdown-menu bell-dropdown">
-            {loading ? (
-              <p>Loading notifications...</p>
-            ) : (
-              <ul>
-                {notifications.length > 0 ? (
-                  notifications.map((notification) => (
-                    <li key={notification._id}>
-                      {notification.message}
-                    </li>
-                  ))
-                ) : (
-                  <li>No new notifications</li>
-                )}
-              </ul>
-            )}
-          </div>
-        )}
-      </div>
-
-      {/* Envelope (Messages) with Dropdown */}
-      <div className="dropdown-container">
-        <FaRegEnvelope
-          className="headIcon envelope"
-          onClick={toggleEnvelopeDropdown}
-        />
-        {isEnvelopeDropdownOpen && (
-          <div className="dropdown-menu envelope-dropdown">
+      <FaRegBell
+        className={`headIcon bell ${openDropdown === "bell" ? 'open' : ''}`}
+        onClick={() => toggleDropdown("bell")}
+      />
+      {openDropdown === "bell" && (
+        <div className={`dropdown-menu bell-dropdown ${openDropdown === "bell" ? 'open' : ''}`}>
+          {loading ? (
+            <p>Loading notifications...</p>
+          ) : (
             <ul>
-              <li>Message from John</li>
-              <li>New group message</li>
-              <li>Message from Admin</li>
+              {notifications.length > 0 ? (
+                notifications.map((notification) => (
+                  <li key={notification._id}>{notification.message}</li>
+                ))
+              ) : (
+                <li>No new notifications</li>
+              )}
             </ul>
-          </div>
-        )}
-      </div>
+          )}
+        </div>
+      )}
+
+      {/* Envelope with Dropdown */}
+      <FaRegEnvelope
+        className={`headIcon envelope ${openDropdown === "envelope" ? 'open' : ''}`}
+        onClick={() => toggleDropdown("envelope")}
+      />
+      {openDropdown === "envelope" && (
+        <div className={`dropdown-menu envelope-dropdown ${openDropdown === "envelope" ? 'open' : ''}`}>
+          <ul>
+            <li>Messages under maintenance.</li>
+          </ul>
+        </div>
+      )}
     </div>
   );
 }

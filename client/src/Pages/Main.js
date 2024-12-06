@@ -13,6 +13,8 @@ import VerifyEmail from '../Components/verifyEmail';
 import Forgot from "./ForgotPassword";
 import Profile from "./Profile";
 import UserPosts from "./UserPosts";
+import UserComments from "./UserComments";
+import UserLikes from "./UserLikes";
 import AppContext from '../Contexts/AppContext'; 
 
 function ProtectedRoute({ children }) {
@@ -81,7 +83,23 @@ function Main() {
         </Route>
 
         <Route path="/Profile" element={<Profile />}>
-          <Route index element={<UserPosts/>}/>
+          <Route index element={
+            <ProtectedRoute>
+              <UserPosts/>
+            </ProtectedRoute>
+            }/>
+            
+            <Route path="Comments" element={
+            <ProtectedRoute>
+              <UserComments/>
+            </ProtectedRoute>
+            }/>
+
+            <Route path="Liked" element={
+            <ProtectedRoute>
+              <UserLikes/>
+            </ProtectedRoute>
+            }/>
         </Route>
 
         <Route path="/Login" element={<Entry />}>

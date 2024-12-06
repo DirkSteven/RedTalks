@@ -335,6 +335,17 @@
     text-overflow:ellipsis;
 }
 
+.postAuthor{
+    margin: 0;
+    padding: 0;
+    display:flex;
+    align-items: center;
+}
+
+.postAuthor p{
+    margin-left: 2%;
+}
+
 .postitem h3{
     font-size: medium;
 }
@@ -364,6 +375,11 @@
     cursor: pointer;
 }
 
+.interact span{
+    cursor: default;
+    color: #9e2525;
+}
+
 .interact p:hover{
     background-color: #3d3d3d57;
 }
@@ -378,15 +394,14 @@
 .postmodal-overlay {
     margin: 2%;
     display: flex;
-    justify-content: space-between;
 }
 
 .postmodal-content {
     padding: 20px;
+    margin: 0 20px;
     border-radius: 8px;
     background-color: #f9f9ed;
-    max-width: 600px;
-    width: 80%;
+    width: 50vw;
     border: 2px solid rgba(0, 0, 0, 0.1);
 }
 
@@ -421,9 +436,22 @@
     outline: 2px solid #9e2525b3;
 }
 
-.addComment button{
+.comments-list button{
     height: fit-content;
     font-family: 'Poppins', serif;
+    margin: 0 1em;
+    border: none;
+    box-sizing: border-box;
+    background-color: #9e2525;
+    color: #f0f0e1;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.comments-list button:hover{
+    color: #9e2525;
+    background-color: #f9f9ed;
 }
 
 .modalClose{
@@ -468,6 +496,37 @@
 .schdesc{
     margin: 0;
     font-size: small;
+}
+
+.schinfo .divider{
+    width: 100%;
+}
+
+.schinfo p{
+    font-size: small;
+    color: #00000070;
+}
+
+.links{
+    margin: 0;
+    padding: 0;
+    display: flex;
+    height: fit-content;
+    width: fit-content;
+}
+
+.batsu{
+    flex-direction: column;
+    font-size: medium;
+}
+
+.batsu a{
+    color: #2c2c2c;
+    text-decoration: none;
+}
+
+.socmed a{
+    margin-right: 3%;
 }
 
 .postcreation{
@@ -534,16 +593,20 @@
 
 .post-tags{
     display: flex;
+    gap: 10px;
+    height: fit-content;
+}
+
+.post-tags::-webkit-scrollbar{
+    display: none;
 }
 
 .tag{
     font-size: small;
     box-sizing: border-box;
-    text-overflow: hidden;
-    height: 100%;
-    max-width: 30%;
-    padding: 5px 20px;
-    margin: 0 10px 0 0;
+    height: fit-content;
+    width: fit-content;
+    padding: 0.3em .5em;
     border-radius: 10px;
     background-color: #2c2c2c;
     color: #f0f0e1;
@@ -583,7 +646,7 @@
     background: white;
     padding: 20px;
     border-radius: 8px;
-    width: 400px;
+    width: 30%;
 }
   
 .tagsModal h3 {
@@ -601,19 +664,30 @@
     margin-bottom: 10px;
 }
 
-.selected-tags{
-    margin: 10px 20px;
+.tagsModal select:focus{
+    outline: none;
 }
 
-  
+.selected-tags{
+    margin: 10px 20px;
+    display: flex;
+    gap: 1%;
+}
+
+.tagselect{
+    border: none;
+    border-radius: 10px;
+    width: fit-content;
+}
+
   /* Dropdown Menu Styling */
   .dropdown-menu {
     position: fixed;
-    top: 30px; /* Adjust this to position the dropdown below the icon */
     right: 0;
-    width: 200px;
-    background-color: #fff;
-    border: 1px solid #ccc;
+    top: 8vh;
+    width: 20%;
+    background-color: #f9f9ed;
+    border: 1px solid #9e2525;
     border-radius: 4px;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     padding: 10px;
@@ -632,17 +706,51 @@
   }
   
   .dropdown-menu li:hover {
-    background-color: #f0f0f0;
+    background-color: #dbdbdb;
   }
   
   /* Optional: Specific styles for the bell and envelope dropdowns */
   .bell-dropdown {
-    background-color: #f8f9fa;
+    right: 8.5%;
   }
   
   .envelope-dropdown {
-    background-color: #f1f3f5;
+    right: 4%;
   }
+
+.ProfileDisplay{
+    height: fit-content;
+    width: 70%;
+    border-radius: 30px;
+    margin: 1vh 5vw;
+    background-color: #f9f9ed;
+    border: 2px solid #2c2c2c50;
+}
+
+.pdname{
+    display: flex;
+    align-items: center;
+    margin: 0;
+    padding: 3%;
+}
+
+.pdname img{
+    margin-left: 4%;
+}
+
+.pdname h3{
+    margin-left: 20px;
+}
+
+.ProfileDisplay .nav{
+    top: 10vh;
+    border-radius: 0;
+    margin: 0;
+}
+
+.ProfileDisplay .postitem{
+    border: none;
+}
 
 
 @media (max-width: 1024px){

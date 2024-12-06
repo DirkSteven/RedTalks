@@ -98,42 +98,42 @@ function CreatePost() {
           />
 
           <div className="tags-display">
+              <div className="selected-tags">
+                {Object.entries(selectedTags).map(([key, value]) => {
+                  if (key === "nsfw" && value) {
+                    return (
+                      <span key={key} className="tag nsfwTag">
+                        NSFW
+                      </span>
+                    );
+                  }
+                  // Skip the NSFW tag if false
+                  if (key === "nsfw") return null;
+
+                  // Assign different classes based on tag type
+                  const tagClass =
+                    key === "descriptiveTag"
+                      ? "descriptiveTag"
+                      : key === "campusTag"
+                      ? "campusTag"
+                      : key === "departmentTag"
+                      ? "departmentTag"
+                      : "";
+
+                  return (
+                    <span key={key} className={`tag ${tagClass}`}>
+                      {value.toString()}
+                    </span>
+                  );
+                })}
+              </div>
             <button
               type="button"
               className="formbtn"
               onClick={handleTagModalToggle}
             >
-              Add tags
+              Edit tags
             </button>
-            <div className="selected-tags">
-              {Object.entries(selectedTags).map(([key, value]) => {
-                if (key === "nsfw" && value) {
-                  return (
-                    <span key={key} className="tag nsfwTag">
-                      NSFW
-                    </span>
-                  );
-                }
-                // Skip the NSFW tag if false
-                if (key === "nsfw") return null;
-
-                // Assign different classes based on tag type
-                const tagClass =
-                  key === "descriptiveTag"
-                    ? "descriptiveTag"
-                    : key === "campusTag"
-                    ? "campusTag"
-                    : key === "departmentTag"
-                    ? "departmentTag"
-                    : "";
-
-                return (
-                  <span key={key} className={`tag ${tagClass}`}>
-                    {value.toString()}
-                  </span>
-                );
-              })}
-            </div>
           </div>
 
           <textarea
@@ -155,7 +155,7 @@ function CreatePost() {
             <h3>Select Tags</h3>
             <div>
               <label>Descriptive Tag:</label>
-              <select
+              <select className="tagselect descriptiveTag"
                 value={selectedTags.descriptiveTag}
                 onChange={(e) =>
                   handleTagChange("descriptiveTag", e.target.value)
@@ -171,7 +171,7 @@ function CreatePost() {
 
             <div>
               <label>Campus Tag:</label>
-              <select
+              <select className="tagselect campusTag"
                 value={selectedTags.campusTag}
                 onChange={(e) => handleTagChange("campusTag", e.target.value)}
               >
@@ -185,7 +185,7 @@ function CreatePost() {
 
             <div>
               <label>Department Tag:</label>
-              <select
+              <select className="tagselect departmentTag"
                 value={selectedTags.departmentTag}
                 onChange={(e) =>
                   handleTagChange("departmentTag", e.target.value)
@@ -199,7 +199,7 @@ function CreatePost() {
               </select>
             </div>
 
-            <div>
+            <div className="tagselect nsfwTag">
               <label>NSFW:</label>
               <input
                 type="checkbox"

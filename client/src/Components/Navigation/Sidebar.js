@@ -3,7 +3,7 @@ import { FaArrowTrendUp, FaGraduationCap } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import AppContext from '../../Contexts/AppContext'; 
-import UserAvatar from '../Assets/UserAvatar.png';
+import UserAvatar from '../../Assets/UserAvatar.png';
 
 function Sidebar({ isCollapsed, setSelectedTag, setCampusTag, setDepartmentTag, setNsfw }) {
   const { user, setUser } = useContext(AppContext);
@@ -77,7 +77,7 @@ function Sidebar({ isCollapsed, setSelectedTag, setCampusTag, setDepartmentTag, 
   };
   
   if (user === null) {
-    return <div>Loading user...</div>; // Show a different loading state for user initialization
+    return <div className="sidebar">Loading user...</div>; // Show a different loading state for user initialization
   }  
   
 
@@ -124,7 +124,7 @@ function Sidebar({ isCollapsed, setSelectedTag, setCampusTag, setDepartmentTag, 
         <div className="divider"></div>
 
         <ul>
-          <li><button onClick={logout}>Logout</button></li>
+          <button onClick={logout}>Logout</button>
         </ul>
       </div>
     </div>

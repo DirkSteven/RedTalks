@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Searchbar from "./Searchbar";
 import Toggle from "../Buttons/Toggle";
 import HeaderButtons from "../Buttons/HeaderButtons";
-import RedTalksLogo from "../Assets/RedTalksLogo.png";
+import RedTalksLogo from "../../Assets/RedTalksLogo.png";
 
 function Header({ toggle }) {
 
