@@ -8,6 +8,19 @@ import sendEmail from '../utils/sendEmail.js'
 import dotenv from 'dotenv';
 dotenv.config();
 
+export async function getUser(req, res) {
+  try {
+    const user = await User.findById(req.params.userId).select('name email imageUrl');
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.status(200).json(user);
+  } catch (error) {
+    console.error('Error fetching user:', error);
+    res.status(500).json({ message: 'Error fetching user', error: error.message });
+  }
+}
+
 export async function getUserPosts(req, res) {
     try {
       const { userId } = req.params;
@@ -30,13 +43,20 @@ export async function getUserPosts(req, res) {
       // Aggregate posts with comments by this user
       const posts = await Post.find({ "comments.author": userId })
         .populate('author', 'name email')
-        .populate('comments.author', 'name email')  // Populate user data for comment authors
+        .populate('comments.author', 'name email')
+        .select('title comments')
         .sort({ createdAt: -1 });
   
       // Filter and return only the comments by the specific user
       const userComments = posts.flatMap(post =>
-        post.comments.filter(comment => comment.author._id.toString() === userId)
-      );
+        post.comments
+            .filter(comment => comment.author._id.toString() === userId)
+            .map(comment => ({
+                content: comment.content,
+                postTitle: post.title || null,
+                postId: post._id || null,
+            }))
+    );
   
       return res.status(200).json(userComments);
     } catch (error) {
@@ -51,8 +71,9 @@ export async function getUserPosts(req, res) {
   
       // Query posts where the user has upvoted
       const posts = await Post.find({ upvotes: userId })
-        .populate('author', 'name email')  // Populate user data for the author
-        .sort({ createdAt: -1 });  // Optionally, sort by creation date
+        .populate('author', 'name email')
+        .select('title content createdAt author upvotes comments')
+        .sort({ createdAt: -1 }); 
   
       return res.status(200).json(posts);
     } catch (error) {
