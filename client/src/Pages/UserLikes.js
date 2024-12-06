@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
+import { useParams } from 'react-router-dom';
 import { FaRegComment, FaHeart, FaRegShareFromSquare } from 'react-icons/fa6';
 import AppContext from '../Contexts/AppContext';
 
 function UserLikes() {
     const { user } = useContext(AppContext);
+    const { userId } = useParams(); 
     const [likedPosts, setLikedPosts] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -12,7 +14,7 @@ function UserLikes() {
         if (!user) return;
 
         setLoading(true);
-        axios.get(`/api/user/${user._id}/upvotes`)
+        axios.get(`/api/user/userId/upvotes`)
             .then(response => {
                 setLikedPosts(response.data || []); // Ensure a fallback to an empty array
                 setLoading(false);

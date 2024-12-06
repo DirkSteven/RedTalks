@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
+import { useParams } from 'react-router-dom';
 import { FaRegComment } from 'react-icons/fa6';
 import AppContext from '../Contexts/AppContext';
 
 function UserComments() {
     const { user } = useContext(AppContext);
+    const { userId } = useParams(); 
     const [comments, setComments] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -12,7 +14,7 @@ function UserComments() {
         if (!user) return;
 
         setLoading(true);
-        axios.get(`/api/user/${user._id}/comments`)
+        axios.get(`/api/user/${userId}/comments`)
             .then(response => {
                 setComments(response.data);
                 setLoading(false);
@@ -25,7 +27,7 @@ function UserComments() {
 
     return (
         <div className="list">
-            <h2>Your Comments</h2>
+            <h2>Comments</h2>
             {loading ? (
                 <p>Loading...</p>
             ) : comments.length > 0 ? (

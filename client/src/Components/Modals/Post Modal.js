@@ -3,6 +3,7 @@ import { FaArrowLeft, FaRegComment, FaHeart, FaRegHeart, FaRegShareFromSquare } 
 import AppContext from '../../Contexts/AppContext'; 
 import UserAvatar from '../../Assets/UserAvatar.png';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 function PostModal({ post, onClose }) {
   const { user } = useContext(AppContext);
@@ -12,6 +13,7 @@ function PostModal({ post, onClose }) {
   const [upvoteCount, setUpvoteCount] = useState(0);
   const [parentId, setParentId] = useState(null);
   const [shareStatus, setShareStatus] = useState('');
+  const navigate = useNavigate();
 
   const fetchUpvoteCount = useCallback(async () => {
     try {
@@ -192,13 +194,17 @@ function PostModal({ post, onClose }) {
     );
   };
 
+  const handleAuthorClick = () => {
+    navigate(`/Profile/${post.author._id}`);
+  };
+
   if (!post) return null;
 
     return (
       <div className="postmodal-overlay" onClick={onClose}> 
         <FaArrowLeft className="modalClose" onClick={onClose}/>
         <div className="postmodal-content" onClick={(e) => e.stopPropagation()}>
-          <div className="postAuthor">
+          <div className="postAuthor" onClick={handleAuthorClick}>
             <img src={UserAvatar} className="user-pic" alt="pfp"></img>
             {post.author && <p className="post-author">{post.author.name || 'Unknown Author'}</p>}
           </div>
