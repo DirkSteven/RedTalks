@@ -3,8 +3,6 @@ import axios from 'axios';
 import { FaRegComment, FaHeart, FaRegHeart, FaRegShareFromSquare } from "react-icons/fa6";
 import PostModal from "../Components/Modals/Post Modal";
 import AppContext from '../Contexts/AppContext'; 
-import UserAvatar from '../Assets/UserAvatar.png';
-import { Link, useOutletContext } from "react-router-dom"; // Import the hook
 
 function Home() {
   const { user } = useContext(AppContext);

@@ -476,6 +476,7 @@
 
 .schinfo{
     background-color: #f9f9ed;
+    overflow: hidden;
     border-radius: 15px 15px 0 0;
     border: 2px solid rgba(0, 0, 0, 0.1);
     height: 100%;
@@ -488,9 +489,16 @@
     z-index: 0;
 }
 
+.schinfo img{
+    max-width: 100%;
+    border-radius: 3%;
+    margin-bottom: 5%;
+}
+
 .schinfo h3{
     margin: 0;
     padding: 0;
+    margin-bottom: 2%;
 }
 
 .schdesc{
@@ -604,9 +612,11 @@
 .tag{
     font-size: small;
     box-sizing: border-box;
-    height: fit-content;
-    width: fit-content;
-    padding: 0.3em .5em;
+    text-overflow: hidden;
+    height: 100%;
+    max-width: 30%;
+    padding: 5px 20px;
+    margin: 0 10px 0 0;
     border-radius: 10px;
     background-color: #2c2c2c;
     color: #f0f0e1;
@@ -789,5 +799,7 @@
         overflow: hidden;
         flex-basis: 0%;
     }
+
+    
 
 }
