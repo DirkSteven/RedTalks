@@ -14,7 +14,7 @@ function UserLikes() {
         if (!user) return;
 
         setLoading(true);
-        axios.get(`/api/user/userId/upvotes`)
+        axios.get(`/api/user/${userId}/upvotes`)
             .then(response => {
                 setLikedPosts(response.data || []); // Ensure a fallback to an empty array
                 setLoading(false);
