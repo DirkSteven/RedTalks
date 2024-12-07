@@ -474,19 +474,36 @@
     font-size: small;
 }
 
-.schinfo{
+.schinfo {
     background-color: #f9f9ed;
-    overflow: hidden;
+    overflow-y: auto; 
+    overflow-x: hidden; 
     border-radius: 15px 15px 0 0;
     border: 2px solid rgba(0, 0, 0, 0.1);
-    height: 100%;
-    top: 23%;
+    height: 70%; 
+    top: 23%; 
     width: 20%;
     padding: 1.5em;
     position: fixed;
-    bottom: 0;
-    right: 1.5%;
-    z-index: 0;
+    bottom: 0; 
+    right: 1.5%; 
+    z-index: 1;
+   
+}
+
+.schinfo::-webkit-scrollbar {
+    width: 8px;
+   
+}
+
+.schinfo::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2); 
+    border-radius: 5px; 
+    }
+
+.schinfo::-webkit-scrollbar-track {
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 5px; 
 }
 
 .schinfo img{
@@ -614,7 +631,7 @@
     box-sizing: border-box;
     text-overflow: hidden;
     height: 100%;
-    max-width: 30%;
+    max-width: 60%;
     padding: 5px 20px;
     margin: 0 10px 0 0;
     border-radius: 10px;
@@ -779,6 +796,7 @@
     .list{
         margin: 0;
     }
+    
 }
 
 @media (max-width: 425px){

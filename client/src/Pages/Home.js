@@ -2,10 +2,10 @@ import React, { useState, useEffect, useContext } from "react";
 import axios from 'axios';
 import { Link, useOutletContext } from 'react-router-dom';
 import { FaRegComment, FaHeart, FaRegHeart, FaRegShareFromSquare } from "react-icons/fa6";
-import { Link, useOutletContext } from "react-router-dom";
 import PostModal from "../Components/Modals/Post Modal";
 import AppContext from '../Contexts/AppContext'; 
 import UserAvatar from '../Assets/UserAvatar.png';
+import homepic from '../Assets/homepic.png';
 
 function Home() {
   const { user } = useContext(AppContext);
@@ -169,8 +169,9 @@ function Home() {
             })
           )}
           <div className="schinfo">
-            <img alt='school'></img>
+            <img alt="School img" src={homepic}></img>
             <h3>Batangas State University</h3>
+            <p className="schdesc"><b>RedTalks</b> is an exclusive online platform for BATANGAS STATE UNIVERSITY students, faculty, and staff to connect, share ideas, and engage in meaningful discussions. Whether you're looking for academic advice, campus news, or a place to chat with fellow BatSU members, RedTalks is here to bring the community together. Where Red Spartans share, engage, and rise. Join today and be part of the conversation!</p>
             <div className="divider"></div>
             <p>BATSTATEU OFFICIAL LINKS</p>
               <div className="links batsu">
