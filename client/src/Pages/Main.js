@@ -82,7 +82,7 @@ function Main() {
           } />
         </Route>
 
-        <Route path="/Profile" element={<Profile />}>
+        <Route path="/Profile/:userId" element={<Profile />}>
           <Route index element={
             <ProtectedRoute>
               <UserPosts/>

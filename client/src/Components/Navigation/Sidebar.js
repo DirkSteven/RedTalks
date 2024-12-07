@@ -34,7 +34,7 @@ function Sidebar({ isCollapsed, setSelectedTag, setCampusTag, setDepartmentTag, 
   }, [user]);
 
   const viewProfile = () => {
-    navigate('/Profile');
+    navigate(`/Profile/${user._id}`);
   }
 
   const logout = () => {

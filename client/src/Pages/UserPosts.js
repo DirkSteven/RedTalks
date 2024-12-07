@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 // import { useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import PostModal from "../Components/Modals/Post Modal";
 import { FaRegComment, FaHeart, FaRegHeart, FaRegShareFromSquare } from "react-icons/fa6";
@@ -7,6 +8,7 @@ import AppContext from '../Contexts/AppContext';
 
 function UserPosts() {
     const { user } = useContext(AppContext);
+    const { userId } = useParams(); 
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [selected, setSelected] = useState(null);
@@ -18,14 +20,14 @@ function UserPosts() {
     useEffect(() => {
         setLoading(true);
         // Fetch posts from the backend API
-        axios.get(`api/user/${user._id}/posts`)
+        axios.get(`/api/user/${userId}/posts`)
             .then(response => {
                 console.log(response.data);  // Log the response to inspect its structure
                 const postsData = Array.isArray(response.data) ? response.data : [];
                 setPosts(postsData);
 
                 const upvotedPosts = postsData.reduce((acc, post) => {
-                    if (post.upvotes && post.upvotes.includes(user._id)) {
+                    if (post.upvotes && post.upvotes.includes(userId)) {
                         acc[post._id] = true;
                     }
                     return acc;

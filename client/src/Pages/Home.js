@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import axios from 'axios';
+import { Link, useOutletContext } from 'react-router-dom';
 import { FaRegComment, FaHeart, FaRegHeart, FaRegShareFromSquare } from "react-icons/fa6";
 import { Link, useOutletContext } from "react-router-dom";
 import PostModal from "../Components/Modals/Post Modal";

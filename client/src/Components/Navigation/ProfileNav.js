@@ -1,6 +1,7 @@
-import { Link, Outlet, useLocation } from "react-router-dom";
+import { Link, Outlet, useParams, useLocation } from "react-router-dom";
 
 function ProfileNav() {
+    const { userId } = useParams();  // Get userId from the URL
     const location = useLocation();  // Get current location (pathname)
 
     // Function to check if the current page matches the link
@@ -10,14 +11,17 @@ function ProfileNav() {
         <>
             <div className="nav profilenav">
                 <ul>
-                    <li className={isActive("/Profile") ? "active" : ""}>
-                        <Link to="/Profile">Posts</Link>
+                    <li className={isActive(`/Profile/${userId}`) ? "active" : ""}>
+                        {/* Correctly using backticks to interpolate userId */}
+                        <Link to={`/Profile/${userId}`}>Posts</Link>
                     </li>
-                    <li className={isActive("/Announcement") ? "active" : ""}>
-                        <Link to="/Profile/Comments">Comments</Link>
+                    <li className={isActive(`/Profile/${userId}/Comments`) ? "active" : ""}>
+                        {/* Correctly using backticks to interpolate userId */}
+                        <Link to={`/Profile/${userId}/Comments`}>Comments</Link>
                     </li>
-                    <li className={isActive("/Marketplace") ? "active" : ""}>
-                        <Link to="/Profile/Liked">Liked Posts</Link>
+                    <li className={isActive(`/Profile/${userId}/Liked`) ? "active" : ""}>
+                        {/* Correctly using backticks to interpolate userId */}
+                        <Link to={`/Profile/${userId}/Liked`}>Liked Posts</Link>
                     </li>
                 </ul>
             </div>
