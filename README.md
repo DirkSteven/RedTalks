@@ -139,7 +139,7 @@ emailPattern = /^\d{2}-\d{5}@g.batstate-u.edu.ph$/
 | <a href = "https://github.com/DirkSteven">Dirk Steven E. Javier</a> | Project Manager/ Full-stack Developer | dirkjaviermvp@gmail.com | Allonsy -Discord |
 | <a href = "https://github.com/LanceAndrei04">Ciavel Anby Montenegro </a>|  Backend Developer  | m.cap1218@gmail.com |
 | <a href = "https://github.com/AeronEvangelista">John Bendict Tolentino </a>| Front-end Developer | jbtolentino.827.04@gmail.com |
-| <a href = "https://github.com/AeronEvangelista">Mikaella Ebora </a>| UI/UX |  |
+| <a href = "(https://github.com/mikaebora">Mikaella Ebora </a>| UI/UX |  | mikaellapebora@gmail.com
 
 
 
