@@ -1,6 +1,7 @@
-<p align = "center">
-  <img src = "Redtalks_logo.png" width = "300" height = "300" alt="LogoInsert"> 
+<p align="center">
+  <img src="Redtalks_logo.png" style="width:auto; height:300;" alt="LogoInsert">
 </p>
+
 
 
 
