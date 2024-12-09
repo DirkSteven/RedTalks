@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="Redtalks_logo.png" style="width:auto; height:300;" alt="LogoInsert">
+  <img src="Redtalks_logo.png" style="width:auto; height:200;" alt="LogoInsert">
 </p>
 
 
