@@ -27,7 +27,6 @@ function UserComments() {
 
     return (
         <div className="list">
-            <h2>Comments</h2>
             {loading ? (
                 <p>Loading...</p>
             ) : comments.length > 0 ? (

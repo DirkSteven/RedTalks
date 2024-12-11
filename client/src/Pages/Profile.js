@@ -39,7 +39,7 @@ function Profile() {
   }
 
   return (
-    <div className="container">
+    <div className="container userprofile">
       <Header toggle={toggle} />
       <div className='contents'>
         <Sidebar isCollapsed={sidebar} />
