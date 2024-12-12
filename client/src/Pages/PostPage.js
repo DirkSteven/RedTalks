@@ -36,7 +36,7 @@ function PostPage() {
   const fetchPostData = useCallback(async () => {
     try {
       const response = await axios.get(`/api/posts/${postId}`);
-      const fetchedPost = response.data;
+      const fetchedPost = response.data.post;
       setPost(fetchedPost);
       setComments(fetchedPost.comments || []);
       setUpvoted(fetchedPost.upvotes && fetchedPost.upvotes.includes(user?._id));
@@ -253,8 +253,9 @@ function PostPage() {
   if (!post) {
     return <div>Post not found.</div>; // If no post is available
   }
-
+    console.log(post.content);
   return (
+
     <div className="container">
 
       <Header toggle={toggle}/>
@@ -279,7 +280,7 @@ function PostPage() {
         </div>
         <h3>{post.title}</h3>
         {renderTags(post.tags)}
-        <p>{post.content}</p>
+        <p>{post.content || "No content available"}</p>
         <div className="interact">
           <p>
             {upvoteCount} 
