@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import axios from 'axios';
-import { Link, useOutletContext } from 'react-router-dom';
+import { Link, useOutletContext, useNavigate } from 'react-router-dom';
 import { FaRegComment, FaHeart, FaRegHeart, FaRegShareFromSquare } from "react-icons/fa6";
-import PostModal from "../Components/Modals/Post Modal";
 import AppContext from '../Contexts/AppContext'; 
 import UserAvatar from '../Assets/UserAvatar.png';
 import homepic from '../Assets/homepic.png';
@@ -12,9 +11,9 @@ function Home() {
   const { selectedTag, campusTag, departmentTag, nsfw } = useOutletContext(); // Use the context to access selectedTag
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selected, setSelected] = useState(null);
   const [upvotedPosts, setUpvotedPosts] = useState({});
   const [refreshPosts, setRefreshPosts] = useState(false);
+  const navigate = useNavigate(); // Initialize the navigate function
 
   const buildUrl = () => {
     let url = '/api/posts/filter?';
@@ -32,7 +31,6 @@ function Home() {
 
     return url;
 };
-
 
   useEffect(() => {
     setLoading(true);
@@ -110,15 +108,6 @@ function Home() {
     });
   };
 
-  const postClick = (post) => {
-    setSelected(post);
-  };
-
-  const closePost = () => {
-    setSelected(null);
-    setRefreshPosts(Date.now());
-  };
-
   const renderTags = (tags) => {
     if (!tags) return null;
     const { descriptiveTag, departmentTag, campusTag, nsfw } = tags;
@@ -160,65 +149,67 @@ function Home() {
     );
   };
 
-  return (
-    <>
-      {selected === null ? (
-        <div className="list">
-          {loading ? (
-            <p>Loading posts...</p>
-          ) : posts.length === 0 ? (
-            <p>No posts available</p>
-          ) : (
-            posts.map(post => {
-              const postId = post._id;
-              return (
-                <div className="postitem" key={postId} onClick={() => postClick(post)}>
-                  <div className="postAuthor">
-                    <img src={UserAvatar} className="user-pic" alt="pfp"></img>
-                    {post.author && <p className="post-author">{post.author.name || 'Unknown Author'}</p>}
-                  </div>
-                  <h3>{post.title}</h3>
-                  {renderTags(post.tags)}
-                  <p className="postpreview">{post.content}</p>
-                  <div className="interact">
-                    <p onClick={(e) => {
-                      e.stopPropagation();
-                      toggleUpvote(postId);
-                    }}>
-                      {post.upvotes ? post.upvotes.length : 0}
-                      {upvotedPosts[postId] ? <FaHeart /> : <FaRegHeart />}
-                    </p>
-                    <p>{post.comments ? post.comments.length : 0} <FaRegComment /></p>
-                    <p><FaRegShareFromSquare /></p>
-                  </div>
-                </div>
-              );
-            })
-          )}
-          <div className="schinfo">
-            <img alt="School img" src={homepic}></img>
-            <h3>Batangas State University</h3>
-            <p className="schdesc"><b>RedTalks</b> is an exclusive online platform for BATANGAS STATE UNIVERSITY students, faculty, and staff to connect, share ideas, and engage in meaningful discussions. Whether you're looking for academic advice, campus news, or a place to chat with fellow BatSU members, RedTalks is here to bring the community together. Where Red Spartans share, engage, and rise. Join today and be part of the conversation!</p>
-            <div className="divider"></div>
-            <p>BATSTATEU OFFICIAL LINKS</p>
-              <div className="links batsu">
-                <Link to='https://batstateu.edu.ph/' target="_blank">Official Website</Link>
-                <Link to='https://batstateu.edu.ph/academic-calendar/2023-2024/' target="_blank">Academic Calendar 2023-2024</Link>
-                <Link to='https://dione.batstate-u.edu.ph/student/#/' target="_blank">Student Portal</Link>
-              </div>
-            <p>BATSTATEU SOCIAL MEDIA LINKS</p>
-              <div className="links socmed">
-                <Link to='https://www.facebook.com/BatStateUTheNEU' target="_blank">fb</Link>
-                <Link to='https://twitter.com/BatStateUTheNEU' target="_blank">X</Link>
-                <Link to='https://www.instagram.com/batstateu_/' target="_blank">insta</Link>
-              </div>
-          </div>
-        </div>
-      ) : (
-        <PostModal post={selected} onClose={closePost} />
-      )}
+  const handlePostClick = (postId) => {
+    // Navigate to the post's detailed page using its ID
+    navigate(`/Post/${postId}`);
+  };
 
-    </>
+  return (
+    <div className="list">
+      {loading ? (
+        <p>Loading posts...</p>
+      ) : posts.length === 0 ? (
+        <p>No posts available</p>
+      ) : (
+        posts.map(post => {
+          const postId = post._id;
+          return (
+            <div 
+              className="postitem" 
+              key={postId} 
+              onClick={() => handlePostClick(postId)} // Add the click handler
+            >
+              <div className="postAuthor">
+                <img src={UserAvatar} className="user-pic" alt="pfp"></img>
+                {post.author && <p className="post-author">{post.author.name || 'Unknown Author'}</p>}
+              </div>
+              <h3>{post.title}</h3>
+              {renderTags(post.tags)}
+              <p className="postpreview">{post.content}</p>
+              <div className="interact">
+                <p onClick={(e) => {
+                  e.stopPropagation();
+                  toggleUpvote(postId);
+                }}>
+                  {post.upvotes ? post.upvotes.length : 0}
+                  {upvotedPosts[postId] ? <FaHeart /> : <FaRegHeart />}
+                </p>
+                <p>{post.comments ? post.comments.length : 0} <FaRegComment /></p>
+                <p><FaRegShareFromSquare /></p>
+              </div>
+            </div>
+          );
+        })
+      )}
+      <div className="schinfo">
+        <img alt="School img" src={homepic}></img>
+        <h3>Batangas State University</h3>
+        <p className="schdesc"><b>RedTalks</b> is an exclusive online platform for BATANGAS STATE UNIVERSITY students, faculty, and staff to connect, share ideas, and engage in meaningful discussions. Whether you're looking for academic advice, campus news, or a place to chat with fellow BatSU members, RedTalks is here to bring the community together. Where Red Spartans share, engage, and rise. Join today and be part of the conversation!</p>
+        <div className="divider"></div>
+        <p>BATSTATEU OFFICIAL LINKS</p>
+          <div className="links batsu">
+            <Link to='https://batstateu.edu.ph/' target="_blank">Official Website</Link>
+            <Link to='https://batstateu.edu.ph/academic-calendar/2023-2024/' target="_blank">Academic Calendar 2023-2024</Link>
+            <Link to='https://dione.batstate-u.edu.ph/student/#/' target="_blank">Student Portal</Link>
+          </div>
+        <p>BATSTATEU SOCIAL MEDIA LINKS</p>
+          <div className="links socmed">
+            <Link to='https://www.facebook.com/BatStateUTheNEU' target="_blank">fb</Link>
+            <Link to='https://twitter.com/BatStateUTheNEU' target="_blank">X</Link>
+            <Link to='https://www.instagram.com/batstateu_/' target="_blank">insta</Link>
+          </div>
+      </div>
+    </div>
   );
 }
 
