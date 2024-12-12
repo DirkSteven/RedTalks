@@ -99,7 +99,10 @@ function PostPage() {
   const handleReplySubmit = async (e) => {
     e.preventDefault();
 
-    if (!replyContent) return;
+    if (!replyContent) {
+      alert('Cannot post empty reply.');
+      return;
+    };
 
     if (!user) {
       alert('You must be logged in to post a reply.');
@@ -219,7 +222,7 @@ function PostPage() {
           <button onClick={() => handleDeleteComment(comment._id)}>Delete</button>
         )}
         <button onClick={() => handleReply(comment._id)}>Reply</button>
-
+  
         {/* Show reply input only if this comment is selected for replying */}
         {parentId === comment._id && (
           <form className='addComment reply' onSubmit={handleReplySubmit}>
@@ -233,9 +236,9 @@ function PostPage() {
             <button type="button" onClick={handleCancelReply}>Cancel</button>  {/* Cancel reply */}
           </form>
         )}
-
-        {/* Render nested replies */}
-        {comment.replies && comment.replies.length > 0 && (
+  
+        {/* Check if replies exist and render them */}
+        {Array.isArray(comment.replies) && comment.replies.length > 0 && (
           <ul style={{ marginLeft: '20px' }}>
             {renderComments(comment.replies, level + 1)}
           </ul>
@@ -338,7 +341,7 @@ function PostPage() {
               <div className="postmodal-content" onClick={(e) => e.stopPropagation()}>
                 <div className="postAuthor" onClick={handleAuthorClick}>
                   <img src={UserAvatar} className="user-pic" alt="pfp"></img>
-                  {post.author && <p className="post-author">{post.author.name || 'Unknown Author'}</p>}
+                  {post.author && <p className="post-author">{post.author.name}</p>}
                 </div>
                 <h3>{post.title}</h3>
                 {renderTags(post.tags)}

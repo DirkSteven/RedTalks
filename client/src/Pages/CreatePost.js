@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa6";
 import axios from "axios";
-import AppContext from '../Contexts/AppContext'; 
+import AppContext from '../Contexts/AppContext';
 
 function CreatePost() {
   const { user } = useContext(AppContext);
@@ -13,7 +13,7 @@ function CreatePost() {
   const [selectedTags, setSelectedTags] = useState({
     descriptiveTag: "Discussion",
     campusTag: "Alangilan",
-    departmentTag: "CICS",
+    departmentTag: "College of Engineering",
     nsfw: false, // Checkbox state for NSFW
   });
 
@@ -70,7 +70,8 @@ function CreatePost() {
           },
         }
       );
-      // Handle successful post creation, perhaps redirect or show a success message
+      alert("Post Successful");
+      navigate(-1);
     } catch (error) {
       console.error("Error creating post", error);
       // Optionally show an error message to the user
@@ -84,10 +85,19 @@ function CreatePost() {
 
   // Handle tag selection
   const handleTagChange = (tagType, tagValue) => {
-    setSelectedTags({
-      ...selectedTags,
-      [tagType]: tagValue,
-    });
+    if (tagType === "departmentTag") {
+      // For departmentTag, store the full department name in state
+      setSelectedTags({
+        ...selectedTags,
+        [tagType]: tagValue,
+      });
+    } else {
+      // For other tags, directly update state
+      setSelectedTags({
+        ...selectedTags,
+        [tagType]: tagValue,
+      });
+    }
   };
 
   // Handle NSFW checkbox change
