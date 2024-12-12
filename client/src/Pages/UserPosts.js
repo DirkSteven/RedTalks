@@ -1,21 +1,17 @@
 import React, { useState, useEffect, useContext } from "react";
-// import { useNavigate } from 'react-router-dom';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from "react-router-dom";
 import axios from 'axios';
-import PostModal from "../Components/Modals/Post Modal";
 import { FaRegComment, FaHeart, FaRegHeart, FaRegShareFromSquare } from "react-icons/fa6";
 import AppContext from '../Contexts/AppContext'; 
 
 function UserPosts() {
     const { user } = useContext(AppContext);
     const { userId } = useParams(); 
+    const navigate = useNavigate();  // Initialize navigate for redirection
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [selected, setSelected] = useState(null);
     const [upvotedPosts, setUpvotedPosts] = useState({});  // Keep track of upvoted posts by postId
     const [refreshPosts, setRefreshPosts] = useState(false); // State to trigger re-fetch
-
-    // const [modalPostId, setModalPostId] = useState(null);
 
     useEffect(() => {
         setLoading(true);
@@ -46,7 +42,7 @@ function UserPosts() {
         if (!user) {
             alert('You must be logged in to upvote.');
             return;
-          }
+        }
 
         const isUpvoted = upvotedPosts[postId] || false;
     
@@ -102,18 +98,6 @@ function UserPosts() {
         });
     };
     
-    // Handle click on a post
-    const postClick = (post) => {
-        setSelected(post);
-    };
-
-    const closePost = () => {
-        setSelected(null);
-        setRefreshPosts(Date.now()); // Toggle refreshPosts state to trigger re-fetch of posts
-    };
-
-    
-
     // Helper function to render tags
     const renderTags = (tags) => {
         if (!tags) return null;
@@ -154,51 +138,47 @@ function UserPosts() {
             {nsfw && <span className="tag nsfwTag">NSFW</span>}
           </div>
         );
-      };
+    };
 
     return (
         <>
-            {selected === null ? (
-                    <div className="list">
-                        {loading ? (
-                            <p>Loading posts...</p>
-                        ) : posts.length === 0 ? (
-                            <p>No posts available</p>
-                        ) : (
-                            posts.map((post, index) => {
-                                const postId = post._id;  // Ensure you're using _id consistently
-                                return (
-                                    <React.Fragment key={postId}>
-                                    <div 
-                                        className="postitem" 
-                                        key={postId} 
-                                        onClick={() => postClick(post)}  
-                                    >
-                                        <h3>{post.title}</h3>
-                                        {renderTags(post.tags)}
-                                        <p className="postpreview">{post.content}</p>
+            <div className="list">
+                {loading ? (
+                    <p>Loading posts...</p>
+                ) : posts.length === 0 ? (
+                    <p>No posts available</p>
+                ) : (
+                    posts.map((post) => {
+                        const postId = post._id;  // Ensure you're using _id consistently
+                        return (
+                            <React.Fragment key={postId}>
+                                <div 
+                                    className="postitem" 
+                                    key={postId} 
+                                    onClick={() => navigate(`/Post/${postId}`)}  // Redirect to the individual post page
+                                >
+                                    <h3>{post.title}</h3>
+                                    {renderTags(post.tags)}
+                                    <p className="postpreview">{post.content}</p>
 
-                                        <div className="interact">
-                                            <p onClick={(e) => {
-                                                e.stopPropagation();
-                                                toggleUpvote(postId);  // Pass the correct ID
-                                            }}>
-                                                {post.upvotes ? post.upvotes.length : 0} 
-                                                {upvotedPosts[postId] ? <FaHeart /> : <FaRegHeart />}
-                                            </p>
-                                            <p>{post.comments ? post.comments.length : 0} <FaRegComment /></p>
-                                            <p><FaRegShareFromSquare /></p>
-                                        </div>
+                                    <div className="interact">
+                                        <p onClick={(e) => {
+                                            e.stopPropagation();
+                                            toggleUpvote(postId);  // Pass the correct ID
+                                        }}>
+                                            {post.upvotes ? post.upvotes.length : 0} 
+                                            {upvotedPosts[postId] ? <FaHeart /> : <FaRegHeart />}
+                                        </p>
+                                        <p>{post.comments ? post.comments.length : 0} <FaRegComment /></p>
+                                        <p><FaRegShareFromSquare /></p>
                                     </div>
-                                    {index < posts.length - 1 && <div className="divider"></div>}
-                                    </React.Fragment>
-                                );
-                            })
-                        )}
-                    </div>
-            ) : (
-                <PostModal post={selected} onClose={closePost} />
-            )}
+                                </div>
+                                {post !== posts[posts.length - 1] && <div className="divider"></div>}
+                            </React.Fragment>
+                        );
+                    })
+                )}
+            </div>
         </>
     );
 }

@@ -1,20 +1,37 @@
 import React, { useState, useContext } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa6";
 import axios from "axios";
 import AppContext from '../Contexts/AppContext'; 
 
 function CreatePost() {
   const { user } = useContext(AppContext);
+  const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [tagsModalOpen, setTagsModalOpen] = useState(false); // For controlling the tag modal visibility
   const [selectedTags, setSelectedTags] = useState({
-    descriptiveTag: "discussion",
+    descriptiveTag: "Discussion",
     campusTag: "Alangilan",
-    departmentTag: "Computer Science",
+    departmentTag: "CICS",
     nsfw: false, // Checkbox state for NSFW
   });
+
+  // Department abbreviation mapping
+  const abbrTags = {
+    "College of Engineering": "CoE",
+    "College of Architecture": "CoA",
+    "College of Fine Arts, and Design": "CFAD",
+    "College of Accountancy, Business, Economics, and International Hospitality Management": "CABEIHM",
+    "College of Arts and Sciences": "CAS",
+    "College of Informatics and Computing Sciences": "CICS",
+    "College of Industrial Technology": "CIT",
+    "College of Nursing and Allied Health Sciences": "CONAHS",
+    "College of Law": "COL",
+    "College of Agriculture and Forestry": "CAF",
+    "College of Teacher Education": "CTE",
+    "College of Medicine": "COM",
+  };
 
   // Predefined tag options
   const availableTags = {
@@ -83,9 +100,7 @@ function CreatePost() {
 
   return (
     <>
-      <Link to="/" className="modalClose">
-        <FaArrowLeft />
-      </Link>
+      <FaArrowLeft className="modalClose" onClick={() => navigate(-1)} />
       <div className="postcreation">
         <h1>Create Post</h1>
         <form onSubmit={handleSubmit}>
@@ -98,35 +113,40 @@ function CreatePost() {
           />
 
           <div className="tags-display">
-              <div className="selected-tags">
-                {Object.entries(selectedTags).map(([key, value]) => {
-                  if (key === "nsfw" && value) {
-                    return (
-                      <span key={key} className="tag nsfwTag">
-                        NSFW
-                      </span>
-                    );
-                  }
-                  // Skip the NSFW tag if false
-                  if (key === "nsfw") return null;
-
-                  // Assign different classes based on tag type
-                  const tagClass =
-                    key === "descriptiveTag"
-                      ? "descriptiveTag"
-                      : key === "campusTag"
-                      ? "campusTag"
-                      : key === "departmentTag"
-                      ? "departmentTag"
-                      : "";
-
+            <div className="selected-tags">
+              {Object.entries(selectedTags).map(([key, value]) => {
+                if (key === "nsfw" && value) {
                   return (
-                    <span key={key} className={`tag ${tagClass}`}>
-                      {value.toString()}
+                    <span key={key} className="tag nsfwTag">
+                      NSFW
                     </span>
                   );
-                })}
-              </div>
+                }
+                // Skip the NSFW tag if false
+                if (key === "nsfw") return null;
+
+                // For departmentTag, display the abbreviation
+                const displayValue =
+                  key === "departmentTag"
+                    ? abbrTags[value] || value // Fallback to full value if abbreviation not found
+                    : value;
+
+                const tagClass =
+                  key === "descriptiveTag"
+                    ? "descriptiveTag"
+                    : key === "campusTag"
+                    ? "campusTag"
+                    : key === "departmentTag"
+                    ? "departmentTag"
+                    : "";
+
+                return (
+                  <span key={key} className={`tag ${tagClass}`}>
+                    {displayValue}
+                  </span>
+                );
+              })}
+            </div>
             <button
               type="button"
               className="formbtn"
@@ -155,7 +175,8 @@ function CreatePost() {
             <h3>Select Tags</h3>
             <div>
               <label>Descriptive Tag:</label>
-              <select className="tagselect descriptiveTag"
+              <select
+                className="tagselect descriptiveTag"
                 value={selectedTags.descriptiveTag}
                 onChange={(e) =>
                   handleTagChange("descriptiveTag", e.target.value)
@@ -171,7 +192,8 @@ function CreatePost() {
 
             <div>
               <label>Campus Tag:</label>
-              <select className="tagselect campusTag"
+              <select
+                className="tagselect campusTag"
                 value={selectedTags.campusTag}
                 onChange={(e) => handleTagChange("campusTag", e.target.value)}
               >
@@ -185,7 +207,8 @@ function CreatePost() {
 
             <div>
               <label>Department Tag:</label>
-              <select className="tagselect departmentTag"
+              <select
+                className="tagselect departmentTag"
                 value={selectedTags.departmentTag}
                 onChange={(e) =>
                   handleTagChange("departmentTag", e.target.value)
@@ -193,16 +216,17 @@ function CreatePost() {
               >
                 {availableTags.departmentTag.map((tag) => (
                   <option key={tag} value={tag}>
-                    {tag}
+                    {tag} {/* Show full department names in the modal */}
                   </option>
                 ))}
               </select>
             </div>
 
             <div className="tagselect nsfwTag">
-              <label>NSFW:</label>
+              <label>NSFW</label>
               <input
                 type="checkbox"
+                className="nsfwCheckbox"
                 checked={selectedTags.nsfw}
                 onChange={handleNSFWChange} // Update the state when checked/unchecked
               />

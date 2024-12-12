@@ -11,7 +11,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 function PostPage() {
   const { user } = useContext(AppContext);
   const [post, setPost] = useState(null);
-  const [commentContent, setCommentContent] = useState('');
+  const [commentContent, setCommentContent] = useState(''); // Main comment
+  const [replyContent, setReplyContent] = useState(''); // Reply content
   const [comments, setComments] = useState([]);
   const [upvoted, setUpvoted] = useState(false);
   const [upvoteCount, setUpvoteCount] = useState(0);
@@ -22,21 +23,16 @@ function PostPage() {
   const navigate = useNavigate();
   const { postId } = useParams(); // Extract postId from the URL parameters
   const [sidebar, setSidebar] = useState(false);
-  const [selectedTag, setSelectedTag] = useState(null);
-  const [campusTag, setCampusTag] = useState(null);
-  const [departmentTag, setDepartmentTag] = useState(null);
-  const [nsfw, setNsfw] = useState(null);
-  
+
   const toggle = () => {
     setSidebar(prevState => !prevState);
   };
-
 
   // Fetch the specific post by postId
   const fetchPostData = useCallback(async () => {
     try {
       const response = await axios.get(`/api/posts/${postId}`);
-      const fetchedPost = response.data;
+      const fetchedPost = response.data.post;
       setPost(fetchedPost);
       setComments(fetchedPost.comments || []);
       setUpvoted(fetchedPost.upvotes && fetchedPost.upvotes.includes(user?._id));
@@ -63,7 +59,11 @@ function PostPage() {
   }, [fetchPostData]); // Fetch post data on component mount or postId change
 
   const handleCommentChange = (e) => {
-    setCommentContent(e.target.value);
+    setCommentContent(e.target.value); // Set main comment content
+  };
+
+  const handleReplyChange = (e) => {
+    setReplyContent(e.target.value); // Set reply content
   };
 
   const handleCommentSubmit = async (e) => {
@@ -88,11 +88,51 @@ function PostPage() {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setComments([response.data.comment, ...comments]);
-      setCommentContent('');
-      setParentId(null);
+      setCommentContent(''); // Clear the comment input after submission
+      setParentId(null); // Reset parentId after submission
     } catch (error) {
       console.error('Error adding comment:', error);
       alert('Failed to add comment');
+    }
+  };
+
+  const handleReplySubmit = async (e) => {
+    e.preventDefault();
+
+    if (!replyContent) return;
+
+    if (!user) {
+      alert('You must be logged in to post a reply.');
+      return;
+    }
+
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('You must be logged in to post a reply.');
+      return;
+    }
+
+    try {
+      const response = await axios.post(`/api/posts/${post._id}/comment`, 
+        { content: replyContent, author: user._id, parentCommentId: parentId },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setComments((prevComments) => {
+        return prevComments.map((comment) => {
+          if (comment._id === parentId) {
+            return {
+              ...comment,
+              replies: [response.data.comment, ...comment.replies],
+            };
+          }
+          return comment;
+        });
+      });
+      setReplyContent(''); // Clear the reply input after submission
+      setParentId(null); // Reset parentId after submission
+    } catch (error) {
+      console.error('Error adding reply:', error);
+      alert('Failed to add reply');
     }
   };
 
@@ -116,7 +156,6 @@ function PostPage() {
         });
         setUpvoted(false);
         fetchUpvoteCount();
-
       } else {
         const response = await axios.post(`/api/posts/${post._id}/upvote`, 
           { userId: user._id }, 
@@ -134,7 +173,7 @@ function PostPage() {
   };
 
   const handleReply = (commentId) => {
-    setParentId(commentId);
+    setParentId(commentId);  // Set parentId to commentId to track the reply
   };
 
   const handleDeleteComment = async (commentId) => {
@@ -175,6 +214,21 @@ function PostPage() {
         )}
         <button onClick={() => handleReply(comment._id)}>Reply</button>
 
+        {/* Show reply input only if this comment is selected for replying */}
+        {parentId === comment._id && (
+          <form className='addComment reply' onSubmit={handleReplySubmit}>
+            <textarea
+              value={replyContent}  // Use replyContent for replies
+              onChange={handleReplyChange}
+              placeholder="Add your reply..."
+              required
+            />
+            <button type="submit">Post</button>
+            <button type="button" onClick={() => setParentId(null)}>Cancel</button>
+          </form>
+        )}
+
+        {/* Render nested replies */}
         {comment.replies && comment.replies.length > 0 && (
           <ul style={{ marginLeft: '20px' }}>
             {renderComments(comment.replies, level + 1)}
@@ -214,8 +268,8 @@ function PostPage() {
 
     const abbrTags = {
       "College of Engineering":"CoE",
-      "College of Architecture":"Archi",
-      "College of Fine Arts and Design":"CAFAD",
+      "College of Architecture":"CoA",
+      "College of Fine Arts and Design":"CFAD",
       "College of Accountancy, Business, Economics, and International Hospitality Management":"CABEIHM",
       "College of Arts and Sciences":"CAS",
       "College of Informatics and Computing Sciences":"CICS",
@@ -224,6 +278,17 @@ function PostPage() {
       "College of Agriculture and Forestry":"CAF",
       "College of Teacher Education":"CTE",
       "College of Medicine":"Med",
+      "college of engineering":"CoE",
+      "college of architecture":"CoA",
+      "college of fine arts and design":"CFAD",
+      "college of accountancy, business, economics, and international hospitality management":"CABEIHM",
+      "college of arts and sciences":"CAS",
+      "college of informatics and computing sciences":"CICS",
+      "college of industrial technology":"CIT",
+      "college of nursing and allied health sciences":"CoNAHS",
+      "college of agriculture and forestry":"CAF",
+      "college of teacher education":"CTE",
+      "college of medicine":"Med"
     };
 
     const shorten = abbrTags[departmentTag] || departmentTag;
@@ -256,65 +321,57 @@ function PostPage() {
 
   return (
     <div className="container">
-
       <Header toggle={toggle}/>
-      
       <div className='contents'>
-
-        <Sidebar  isCollapsed={sidebar}
-          setSelectedTag={setSelectedTag}
-          setCampusTag={setCampusTag}
-          setDepartmentTag={setDepartmentTag}
-          setNsfw={setNsfw} />
-
+        <Sidebar  isCollapsed={sidebar} />
         <div className={`wall ${sidebar ? 'collapsed' : ''}`}>
           <HomeNav />
           <div className="page">
             <div className="postmodal-overlay"> 
-      <FaArrowLeft className="modalClose" onClick={() => navigate(-1)}/>
-      <div className="postmodal-content" onClick={(e) => e.stopPropagation()}>
-        <div className="postAuthor" onClick={handleAuthorClick}>
-          <img src={UserAvatar} className="user-pic" alt="pfp"></img>
-          {post.author && <p className="post-author">{post.author.name || 'Unknown Author'}</p>}
-        </div>
-        <h3>{post.title}</h3>
-        {renderTags(post.tags)}
-        <p>{post.content}</p>
-        <div className="interact">
-          <p>
-            {upvoteCount} 
-            {upvoted ? (
-              <FaHeart onClick={handleUpvote} />
-            ) : (
-              <FaRegHeart onClick={handleUpvote} />
-            )}
-          </p>
-          <p>{post.comments ? post.comments.length : 0} <FaRegComment/> </p>
-          <p><FaRegShareFromSquare onClick={handleShare}/></p>
-          {shareStatus && <span>{shareStatus}</span>}
-        </div>
-        <div className="comments-list">
-          <h4>Comments:</h4>
-          <form className='addComment' onSubmit={handleCommentSubmit}>
-            <textarea
-              value={commentContent}
-              onChange={handleCommentChange}
-              placeholder="Add your comment..."
-              required
-            />
-            <button type="submit">Post</button>
-          </form>
+              <FaArrowLeft className="modalClose" onClick={() => navigate(-1)}/>
+              <div className="postmodal-content" onClick={(e) => e.stopPropagation()}>
+                <div className="postAuthor" onClick={handleAuthorClick}>
+                  <img src={UserAvatar} className="user-pic" alt="pfp"></img>
+                  {post.author && <p className="post-author">{post.author.name || 'Unknown Author'}</p>}
+                </div>
+                <h3>{post.title}</h3>
+                {renderTags(post.tags)}
+                <p>{post.content}</p>
+                <div className="interact">
+                  <p>
+                    {upvoteCount} 
+                    {upvoted ? (
+                      <FaHeart onClick={handleUpvote} />
+                    ) : (
+                      <FaRegHeart onClick={handleUpvote} />
+                    )}
+                  </p>
+                  <p>{post.comments ? post.comments.length : 0} <FaRegComment/> </p>
+                  <p><FaRegShareFromSquare onClick={handleShare}/></p>
+                  {shareStatus && <span>{shareStatus}</span>}
+                </div>
+                <div className="comments-list">
+                  <h4>Comments:</h4>
+                  <form className='addComment' onSubmit={handleCommentSubmit}>
+                    <textarea
+                      value={commentContent}  // Use commentContent for main comments
+                      onChange={handleCommentChange}
+                      placeholder="Add your comment..."
+                      required
+                    />
+                    <button type="submit">Post</button>
+                  </form>
 
-          {comments && comments.length > 0 ? (
-          <ul>
-            {renderComments(comments)}
-          </ul>
-        ) : (
-          <p>No comments yet.</p>
-        )}
-        </div>
-      </div>
-    </div>
+                  {comments && comments.length > 0 ? (
+                    <ul>
+                      {renderComments(comments)}
+                    </ul>
+                  ) : (
+                    <p>No comments yet.</p>
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

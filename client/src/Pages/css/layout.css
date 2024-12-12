@@ -438,6 +438,10 @@
     outline: 2px solid #9e2525b3;
 }
 
+.reply{
+    margin: 1em 0 0 0;
+}
+
 .comments-list button{
     height: fit-content;
     font-family: 'Poppins', serif;
@@ -568,7 +572,7 @@
     display: flex;
     flex-direction: column;
     width: 70%;
-    height: auto;
+    height: 60vh;
 }
 
 .postcreation h1{
@@ -672,10 +676,11 @@
   
   /* Modal styles */
 .tagsModal {
-    background: white;
+    background: #f9f9ed;
     padding: 20px;
     border-radius: 8px;
     width: 30%;
+    border: 2px solid #00000070;
 }
   
 .tagsModal h3 {
@@ -685,12 +690,27 @@
 .tagsModal .formbtn{
     margin: 15px 0;
 }
+
+.tagsModal .nsfwTag{
+    padding: 0.5em;
+    margin: 5px 0;
+    font-weight: bold;
+    border-radius: 20px;
+    border: 2px solid #00000050;
+}
+
+.nsfwCheckbox{
+    transform: translateY(11%);
+}
   
 .tagsModal select {
     font-family: 'Poppins', serif;
+    box-sizing: border-box;
+    font-weight: bold;
     width: 100%;
     padding: 8px;
     margin-bottom: 10px;
+    border: 2px solid #00000050;
 }
 
 .tagsModal select:focus{
@@ -698,7 +718,7 @@
 }
 
 .selected-tags{
-    margin: 10px 20px;
+    margin: 0 0 10px 20px ;
     display: flex;
     gap: 1%;
 }
@@ -707,6 +727,11 @@
     border: none;
     border-radius: 10px;
     width: fit-content;
+    color: #f0f0e1;
+}
+
+.tagselect option{
+    text-overflow: hidden;
 }
 
   /* Dropdown Menu Styling */
@@ -749,8 +774,9 @@
 
 .ProfileDisplay{
     height: fit-content;
+    justify-self: center;
     box-sizing: border-box;
-    width: 70%;
+    width: 90%;
     border-radius: 30px;
     margin: 1vh 5vw;
     background-color: #f9f9ed;

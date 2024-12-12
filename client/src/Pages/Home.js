@@ -114,8 +114,8 @@ function Home() {
 
     const abbrTags = {
       "College of Engineering":"CoE",
-      "College of Architecture":"Archi",
-      "College of Fine Arts and Design":"CAFAD",
+      "College of Architecture":"CoA",
+      "College of Fine Arts and Design":"CFAD",
       "College of Accountancy, Business, Economics, and International Hospitality Management":"CABEIHM",
       "College of Arts and Sciences":"CAS",
       "College of Informatics and Computing Sciences":"CICS",
@@ -125,8 +125,8 @@ function Home() {
       "College of Teacher Education":"CTE",
       "College of Medicine":"Med",
       "college of engineering":"CoE",
-      "college of architecture":"Archi",
-      "college of fine arts and design":"CAFAD",
+      "college of architecture":"CoA",
+      "college of fine arts and design":"CFAD",
       "college of accountancy, business, economics, and international hospitality management":"CABEIHM",
       "college of arts and sciences":"CAS",
       "college of informatics and computing sciences":"CICS",
