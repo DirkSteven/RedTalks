@@ -318,8 +318,9 @@ function PostPage() {
   if (!post) {
     return <div>Post not found.</div>; // If no post is available
   }
-
+    console.log(post.content);
   return (
+
     <div className="container">
       <Header toggle={toggle}/>
       <div className='contents'>
