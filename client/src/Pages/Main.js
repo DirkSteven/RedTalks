@@ -104,7 +104,11 @@ function Main() {
             }/>
         </Route>
 
-        <Route path="Post/:postId" element={<PostPage/>}></Route>
+        <Route path="Post/:postId" element={
+          <ProtectedRoute>
+            <PostPage/>
+          </ProtectedRoute>}>
+        </Route>
         
         <Route path="/Login" element={<Entry />}>
           <Route index element={<Login />} />

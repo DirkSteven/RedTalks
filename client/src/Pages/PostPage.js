@@ -174,6 +174,12 @@ function PostPage() {
 
   const handleReply = (commentId) => {
     setParentId(commentId);  // Set parentId to commentId to track the reply
+    setReplyContent('');  // Clear the previous reply content when selecting a new comment
+  };
+
+  const handleCancelReply = () => {
+    setParentId(null);  // Reset the parentId when cancelling the reply
+    setReplyContent('');  // Clear the reply content when cancelling the reply
   };
 
   const handleDeleteComment = async (commentId) => {
@@ -224,7 +230,7 @@ function PostPage() {
               required
             />
             <button type="submit">Post</button>
-            <button type="button" onClick={() => setParentId(null)}>Cancel</button>
+            <button type="button" onClick={handleCancelReply}>Cancel</button>  {/* Cancel reply */}
           </form>
         )}
 
@@ -318,13 +324,12 @@ function PostPage() {
   if (!post) {
     return <div>Post not found.</div>; // If no post is available
   }
-    console.log(post.content);
+  
   return (
-
     <div className="container">
       <Header toggle={toggle}/>
       <div className='contents'>
-        <Sidebar  isCollapsed={sidebar} />
+        <Sidebar isCollapsed={sidebar} />
         <div className={`wall ${sidebar ? 'collapsed' : ''}`}>
           <HomeNav />
           <div className="page">
