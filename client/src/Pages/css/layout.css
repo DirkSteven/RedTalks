@@ -264,11 +264,11 @@
 }
 
 .nav ul li:hover{
-    background-color: #f0f0e1;
+    background-color: rgba(240, 240, 225, 0.2);
 }
 
 .nav ul li:hover a{
-    color: #9e2525;
+    color: #f0f0e1;
 }
 
 .nav ul li a{
