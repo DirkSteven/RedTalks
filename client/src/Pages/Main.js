@@ -16,6 +16,7 @@ import UserPosts from "./UserPosts";
 import UserComments from "./UserComments";
 import UserLikes from "./UserLikes";
 import AppContext from '../Contexts/AppContext'; 
+import PostPage from "./PostPage";
 
 function ProtectedRoute({ children }) {
   const token = localStorage.getItem('token');
@@ -80,6 +81,7 @@ function Main() {
               <CreatePost />
             </ProtectedRoute>
           } />
+
         </Route>
 
         <Route path="/Profile/:userId" element={<Profile />}>
@@ -102,6 +104,12 @@ function Main() {
             }/>
         </Route>
 
+        <Route path="Post/:postId" element={
+          <ProtectedRoute>
+            <PostPage/>
+          </ProtectedRoute>}>
+        </Route>
+        
         <Route path="/Login" element={<Entry />}>
           <Route index element={<Login />} />
           <Route path="Signup" element={<Signup />} />

@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Submit from "../Buttons/Submit";
 import PlainInput from "../Text Input/PlainInput";
 import HiddenInput from "../Text Input/HiddenInput";
+import AppContext from '../../Contexts/AppContext';
 
 function SignupForm() {
     const [name, setName] = useState('');
@@ -12,6 +13,7 @@ function SignupForm() {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+    const { user, setUser } = useContext(AppContext); 
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -50,6 +52,7 @@ function SignupForm() {
           const { token } = response.data;
 
           localStorage.setItem('token', token);
+          setUser(user);
 
           navigate('/');
           setError('');

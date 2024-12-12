@@ -95,6 +95,7 @@ function Sidebar({ isCollapsed, setSelectedTag, setCampusTag, setDepartmentTag, 
             <p>view profile</p>
           </div>
         </div>
+        <button onClick={logout} className="logout">Logout</button>
         <div className="divider"></div>
 
         <p><FaGraduationCap />COLLEGE</p>
@@ -122,10 +123,6 @@ function Sidebar({ isCollapsed, setSelectedTag, setCampusTag, setDepartmentTag, 
           )}
         </ul>
         <div className="divider"></div>
-
-        <ul>
-          <button onClick={logout}>Logout</button>
-        </ul>
       </div>
     </div>
   );

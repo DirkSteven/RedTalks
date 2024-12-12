@@ -71,7 +71,7 @@ function Searchbar() {
     if (!query) return text;
     const regex = new RegExp(`(${query})`, 'gi');
     return text.split(regex).map((part, index) =>
-      regex.test(part) ? <span key={index} style={{ backgroundColor: 'yellow' }}>{part}</span> : part
+      regex.test(part) ? <span key={index} style={{ fontWeight:'bold' }}>{part}</span> : part
     );
   };
 

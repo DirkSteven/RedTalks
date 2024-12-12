@@ -36,7 +36,6 @@ function Layout() {
             <Outlet context={{ selectedTag, campusTag, departmentTag, nsfw }}/>
           </div>
         </div>
-     
       </div>
     </div>
   );

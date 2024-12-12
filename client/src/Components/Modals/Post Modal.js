@@ -58,7 +58,7 @@ function PostModal({ post, onClose }) {
       );
       setComments([response.data.comment, ...comments]);
       setCommentContent('');
-      setParentId(null);
+      setParentId(null); // Reset parentId after comment submission
     } catch (error) {
       console.error('Error adding comment:', error);
       alert('Failed to add comment');
@@ -103,7 +103,7 @@ function PostModal({ post, onClose }) {
   };
 
   const handleReply = (commentId) => {
-    setParentId(commentId);
+    setParentId(commentId);  // Set the parentId to the comment ID being replied to
   };
 
   const handleDeleteComment = async (commentId) => {
@@ -130,7 +130,7 @@ function PostModal({ post, onClose }) {
       <li 
         key={comment._id}
         style={{
-          marginLeft: `${level * 20}px`, //index please (for nested comments)
+          marginLeft: `${level * 20}px`, // Adjust for nested comments
           padding: '10px',
           borderLeft: level > 0 ? '2px solid #ccc' : 'none',
           backgroundColor: level > 0 ? '#f9f9f9' : 'transparent' 
@@ -153,11 +153,8 @@ function PostModal({ post, onClose }) {
     ));
   };
 
-
   const handleShare = () => {
     const postUrl = window.location.href;
-    // const postUrl = `${window.location.origin}/posts/${post._id}`;
-    
     
     if (navigator.share) {
       navigator.share({
@@ -227,53 +224,68 @@ function PostModal({ post, onClose }) {
 
   if (!post) return null;
 
-    return (
-      <div className="postmodal-overlay" onClick={onClose}> 
-        <FaArrowLeft className="modalClose" onClick={onClose}/>
-        <div className="postmodal-content" onClick={(e) => e.stopPropagation()}>
-          <div className="postAuthor" onClick={handleAuthorClick}>
-            <img src={UserAvatar} className="user-pic" alt="pfp"></img>
-            {post.author && <p className="post-author">{post.author.name || 'Unknown Author'}</p>}
-          </div>
-          <h3>{post.title}</h3>
-          {renderTags(post.tags)}
-          <p>{post.content}</p>
-          <div className="interact">
-            <p>
-              {upvoteCount} 
-              {upvoted ? (
-                <FaHeart onClick={handleUpvote} />
-              ) : (
-                <FaRegHeart onClick={handleUpvote} />
-              )}
-            </p>
-            <p>{post.comments ? post.comments.length : 0} <FaRegComment/> </p>
-            <p><FaRegShareFromSquare onClick={handleShare}/></p>
-            {shareStatus && <span>{shareStatus}</span>}
-          </div>
-          <div className="comments-list">
-            <h4>Comments:</h4>
-            <form className='addComment' onSubmit={handleCommentSubmit}>
-              <textarea
-                value={commentContent}
-                onChange={handleCommentChange}
-                placeholder="Add your comment..."
-                required
-              />
-              <button type="submit">Post</button>
-            </form>
+  return (
+    <div className="postmodal-overlay" onClick={onClose}> 
+      <FaArrowLeft className="modalClose" onClick={onClose}/>
+      <div className="postmodal-content" onClick={(e) => e.stopPropagation()}>
+        <div className="postAuthor" onClick={handleAuthorClick}>
+          <img src={UserAvatar} className="user-pic" alt="pfp"></img>
+          {post.author && <p className="post-author">{post.author.name || 'Unknown Author'}</p>}
+        </div>
+        <h3>{post.title}</h3>
+        {renderTags(post.tags)}
+        <p>{post.content}</p>
+        <div className="interact">
+          <p>
+            {upvoteCount} 
+            {upvoted ? (
+              <FaHeart onClick={handleUpvote} />
+            ) : (
+              <FaRegHeart onClick={handleUpvote} />
+            )}
+          </p>
+          <p>{post.comments ? post.comments.length : 0} <FaRegComment/> </p>
+          <p><FaRegShareFromSquare onClick={handleShare}/></p>
+          {shareStatus && <span>{shareStatus}</span>}
+        </div>
+        <div className="comments-list">
+          <h4>Comments:</h4>
+          <form className='addComment' onSubmit={handleCommentSubmit}>
+            <textarea
+              value={commentContent}
+              onChange={handleCommentChange}
+              placeholder="Add your comment..."
+              required
+            />
+            <button type="submit">Post</button>
+          </form>
 
-            {comments && comments.length > 0 ? (
+          {parentId && (
+            <div className="reply-form">
+              <h5>Replying to comment...</h5>
+              <form onSubmit={handleCommentSubmit}>
+                <textarea
+                  value={commentContent}
+                  onChange={handleCommentChange}
+                  placeholder="Write your reply..."
+                  required
+                />
+                <button type="submit">Post Reply</button>
+              </form>
+            </div>
+          )}
+
+          {comments && comments.length > 0 ? (
             <ul>
               {renderComments(comments)}
             </ul>
           ) : (
             <p>No comments yet.</p>
           )}
-          </div>
         </div>
       </div>
-    );
+    </div>
+  );
 }
 
 export default PostModal;
