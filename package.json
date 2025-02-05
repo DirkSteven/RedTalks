@@ -1,0 +1,17 @@
+{
+  "name": "redtalks",
+  "version": "1.0.0",
+  "scripts": {
+    "client": "npm start --prefix client",
+    "server": "npm start --prefix server",
+    "dev": "concurrently \"npm run client\" \"npm run server\"",
+    "install-all": "npm install && cd client && npm install && cd ../server && npm install && cd .."
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  },
+  "dependencies": {
+    "mongoose": "^8.8.3",
+    "nodemailer": "^6.9.16"
+  }
+}
